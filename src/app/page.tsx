@@ -1,3 +1,8 @@
 export default function Home() {
-  return <main>Hello RLN Referral system</main>;
+  return (
+    <main>
+      <div className="header-banner">Refferal system</div>
+      Hello RLN Referral system
+    </main>
+  );
 }

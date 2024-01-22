@@ -24,3 +24,13 @@ a {
 * {
   box-sizing: border-box;
 }
+
+.header-banner {
+  display: flex;
+  padding: 20px;
+  overflow: hidden;
+  height: 113px;
+  background: rgba(108, 19, 183, 0.27);
+  justify-items: center;
+  
+}
