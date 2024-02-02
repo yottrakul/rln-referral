@@ -1,3 +1,5 @@
+import { Button } from "@chakra-ui/react";
+
 export default function Home() {
   return (
     <main>
@@ -5,7 +7,7 @@ export default function Home() {
       <h1>Hello world test add 2</h1>
       Hello RLN Referral system Test Github Hook
       <button>Hello Fighter</button>
-      
+      <Button colorScheme="blue">Button</Button>
     </main>
   );
 }
