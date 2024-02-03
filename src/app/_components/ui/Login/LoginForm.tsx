@@ -1,13 +1,16 @@
 "use client";
-import { LoginSchema } from "@/app/schemas";
-import { FormControl, FormLabel, FormHelperText, Input, Button, FormErrorMessage, Box } from "@chakra-ui/react";
+import { LoginSchema } from "@/app/_schemas";
+import { FormControl, FormLabel, Input, Button, FormErrorMessage, Box, Alert, AlertIcon } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import type * as z from "zod";
 import GoogleIcon from "../../icons/GoogleIcon";
 import { login } from "@/app/_actions/login";
+import { useState, useTransition } from "react";
 
 export default function LoginForm() {
+  const [isPending, startTransition] = useTransition();
+  const [error, setIsError] = useState<string | undefined>("");
   const {
     handleSubmit,
     register,
@@ -20,7 +23,11 @@ export default function LoginForm() {
     },
   });
   const onSubmit = (value: z.infer<typeof LoginSchema>) => {
-    login(value);
+    setIsError("");
+    startTransition(async () => {
+      const data = await login(value);
+      setIsError(data?.error);
+    });
   };
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -34,6 +41,12 @@ export default function LoginForm() {
         <Input {...register("password")} type="password" />
         {errors.password && <FormErrorMessage>{errors.password.message}</FormErrorMessage>}
       </FormControl>
+      {error && (
+        <Alert mt={4} status="error">
+          <AlertIcon />
+          {error}
+        </Alert>
+      )}
       <Button w={"100%"} type="submit" mt={4} colorScheme="blue">
         Login
       </Button>

@@ -14,7 +14,7 @@ import {
   AlertIcon,
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
-import { RegisterSchema } from "@/app/schemas";
+import { RegisterSchema } from "@/app/_schemas";
 import type * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { register as regisAction } from "@/app/_actions/register";
