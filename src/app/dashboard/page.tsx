@@ -1,5 +1,9 @@
-import React from "react";
+import RegisterForm from "@/app/_components/ui/Register/RegisterForm";
 
 export default function Dashboard() {
-  return <div>Dashboard</div>;
+  return (
+    <main>
+      <RegisterForm />
+    </main>
+  );
 }

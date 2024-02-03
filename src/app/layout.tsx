@@ -1,7 +1,7 @@
 import "@/styles/globals.css";
 
 import { Inter } from "next/font/google";
-import { ChakraUIProviders } from "./providers/ChakraProvider";
+import { ChakraUIProviders } from "./_components/providers/ChakraProvider";
 
 const inter = Inter({
   subsets: ["latin"],

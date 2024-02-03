@@ -1,12 +1,14 @@
 import { Center, Container } from "@chakra-ui/react";
-import LoginForm from "./ui/Login/LoginForm";
+import LoginForm from "@/app/_components/ui/Login/LoginForm";
 
 export default function Home() {
   return (
     <main>
-      <Container sx={{ minHeight: "100vh" }}>
-        <LoginForm />
-      </Container>
+      <Center minHeight={"100vh"}>
+        <Container maxW={"md"}>
+          <LoginForm />
+        </Container>
+      </Center>
     </main>
   );
 }
