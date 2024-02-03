@@ -7,6 +7,7 @@ export default function Home() {
       <Center minHeight={"100vh"}>
         <Container maxW={"md"}>
           <LoginForm />
+          Test
         </Container>
       </Center>
     </main>
