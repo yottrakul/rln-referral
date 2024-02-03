@@ -10,11 +10,15 @@ import {
   FormErrorMessage,
   FormLabel,
   Input,
+  Alert,
+  AlertIcon,
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import { RegisterSchema } from "@/app/schemas";
 import type * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { register as regisAction } from "@/app/_actions/register";
+import { useState, useTransition } from "react";
 
 const roles = Object.values(RegisterSchema.shape.role._def.values);
 
@@ -32,6 +36,9 @@ export default function RegisterFormCard() {
 }
 
 const RegisterForm = () => {
+  const [isPending, startTransition] = useTransition();
+  const [success, setIsSuccess] = useState<string | undefined>("");
+  const [error, setIsError] = useState<string | undefined>("");
   const {
     register,
     handleSubmit,
@@ -46,9 +53,15 @@ const RegisterForm = () => {
   });
 
   const onSubmit = (value: z.infer<typeof RegisterSchema>) => {
-    // register(value);
-    // console.log();
+    setIsSuccess("");
+    setIsError("");
+    startTransition(async () => {
+      const data = await regisAction(value);
+      setIsSuccess(data.success);
+      setIsError(data.error);
+    });
   };
+
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <FormControl isInvalid={Boolean(errors.email)}>
@@ -79,7 +92,19 @@ const RegisterForm = () => {
         {/* {errors.role && <div>hello</div>} */}
         {errors.role && <FormErrorMessage>{errors.role.message}</FormErrorMessage>}
       </FormControl>
-      <Button w={"100%"} type="submit" mt={4} colorScheme="blue">
+      {success && (
+        <Alert mt={4} status="success">
+          <AlertIcon />
+          {success}
+        </Alert>
+      )}
+      {error && (
+        <Alert mt={4} status="error">
+          <AlertIcon />
+          {error}
+        </Alert>
+      )}
+      <Button isDisabled={isPending} w={"100%"} type="submit" mt={4} colorScheme="blue">
         Add User
       </Button>
     </form>

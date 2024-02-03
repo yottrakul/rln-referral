@@ -24,14 +24,18 @@ export const register = async (value: z.infer<typeof RegisterSchema>) => {
     return { error: "Email already exists" };
   }
 
-  await db.user.create({
-    data: {
-      email,
-      password: hashedPassword,
-      name,
-      role,
-    },
-  });
+  try {
+    await db.user.create({
+      data: {
+        email,
+        password: hashedPassword,
+        name,
+        role,
+      },
+    });
+  } catch (error) {
+    return { error: "Error creating user" };
+  }
 
   return { success: "Email sent!" };
 };
