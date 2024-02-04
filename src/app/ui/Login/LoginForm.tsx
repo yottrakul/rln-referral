@@ -52,9 +52,8 @@ export default function LoginForm() {
       alignItems="center"
     >
       <Stack flexDir="column" mb="2" justifyContent="center" alignItems="center">
-        <Avatar bg="teal.500" />
-        <Heading color="teal.400">Welcome</Heading>
-        <Box minW={{ base: "90%", md: "468px" }}>
+        <Heading color="black">Refferal & Consult System</Heading>
+        <Box minW={{ base: "90%", md: "468px" }} mt={"4"}>
           <form>
             <Stack spacing={4} p="1rem" backgroundColor="whiteAlpha.900" boxShadow="md">
               <FormControl>
@@ -77,7 +76,6 @@ export default function LoginForm() {
                     </Button>
                   </InputRightElement>
                 </InputGroup>
-                <FormHelperText textAlign="right">forgot password?</FormHelperText>
               </FormControl>
               <Link href="/UserBackOffice">
                 <Button borderRadius={4} type="submit" variant="solid" colorScheme="teal" width="full">
@@ -89,7 +87,7 @@ export default function LoginForm() {
                 borderRadius={4}
                 type="submit"
                 variant="outline"
-                colorScheme="teal"
+                color={"Black"}
                 width="full"
                 onClick={() => oAuthHandle()}
               >
@@ -99,12 +97,6 @@ export default function LoginForm() {
           </form>
         </Box>
       </Stack>
-      <Box>
-        New to us?{" "}
-        <Link color="teal.500" href="#">
-          Sign Up
-        </Link>
-      </Box>
     </Flex>
   );
 }

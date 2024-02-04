@@ -18,8 +18,13 @@ import {
   Input,
   InputRightElement,
   Select,
+  Button,
+  IconButton,
+  FormControl,
 } from "@chakra-ui/react";
-import { SearchIcon } from "@chakra-ui/icons";
+import { AddIcon, SearchIcon } from "@chakra-ui/icons";
+import { MdOutlineEdit } from "react-icons/md";
+import Navbar from "../navbar/Navbar";
 
 export default function UserManagement() {
   const user = [
@@ -36,58 +41,93 @@ export default function UserManagement() {
   ];
 
   return (
-    <Box position="relative" px="6" pt={20} overflow="auto">
-      <Box boxShadow="lg" rounded="md" bg="white">
-        <Flex direction="row" justify="between" my="10" mx="20">
-          <Box>
-            <Text as="b" fontSize="2xl">
-              User
-            </Text>
-          </Box>
-          <Spacer />
-          {/* filter */}
-          <Stack direction="row">
-            <Select placeholder="Select option">
-              <option value="option1">Option 1</option>
-              <option value="option2">Option 2</option>
-              <option value="option3">Option 3</option>
-            </Select>
-            <InputGroup>
-              <Input variant="outline" placeholder="Username/Name" />
-              <InputRightElement color={"gray.500"}>
-                <SearchIcon />
-              </InputRightElement>
-            </InputGroup>
-          </Stack>
-        </Flex>
-        <Flex direction="row" mt={4} px={20}>
-          <Box boxShadow="lg" w="100%">
-            <TableContainer w={"100%"} overflow={"auto"}>
-              <Table variant="simple" border="4px solid" borderColor="gray.200">
-                <TableCaption>User Account</TableCaption>
-                <Thead bg={"#EDF2F7"} fontSize={"xl"}>
-                  <Tr>
-                    <Th>Username</Th>
-                    <Th>Name - Surname</Th>
-                    <Th>Create Date</Th>
-                    <Th>Role</Th>
-                  </Tr>
-                </Thead>
-                <Tbody fontSize={"lg"}>
-                  {user.map((u) => (
-                    <Tr key={u.user_id}>
-                      <Td>{u.username}</Td>
-                      <Td>{u.name}</Td>
-                      <Td>{u.create_date}</Td>
-                      <Td>{u.role}</Td>
+    <>
+      <Navbar />
+      <Box position="relative" p="6" bg="#f3f4f7">
+        <Box boxShadow="lg" rounded="md" bg="white">
+          <Flex direction="row" mx="20" pt="6" alignItems="center">
+            <Box>
+              <Text fontWeight="Bold" fontSize="2xl">
+                User Management
+              </Text>
+            </Box>
+            <Spacer />
+            {/* filter */}
+            <Stack direction="row">
+              <FormControl width="30">
+                <Select placeholder="ตำแหน่งทั้งหมด">
+                  <option value="option1">Doctor</option>
+                  <option value="option2">Medic</option>
+                </Select>
+              </FormControl>
+              <FormControl width="22">
+                <InputGroup>
+                  <Input variant="outline" placeholder="Username/ชื่อ-สกุล" />
+                  <InputRightElement color={"gray.500"}>
+                    <SearchIcon />
+                  </InputRightElement>
+                </InputGroup>
+              </FormControl>
+              <Button
+                width="30"
+                rightIcon={<AddIcon />}
+                color={"white"}
+                _hover={{ bg: "green.500" }}
+                bg="#00b300"
+                shadow="lg"
+              >
+                <Text color={"white"}>เพิ่ม</Text>
+              </Button>
+            </Stack>
+          </Flex>
+          <Flex direction="row" px={20} pt="4" pb="10">
+            <Box w="100%" boxShadow="lg">
+              <TableContainer w={"100%"} overflow={"auto"}>
+                <Table variant="simple" size="sm">
+                  <Thead bg={"#04BFDA"} height="14">
+                    <Tr>
+                      <Th fontSize={"xl"} minHeight="10vh" fontWeight="semi-bold" color="white">
+                        username
+                      </Th>
+                      <Th fontSize={"xl"} fontWeight="semi-bold" color="white">
+                        ชื่อ-สกุล
+                      </Th>
+                      <Th fontSize={"xl"} fontWeight="semi-bold" color="white">
+                        วันที่สร้าง
+                      </Th>
+                      <Th fontSize={"xl"} fontWeight="semi-bold" color="white">
+                        ตำแหน่ง
+                      </Th>
+                      <Th fontSize={"xl"} fontWeight="semi-bold" color="white"></Th>
                     </Tr>
-                  ))}
-                </Tbody>
-              </Table>
-            </TableContainer>
-          </Box>
-        </Flex>
+                  </Thead>
+                  <Tbody>
+                    {user.map((u) => (
+                      <Tr key={u.user_id} _hover={{ bg: "gray.50" }} style={{ maxHeight: "5vh" }} px="4">
+                        <Td fontSize={"lg"} fontWeight="medium" color="black">
+                          {u.username}
+                        </Td>
+                        <Td fontSize={"lg"} fontWeight="medium" color="black">
+                          {u.name}
+                        </Td>
+                        <Td fontSize={"lg"} fontWeight="medium" color="black">
+                          {u.create_date}
+                        </Td>
+                        <Td fontSize={"lg"} fontWeight="medium" color="black">
+                          {u.role}
+                        </Td>
+                        <Td fontSize={"lg"} fontWeight="medium" color="black">
+                          <IconButton aria-label="Edit" isRound={true} icon={<MdOutlineEdit />} />
+                        </Td>
+                      </Tr>
+                    ))}
+                  </Tbody>
+                </Table>
+              </TableContainer>
+            </Box>
+          </Flex>
+        </Box>
       </Box>
-    </Box>
+    </>
   );
 }
