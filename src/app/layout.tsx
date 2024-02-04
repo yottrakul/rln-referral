@@ -4,7 +4,7 @@ import { Kanit } from "next/font/google";
 import { ChakraUIProviders } from "./providers/ChakraProvider";
 
 const kanit = Kanit({
-  weight: ["400"],
+  weight: ["300"],
   style: "normal",
   subsets: ["latin"],
 });
