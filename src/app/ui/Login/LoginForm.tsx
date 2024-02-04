@@ -23,9 +23,6 @@ import Link from "next/link";
 import { FaUserAlt, FaLock } from "react-icons/fa";
 import GoogleIcon from "@/app/_components/GoogleIcon";
 
-const CFaUserAlt = chakra(FaUserAlt);
-const CFaLock = chakra(FaLock);
-
 export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
