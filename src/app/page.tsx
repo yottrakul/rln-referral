@@ -1,4 +1,4 @@
-import LoginForm from "./ui/login/LoginForm";
+import LoginForm from "./ui/Login/LoginForm";
 
 export default function Home() {
   return (
