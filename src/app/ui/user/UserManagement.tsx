@@ -76,7 +76,9 @@ export default function UserManagement() {
                 bg="#00b300"
                 shadow="lg"
               >
-                <Text color={"white"}>เพิ่ม</Text>
+                <Text color={"white"} fontSize={"medium"}>
+                  เพิ่ม
+                </Text>
               </Button>
             </Stack>
           </Flex>
@@ -87,7 +89,7 @@ export default function UserManagement() {
                   <Thead bg={"#04BFDA"} height="14">
                     <Tr>
                       <Th fontSize={"xl"} minHeight="10vh" fontWeight="semi-bold" color="white">
-                        username
+                        <Text>username</Text>
                       </Th>
                       <Th fontSize={"xl"} fontWeight="semi-bold" color="white">
                         ชื่อ-สกุล
