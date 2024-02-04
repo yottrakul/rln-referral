@@ -17,7 +17,7 @@ import { useForm } from "react-hook-form";
 import { RegisterSchema } from "@/app/_schemas";
 import type * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { register as regisAction } from "@/app/_actions/register";
+import { register as regisAction } from "@/app/_actions/auth/register";
 import { useState, useTransition } from "react";
 
 const roles = Object.values(RegisterSchema.shape.role._def.values);

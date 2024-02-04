@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import type * as z from "zod";
 import GoogleIcon from "../../icons/GoogleIcon";
-import { login } from "@/app/_actions/login";
+import { login } from "@/app/_actions/auth/login";
 import { useState, useTransition } from "react";
 
 export default function LoginForm() {
@@ -47,10 +47,10 @@ export default function LoginForm() {
           {error}
         </Alert>
       )}
-      <Button w={"100%"} type="submit" mt={4} colorScheme="blue">
+      <Button isDisabled={isPending} w={"100%"} type="submit" mt={4} colorScheme="blue">
         Login
       </Button>
-      <Button variant="outline" w={"100%"} mt={4} colorScheme="blue">
+      <Button isDisabled={isPending} variant="outline" w={"100%"} mt={4} colorScheme="blue">
         <Box boxSize={6}>
           <GoogleIcon />
         </Box>
