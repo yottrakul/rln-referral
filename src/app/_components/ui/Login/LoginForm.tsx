@@ -51,9 +51,7 @@ export default function LoginForm() {
         Login
       </Button>
       <Button isDisabled={isPending} variant="outline" w={"100%"} mt={4} colorScheme="blue">
-        <Box boxSize={6}>
-          <GoogleIcon />
-        </Box>
+        <GoogleIcon boxSize={6} />
       </Button>
     </form>
   );
