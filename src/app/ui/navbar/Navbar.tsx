@@ -1,7 +1,6 @@
 "use client";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import {
-  Box,
   Flex,
   Text,
   Spacer,
@@ -17,7 +16,6 @@ import {
   Menu,
 } from "@chakra-ui/react";
 import Link from "next/link";
-import { useState } from "react";
 import { IoHomeOutline } from "react-icons/io5";
 import { LuFolderInput } from "react-icons/lu";
 import { HiOutlineOfficeBuilding } from "react-icons/hi";

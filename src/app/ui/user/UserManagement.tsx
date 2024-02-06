@@ -7,7 +7,6 @@ import {
   Tr,
   Th,
   Td,
-  TableCaption,
   TableContainer,
   Box,
   Text,
@@ -28,15 +27,15 @@ import Navbar from "../navbar/Navbar";
 export default function UserManagement() {
   const user = [
     { user_id: 1, username: "nuttanon_u", name: "Nuttanon Ungkachan", create_date: "01/01/1991", role: "Doctor" },
-    { user_id: 1, username: "nuttanon_u", name: "Nuttanon Ungkachan", create_date: "01/01/1991", role: "Doctor" },
-    { user_id: 1, username: "nuttanon_u", name: "Nuttanon Ungkachan", create_date: "01/01/1991", role: "Doctor" },
-    { user_id: 1, username: "nuttanon_u", name: "Nuttanon Ungkachan", create_date: "01/01/1991", role: "Doctor" },
-    { user_id: 1, username: "nuttanon_u", name: "Nuttanon Ungkachan", create_date: "01/01/1991", role: "Doctor" },
-    { user_id: 1, username: "nuttanon_u", name: "Nuttanon Ungkachan", create_date: "01/01/1991", role: "Doctor" },
-    { user_id: 1, username: "nuttanon_u", name: "Nuttanon Ungkachan", create_date: "01/01/1991", role: "Doctor" },
-    { user_id: 1, username: "nuttanon_u", name: "Nuttanon Ungkachan", create_date: "01/01/1991", role: "Doctor" },
-    { user_id: 1, username: "nuttanon_u", name: "Nuttanon Ungkachan", create_date: "01/01/1991", role: "Doctor" },
-    { user_id: 1, username: "nuttanon_u", name: "Nuttanon Ungkachan", create_date: "01/01/1991", role: "Doctor" },
+    { user_id: 2, username: "nuttanon_u", name: "Nuttanon Ungkachan", create_date: "01/01/1991", role: "Doctor" },
+    { user_id: 3, username: "nuttanon_u", name: "Nuttanon Ungkachan", create_date: "01/01/1991", role: "Doctor" },
+    { user_id: 4, username: "nuttanon_u", name: "Nuttanon Ungkachan", create_date: "01/01/1991", role: "Doctor" },
+    { user_id: 5, username: "nuttanon_u", name: "Nuttanon Ungkachan", create_date: "01/01/1991", role: "Doctor" },
+    { user_id: 6, username: "nuttanon_u", name: "Nuttanon Ungkachan", create_date: "01/01/1991", role: "Doctor" },
+    { user_id: 7, username: "nuttanon_u", name: "Nuttanon Ungkachan", create_date: "01/01/1991", role: "Doctor" },
+    { user_id: 8, username: "nuttanon_u", name: "Nuttanon Ungkachan", create_date: "01/01/1991", role: "Doctor" },
+    { user_id: 9, username: "nuttanon_u", name: "Nuttanon Ungkachan", create_date: "01/01/1991", role: "Doctor" },
+    { user_id: 10, username: "nuttanon_u", name: "Nuttanon Ungkachan", create_date: "01/01/1991", role: "Doctor" },
   ];
 
   return (

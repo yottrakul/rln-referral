@@ -13,15 +13,13 @@ import {
   InputLeftElement,
   chakra,
   Box,
-  Avatar,
   FormControl,
-  FormHelperText,
   InputRightElement,
 } from "@chakra-ui/react";
 import Link from "next/link";
 
 import { FaUserAlt, FaLock } from "react-icons/fa";
-import GoogleIcon from "@/app/_components/GoogleIcon";
+import GoogleIcon from "@/app/_components/icons/GoogleIcon";
 
 export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
