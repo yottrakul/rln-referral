@@ -7,7 +7,6 @@ import {
   Tr,
   Th,
   Td,
-  TableCaption,
   TableContainer,
   Box,
   Text,
@@ -23,7 +22,6 @@ import {
 } from "@chakra-ui/react";
 import { AddIcon, SearchIcon } from "@chakra-ui/icons";
 import { MdOutlineEdit } from "react-icons/md";
-import Navbar from "../navbar/Navbar";
 
 export default function UserManagement() {
   const user = [
@@ -40,10 +38,14 @@ export default function UserManagement() {
   ];
 
   return (
-    // <>user</>
     <Box p="6" bg="none" w="100%">
       <Box rounded="md" bg="none">
-        <Flex direction="row" mx="20" pt="6" alignItems="center">
+        <Flex
+          direction={{ base: "column", lg: "row" }}
+          mx={{ base: 10, lg: 20 }}
+          pt="6"
+          alignItems={{ base: "start", lg: "center" }}
+        >
           <Box>
             <Text fontWeight="Bold" fontSize="2xl">
               User Management
@@ -80,7 +82,7 @@ export default function UserManagement() {
             </Button>
           </Stack>
         </Flex>
-        <Flex direction="row" px={20} pt="4" pb="10">
+        <Flex direction="row" px={{ base: 10, lg: 20 }} pt="4" pb="10">
           <Box w="100%" boxShadow="lg">
             <TableContainer w={"100%"}>
               <Table variant="simple" size="sm">

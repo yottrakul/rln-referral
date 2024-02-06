@@ -1,5 +1,5 @@
-import { Flex, Icon, Menu, MenuButton, Text } from "@chakra-ui/react";
-import Link from "next/link";
+import { Flex, Icon, Menu, MenuButton, Text, Link } from "@chakra-ui/react";
+import nextLink from "next/link";
 import { type IconType } from "react-icons";
 
 interface NavItemProps {
@@ -7,28 +7,23 @@ interface NavItemProps {
   icon: IconType;
   title: string;
   active: boolean;
+  link: string;
 }
 
-export default function Navitem({ navSize, icon, title, active }: NavItemProps) {
+export default function Navitem({ navSize, icon, title, active, link }: NavItemProps) {
   return (
     <Flex mt={30} flexDir={"column"} w="100%" alignItems={navSize == "small" ? "center" : "flex-start"}>
       <Menu placement="right">
-        <MenuButton
-          _active={{ bg: "#f3f4f7" }}
-          _hover={{ bg: "#f3f4f7" }}
-          p={3}
-          borderRadius={8}
-          w={navSize == "large" ? "100%" : undefined}
-        >
-          <Link href="/backoffice_user">
+        <Link as={nextLink} href={link} w="100%">
+          <MenuButton _active={{ bg: "#f3f4f7" }} _hover={{ bg: "#f3f4f7" }} p={3} borderRadius={8} w="100%">
             <Flex alignItems={navSize == "small" ? "center" : "flex-start"}>
               <Icon fontSize="xl" as={icon} color={active ? "black" : "black"} />
               <Text ml={5} display={navSize == "small" ? "none" : "flex"}>
                 {title}
               </Text>
             </Flex>
-          </Link>
-        </MenuButton>
+          </MenuButton>
+        </Link>
       </Menu>
     </Flex>
   );
