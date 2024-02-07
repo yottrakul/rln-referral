@@ -7,6 +7,8 @@ import type * as z from "zod";
 import GoogleIcon from "../../icons/GoogleIcon";
 import { login } from "@/app/_actions/auth/login";
 import { useState, useTransition } from "react";
+import { signIn } from "next-auth/react";
+import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 
 export default function LoginForm() {
   const [isPending, startTransition] = useTransition();
@@ -29,6 +31,11 @@ export default function LoginForm() {
       setIsError(data?.error);
     });
   };
+
+  const onGoogleLogin = async () => {
+    await signIn("google", { callbackUrl: DEFAULT_LOGIN_REDIRECT });
+  };
+
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <FormControl isInvalid={Boolean(errors.email)}>
@@ -50,7 +57,14 @@ export default function LoginForm() {
       <Button isDisabled={isPending} w={"100%"} type="submit" mt={4} colorScheme="blue">
         Login
       </Button>
-      <Button isDisabled={isPending} variant="outline" w={"100%"} mt={4} colorScheme="blue">
+      <Button
+        onClick={() => onGoogleLogin()}
+        isDisabled={isPending}
+        variant="outline"
+        w={"100%"}
+        mt={4}
+        colorScheme="blue"
+      >
         <GoogleIcon boxSize={6} />
       </Button>
     </form>

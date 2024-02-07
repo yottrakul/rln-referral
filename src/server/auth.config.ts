@@ -1,12 +1,22 @@
 import Credentials from "next-auth/providers/credentials";
+import GoogleProvider from "next-auth/providers/google";
 import type { NextAuthConfig } from "next-auth";
 
 import { LoginSchema } from "@/app/_schemas";
 import { getUserByEmail } from "@/app/_actions/data/user";
 import bcrypt from "bcryptjs";
+import { env } from "@/env";
 
 export default {
+  pages: {
+    error: "/",
+  },
   providers: [
+    GoogleProvider({
+      clientId: env.GOOGLE_CLIENT_ID,
+      clientSecret: env.GOOGLE_CLIENT_SECRET,
+      allowDangerousEmailAccountLinking: true,
+    }),
     Credentials({
       async authorize(credentials) {
         const validatedFields = LoginSchema.safeParse(credentials);

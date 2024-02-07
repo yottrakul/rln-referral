@@ -68,7 +68,7 @@ model User {
     emailVerified DateTime?
     image         String?
     password      String? // @db.Text
-    role          Role
+    role          Role      @default(GUEST)
     accounts      Account[]
     sessions      Session[]
 }
@@ -98,4 +98,5 @@ enum Role {
     ADMIN
     PHYSICIAN
     MEDICAL_ASSISTANT
+    GUEST
 }
