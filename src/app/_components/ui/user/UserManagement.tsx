@@ -1,13 +1,6 @@
 "use client";
 import {
   Flex,
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
-  TableContainer,
   Box,
   Text,
   Stack,
@@ -17,11 +10,9 @@ import {
   InputRightElement,
   Select,
   Button,
-  IconButton,
   FormControl,
 } from "@chakra-ui/react";
 import { AddIcon, SearchIcon } from "@chakra-ui/icons";
-import { MdOutlineEdit } from "react-icons/md";
 import TableComponent from "../table/TableComponent";
 
 export default function UserManagement() {
