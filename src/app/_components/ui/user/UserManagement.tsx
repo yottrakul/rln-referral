@@ -22,8 +22,19 @@ import {
 } from "@chakra-ui/react";
 import { AddIcon, SearchIcon } from "@chakra-ui/icons";
 import { MdOutlineEdit } from "react-icons/md";
+import TableComponent from "../table/TableComponent";
 
 export default function UserManagement() {
+  const header = [
+    {
+      username: "username",
+      name: "ชื่อ-สกุล",
+      role: "role",
+      create_date: "วันที่สร้าง",
+      edit: "",
+    },
+  ];
+
   const user = [
     { user_id: 1, username: "nuttanon_u", name: "Nuttanon Ungkachan", create_date: "01/01/1991", role: "Doctor" },
     { user_id: 1, username: "nuttanon_u", name: "Nuttanon Ungkachan", create_date: "01/01/1991", role: "Doctor" },
@@ -82,52 +93,7 @@ export default function UserManagement() {
             </Button>
           </Stack>
         </Flex>
-        <Flex direction="row" px={{ base: 10, lg: 20 }} pt="4" pb="10">
-          <Box w="100%" boxShadow="lg">
-            <TableContainer w={"100%"}>
-              <Table variant="simple" size="sm">
-                <Thead bg={"#04BFDA"} height="14">
-                  <Tr>
-                    <Th fontSize={"xl"} fontWeight="semi-bold" color="white">
-                      <Text>username</Text>
-                    </Th>
-                    <Th fontSize={"xl"} fontWeight="semi-bold" color="white">
-                      ชื่อ-สกุล
-                    </Th>
-                    <Th fontSize={"xl"} fontWeight="semi-bold" color="white">
-                      วันที่สร้าง
-                    </Th>
-                    <Th fontSize={"xl"} fontWeight="semi-bold" color="white">
-                      ตำแหน่ง
-                    </Th>
-                    <Th fontSize={"xl"} fontWeight="semi-bold" color="white"></Th>
-                  </Tr>
-                </Thead>
-                <Tbody>
-                  {user.map((u) => (
-                    <Tr key={u.user_id} _hover={{ bg: "gray.50" }} style={{ maxHeight: "5vh" }} px="4">
-                      <Td fontSize={"lg"} fontWeight="medium" color="black">
-                        {u.username}
-                      </Td>
-                      <Td fontSize={"lg"} fontWeight="medium" color="black">
-                        {u.name}
-                      </Td>
-                      <Td fontSize={"lg"} fontWeight="medium" color="black">
-                        {u.create_date}
-                      </Td>
-                      <Td fontSize={"lg"} fontWeight="medium" color="black">
-                        {u.role}
-                      </Td>
-                      <Td fontSize={"lg"} fontWeight="medium" color="black">
-                        <IconButton aria-label="Edit" isRound={true} icon={<MdOutlineEdit />} />
-                      </Td>
-                    </Tr>
-                  ))}
-                </Tbody>
-              </Table>
-            </TableContainer>
-          </Box>
-        </Flex>
+        <TableComponent header={header} user={user} />
       </Box>
     </Box>
   );
