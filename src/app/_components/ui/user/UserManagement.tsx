@@ -40,52 +40,50 @@ export default function UserManagement() {
   ];
 
   return (
-    <Box p="6" bg="none" w="100%">
-      <Box rounded="md" bg="none">
-        <Flex
-          direction={{ base: "column", lg: "row" }}
-          mx={{ base: 10, lg: 20 }}
-          pt="6"
-          alignItems={{ base: "start", lg: "center" }}
-        >
-          <Box>
-            <Text fontWeight="Bold" fontSize="2xl">
-              User Management
+    <Box rounded="md" bg="none">
+      <Flex
+        direction={{ base: "column", lg: "row" }}
+        mx={{ base: 10, lg: 20 }}
+        pt="6"
+        alignItems={{ base: "start", lg: "center" }}
+      >
+        <Box>
+          <Text fontWeight="Bold" fontSize="2xl">
+            User Management
+          </Text>
+        </Box>
+        <Spacer />
+        {/* filter */}
+        <Stack direction="row">
+          <FormControl width="30">
+            <Select placeholder="ตำแหน่งทั้งหมด">
+              <option value="option1">Doctor</option>
+              <option value="option2">Medic</option>
+            </Select>
+          </FormControl>
+          <FormControl width="30">
+            <InputGroup>
+              <Input variant="outline" placeholder="Username/ชื่อ-สกุล" />
+              <InputRightElement color={"gray.500"}>
+                <SearchIcon />
+              </InputRightElement>
+            </InputGroup>
+          </FormControl>
+          <Button
+            width="30"
+            rightIcon={<AddIcon />}
+            color={"white"}
+            _hover={{ bg: "green.500" }}
+            bg="#00b300"
+            shadow="lg"
+          >
+            <Text color={"white"} fontSize={"medium"}>
+              เพิ่ม
             </Text>
-          </Box>
-          <Spacer />
-          {/* filter */}
-          <Stack direction="row">
-            <FormControl width="30">
-              <Select placeholder="ตำแหน่งทั้งหมด">
-                <option value="option1">Doctor</option>
-                <option value="option2">Medic</option>
-              </Select>
-            </FormControl>
-            <FormControl width="30">
-              <InputGroup>
-                <Input variant="outline" placeholder="Username/ชื่อ-สกุล" />
-                <InputRightElement color={"gray.500"}>
-                  <SearchIcon />
-                </InputRightElement>
-              </InputGroup>
-            </FormControl>
-            <Button
-              width="30"
-              rightIcon={<AddIcon />}
-              color={"white"}
-              _hover={{ bg: "green.500" }}
-              bg="#00b300"
-              shadow="lg"
-            >
-              <Text color={"white"} fontSize={"medium"}>
-                เพิ่ม
-              </Text>
-            </Button>
-          </Stack>
-        </Flex>
-        <TableComponent header={header} user={user} />
-      </Box>
+          </Button>
+        </Stack>
+      </Flex>
+      <TableComponent header={header} user={user} />
     </Box>
   );
 }

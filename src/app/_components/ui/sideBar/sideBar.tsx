@@ -76,13 +76,12 @@ export default function Navbar() {
   return (
     <>
       <Flex
-        display={{ base: "none", lg: "flex" }}
+        display={{ base: "none", sm: "none", md: "flex", lg: "flex" }}
         pos="sticky"
         left="0"
         minH="100vh"
         boxShadow="lg"
         w={navSize == "small" ? "75px" : "250px"}
-        transition={`width 0.25s ease-in-out, border-radius 0.25s ease-in-out`}
         flexDir="column"
         justifyContent="space-between"
       >
@@ -115,7 +114,7 @@ export default function Navbar() {
               <MenuButton bg="none" _hover={{ bg: "#f3f4f7" }} as={Button} rightIcon={<ChevronDownIcon />}>
                 <Flex alignItems={navSize == "small" ? "center" : "flex-start"}>
                   <Icon fontSize="xl" as={HiOutlineOfficeBuilding} color="black" />
-                  <Text ml={5} display={navSize == "small" ? "none" : "flex"} fontWeight="medium">
+                  <Text ml={4} display={navSize == "small" ? "none" : "flex"} fontWeight="medium">
                     Back Office
                   </Text>
                 </Flex>
@@ -134,14 +133,7 @@ export default function Navbar() {
             </Menu>
           </Flex>
         </Flex>
-        <Flex
-          p="5%"
-          w="100%"
-          flexDir="column"
-          alignItems={navSize == "small" ? "center" : "flex-start"}
-          mb={4}
-          transition={`width 0.5s ease-in-out, display 0.5s ease-in-out`}
-        >
+        <Flex p="5%" w="100%" flexDir="column" alignItems={navSize == "small" ? "center" : "flex-start"} mb={4}>
           <Divider display={navSize == "small" ? "none" : "flex"} />
           <Flex mt={4} align={"center"}>
             <Avatar size={"sm"} />

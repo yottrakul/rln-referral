@@ -65,9 +65,9 @@ export default function Topbar() {
     },
   ];
 
-  return isMobile == true ? (
+  return (
     <>
-      <Flex p={4}>
+      <Flex p={4} display={{ base: "flex", sm: "flex", md: "none", lg: "none" }}>
         <IconButton
           aria-label={"hamburger"}
           bg="none"
@@ -77,7 +77,7 @@ export default function Topbar() {
           onClick={onOpen}
         />
       </Flex>
-      <Drawer placement="left" onClose={onClose} isOpen={isOpen} size={"sm"}>
+      <Drawer placement="left" onClose={onClose} isOpen={isOpen} size={"md"}>
         <DrawerOverlay />
         <DrawerContent>
           <DrawerCloseButton />
@@ -100,7 +100,12 @@ export default function Topbar() {
                   {backOfficeItem.map((e) => {
                     return (
                       <MenuItem key={e.title}>
-                        <Link href={e.link}>
+                        <Link
+                          href={e.link}
+                          onClick={() => {
+                            onClose;
+                          }}
+                        >
                           <Text>{e.title}</Text>
                         </Link>
                       </MenuItem>
@@ -113,7 +118,5 @@ export default function Topbar() {
         </DrawerContent>
       </Drawer>
     </>
-  ) : (
-    <></>
   );
 }
