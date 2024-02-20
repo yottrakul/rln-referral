@@ -40,10 +40,10 @@ export default function UserManagement() {
   ];
 
   return (
-    <Box rounded="md" bg="none">
+    <Flex flexDirection={"column"} w={"full"}>
       <Flex
         direction={{ base: "column", lg: "row" }}
-        mx={{ base: 10, lg: 20 }}
+        px={{ base: 10, lg: 20 }}
         pt="6"
         alignItems={{ base: "start", lg: "center" }}
       >
@@ -84,6 +84,6 @@ export default function UserManagement() {
         </Stack>
       </Flex>
       <TableComponent header={header} user={user} />
-    </Box>
+    </Flex>
   );
 }
