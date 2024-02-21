@@ -1,3 +1,9 @@
+import { Flex, Icon, Menu, MenuButton, Link, Box } from "@chakra-ui/react";
+
 export default function Dashboard() {
-  return <div>Dashboard</div>;
+  return (
+    <Box py={"5"} px={"12"} w={"100%"}>
+      Dashboard
+    </Box>
+  );
 }

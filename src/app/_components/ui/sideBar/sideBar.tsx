@@ -16,19 +16,24 @@ import {
   useMediaQuery,
   Tooltip,
   Link,
+  Box,
+  Hide,
+  Image,
 } from "@chakra-ui/react";
-import nextLink from "next/link";
-import { IoHomeOutline } from "react-icons/io5";
+import * as io5 from "react-icons/io5";
 import { LuFolderInput } from "react-icons/lu";
-import { HiOutlineOfficeBuilding } from "react-icons/hi";
-import { FaUserFriends } from "react-icons/fa";
+import * as fa6 from "react-icons/fa6";
+import * as md from "react-icons/md";
+import { TbAmbulance } from "react-icons/tb";
+import { MdDriveFileMoveOutline } from "react-icons/md";
 import { useEffect, useState } from "react";
 import Navitem from "../navitem/Navitem";
 
 export default function Navbar() {
-  const [navSize, changenavSize] = useState("small");
+  const [active, changeActive] = useState(location.pathname);
+  const [navSize, changenavSize] = useState("large");
 
-  const [isMobile] = useMediaQuery("(max-width: 480px)", {
+  const [isMobile] = useMediaQuery("(max-width: 1000px)", {
     ssr: true,
     fallback: false,
   });
@@ -44,19 +49,37 @@ export default function Navbar() {
   const navItem = [
     {
       title: "Dashboard",
-      icon: IoHomeOutline,
+      icon: io5.IoHomeOutline,
       navSize: navSize,
       link: "/dashboard",
     },
     {
-      title: "Refferal",
+      title: "รายการคำขอ",
       icon: LuFolderInput,
       navSize: navSize,
-      link: "/dashboard",
+      link: "/backoffice_user",
     },
     {
-      title: "Consult",
-      icon: FaUserFriends,
+      title: "ค้นหารายชื่อ",
+      icon: fa6.FaMagnifyingGlass,
+      navSize: navSize,
+      link: "/consult",
+    },
+    {
+      title: "ประวัติ",
+      icon: md.MdAccessTime,
+      navSize: navSize,
+      link: "/consult",
+    },
+    {
+      title: "คู่มือการใช้งาน",
+      icon: io5.IoDocumentTextOutline,
+      navSize: navSize,
+      link: "/consult",
+    },
+    {
+      title: "จัดการผู้ใช้",
+      icon: io5.IoPersonOutline,
       navSize: navSize,
       link: "/consult",
     },
@@ -74,23 +97,39 @@ export default function Navbar() {
   ];
 
   return (
-    <>
+    <Box
+      h="100%"
+      pos={{ base: "fixed", md: "sticky" }}
+      left={{ base: "-75px", md: "0px" }}
+      top="0px"
+      transition={`left 0.25s ease-in-out`}
+    >
       <Flex
-        display={{ base: "none", lg: "flex" }}
-        pos="sticky"
-        left="0"
         minH="100vh"
         boxShadow="lg"
+        bg="white"
         w={navSize == "small" ? "75px" : "250px"}
-        transition={`width 0.25s ease-in-out, border-radius 0.25s ease-in-out`}
+        transition={`width 0.25s ease-in-out`}
         flexDir="column"
         justifyContent="space-between"
+        overflow="hidden"
+        _hover={{ width: "250px" }}
       >
-        <Flex p="5" flexDir="column" alignItems={navSize == "small" ? "center" : "flex-start"} as="nav">
-          <IconButton
+        <Flex p="4" flexDir="column" alignItems="flex-start" as="nav">
+          <Flex mb={navSize == "small" ? "2" : "5"} ml={navSize == "small" ? "" : "2"} transition={`margin 0.25s`}>
+            <Icon as={TbAmbulance} boxSize={8} mt={4} />
+            <Icon as={MdDriveFileMoveOutline} boxSize={4} mt={2} />
+            <Box w={"150px"} ml={3} style={{ fontWeight: "500" }}>
+              Refferral & <br />
+              &nbsp; Consult System +
+            </Box>
+          </Flex>
+
+          {/* <IconButton
             aria-label={"hamburger"}
+            w="43px"
             bg="none"
-            _hover={{ bg: "none" }}
+            _hover={{ bg: "#f3f4f7" }}
             icon={<HamburgerIcon />}
             color="black"
             onClick={() => {
@@ -100,52 +139,52 @@ export default function Navbar() {
                 changenavSize("small");
               }
             }}
-          />
-          {navItem.map((e) => {
-            return <Navitem key={e.title} navSize={e.navSize} icon={e.icon} title={e.title} link={e.link} active />;
-          })}
-          <Flex
-            mt={30}
-            flexDir={"column"}
-            w="100%"
-            alignItems={navSize == "small" ? "center" : "flex-start"}
-            alignContent="center"
+          /> */}
+
+          <Box
+            w={navSize == "small" ? "0px" : "100%"}
+            h={navSize == "small" ? "0px" : "40px"}
+            transition={`width 0.25s,height 0.25s 0.25s`}
+            overflow={"hidden"}
           >
-            <Menu>
-              <MenuButton bg="none" _hover={{ bg: "#f3f4f7" }} as={Button} rightIcon={<ChevronDownIcon />}>
-                <Flex alignItems={navSize == "small" ? "center" : "flex-start"}>
-                  <Icon fontSize="xl" as={HiOutlineOfficeBuilding} color="black" />
-                  <Text ml={5} display={navSize == "small" ? "none" : "flex"} fontWeight="medium">
-                    Back Office
-                  </Text>
-                </Flex>
-              </MenuButton>
-              <MenuList>
-                {backOfficeItem.map((e) => {
-                  return (
-                    <Link key={e.title} as={nextLink} href={e.link}>
-                      <MenuItem>
-                        <Text>{e.title}</Text>
-                      </MenuItem>
-                    </Link>
-                  );
-                })}
-              </MenuList>
-            </Menu>
-          </Flex>
+            <Button mx={2} px={6} bg={"#9E57DA"} color={"white"} rightIcon={<fa6.FaPlus />}>
+              สร้างคำขอ
+            </Button>
+          </Box>
+
+          {navItem.map((e) => {
+            return (
+              <Box
+                key={e.title}
+                w="100%"
+                onClick={() => {
+                  changeActive(e.link);
+                }}
+              >
+                <Navitem
+                  key={e.title}
+                  navSize={e.navSize}
+                  icon={e.icon}
+                  title={e.title}
+                  link={e.link}
+                  active={active}
+                />
+              </Box>
+            );
+          })}
         </Flex>
+
         <Flex
           p="5%"
           w="100%"
           flexDir="column"
           alignItems={navSize == "small" ? "center" : "flex-start"}
-          mb={4}
           transition={`width 0.5s ease-in-out, display 0.5s ease-in-out`}
         >
           <Divider display={navSize == "small" ? "none" : "flex"} />
           <Flex mt={4} align={"center"}>
-            <Avatar size={"sm"} />
-            <Flex flexDir={"column"} m={4} display={navSize == "small" ? "none" : "flex"}>
+            <Avatar size={"sm"} mb={navSize == "small" ? "4" : ""} />
+            <Flex flexDir={"column"} mx={4} display={navSize == "small" ? "none" : "flex"}>
               <Tooltip label="กรกฎ กิ่งแก้วกรกฎ กิ่งแก้วกรกฎ กิ่งแก้วกรกฎ กิ่งแก้ว" aria-label="A tooltip">
                 <Heading fontSize={"lg"} noOfLines={1}>
                   กรกฎ กิ่งแก้วกรกฎ กิ่งแก้วกรกฎ กิ่งแก้วกรกฎ กิ่งแก้ว
@@ -156,6 +195,6 @@ export default function Navbar() {
           </Flex>
         </Flex>
       </Flex>
-    </>
+    </Box>
   );
 }
