@@ -26,7 +26,7 @@ import { useEffect, useState } from "react";
 import Navitem from "../navitem/Navitem";
 
 export default function Navbar() {
-  const [navSize, changenavSize] = useState("small");
+  const [navSize, changenavSize] = useState("large");
 
   const [isMobile] = useMediaQuery("(max-width: 480px)", {
     ssr: true,
@@ -76,21 +76,23 @@ export default function Navbar() {
   return (
     <>
       <Flex
-        display={{ base: "none", lg: "flex" }}
+        display={{ base: "none", sm: "none", md: "flex", lg: "flex" }}
+        bg={""}
         pos="sticky"
         left="0"
         minH="100vh"
         boxShadow="lg"
         w={navSize == "small" ? "75px" : "250px"}
-        transition={`width 0.25s ease-in-out, border-radius 0.25s ease-in-out`}
         flexDir="column"
         justifyContent="space-between"
       >
-        <Flex p="5" flexDir="column" alignItems={navSize == "small" ? "center" : "flex-start"} as="nav">
+        <Flex px={4} flexDir="column" alignItems={"flex-start"} as="nav">
           <IconButton
+            mt={5}
+            px={3}
             aria-label={"hamburger"}
             bg="none"
-            _hover={{ bg: "none" }}
+            _hover={{ bg: "#F3f4f7" }}
             icon={<HamburgerIcon />}
             color="black"
             onClick={() => {
@@ -105,21 +107,30 @@ export default function Navbar() {
             return <Navitem key={e.title} navSize={e.navSize} icon={e.icon} title={e.title} link={e.link} active />;
           })}
           <Flex
-            mt={30}
+            mt={5}
             flexDir={"column"}
             w="100%"
             alignItems={navSize == "small" ? "center" : "flex-start"}
             alignContent="center"
           >
             <Menu>
-              <MenuButton bg="none" _hover={{ bg: "#f3f4f7" }} as={Button} rightIcon={<ChevronDownIcon />}>
-                <Flex alignItems={navSize == "small" ? "center" : "flex-start"}>
-                  <Icon fontSize="xl" as={HiOutlineOfficeBuilding} color="black" />
-                  <Text ml={5} display={navSize == "small" ? "none" : "flex"} fontWeight="medium">
-                    Back Office
-                  </Text>
-                </Flex>
-              </MenuButton>
+              <Flex>
+                <MenuButton px={3} bg="none" _hover={{ bg: "#f3f4f7" }} as={Button} w={"full"}>
+                  <Flex alignItems={"center"}>
+                    <Icon
+                      my={2}
+                      mr={navSize == "small" ? 0 : 5}
+                      fontSize="xl"
+                      as={HiOutlineOfficeBuilding}
+                      color="black"
+                    />
+                    <Text display={navSize == "small" ? "none" : "flex"} fontWeight="medium">
+                      Back Office
+                    </Text>
+                    <Icon my={2} ml={navSize == "small" ? 0 : 2} fontSize="xl" as={ChevronDownIcon} color="black" />
+                  </Flex>
+                </MenuButton>
+              </Flex>
               <MenuList>
                 {backOfficeItem.map((e) => {
                   return (
@@ -134,14 +145,7 @@ export default function Navbar() {
             </Menu>
           </Flex>
         </Flex>
-        <Flex
-          p="5%"
-          w="100%"
-          flexDir="column"
-          alignItems={navSize == "small" ? "center" : "flex-start"}
-          mb={4}
-          transition={`width 0.5s ease-in-out, display 0.5s ease-in-out`}
-        >
+        <Flex p="5%" w="100%" flexDir="column" alignItems={navSize == "small" ? "center" : "flex-start"} mb={4}>
           <Divider display={navSize == "small" ? "none" : "flex"} />
           <Flex mt={4} align={"center"}>
             <Avatar size={"sm"} />

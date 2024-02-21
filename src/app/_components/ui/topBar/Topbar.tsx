@@ -65,9 +65,9 @@ export default function Topbar() {
     },
   ];
 
-  return isMobile == true ? (
+  return (
     <>
-      <Flex p={4}>
+      <Flex p={4} display={{ base: "flex", sm: "flex", md: "none", lg: "none" }}>
         <IconButton
           aria-label={"hamburger"}
           bg="none"
@@ -77,21 +77,35 @@ export default function Topbar() {
           onClick={onOpen}
         />
       </Flex>
-      <Drawer placement="left" onClose={onClose} isOpen={isOpen} size={"sm"}>
+      <Drawer placement="left" onClose={onClose} isOpen={isOpen} size={"md"}>
         <DrawerOverlay />
         <DrawerContent>
           <DrawerCloseButton />
           <DrawerHeader></DrawerHeader>
           <DrawerBody>
-            {navItem.map((e) => {
-              return <Navitem key={e.title} navSize={e.navSize} icon={e.icon} title={e.title} link={e.link} active />;
-            })}
-            <Flex mt={30} flexDir={"column"} w="100%" alignItems="flex-start" alignContent="center">
+            <Flex
+              flexDirection={"column"}
+              onClick={() => {
+                onClose();
+              }}
+            >
+              {navItem.map((e) => {
+                return <Navitem key={e.title} navSize={e.navSize} icon={e.icon} title={e.title} link={e.link} active />;
+              })}
+            </Flex>
+            <Flex mt={5} flexDir={"column"} w="100%" alignItems="flex-start" alignContent="center">
               <Menu>
-                <MenuButton bg="none" _hover={{ bg: "#f3f4f7" }} w="100%" as={Button} rightIcon={<ChevronDownIcon />}>
-                  <Flex alignItems="flex-start">
-                    <Icon fontSize="xl" as={HiOutlineOfficeBuilding} color="black" />
-                    <Text ml={5} display="flex" fontWeight="medium">
+                <MenuButton
+                  px={3}
+                  bg="none"
+                  _hover={{ bg: "#f3f4f7" }}
+                  w="100%"
+                  as={Button}
+                  rightIcon={<ChevronDownIcon />}
+                >
+                  <Flex alignItems="center">
+                    <Icon my={2} mr={5} fontSize="xl" as={HiOutlineOfficeBuilding} color="black" />
+                    <Text display={"flex"} fontWeight="medium">
                       Back Office
                     </Text>
                   </Flex>
@@ -99,7 +113,12 @@ export default function Topbar() {
                 <MenuList>
                   {backOfficeItem.map((e) => {
                     return (
-                      <MenuItem key={e.title}>
+                      <MenuItem
+                        key={e.title}
+                        onClick={() => {
+                          onClose();
+                        }}
+                      >
                         <Link href={e.link}>
                           <Text>{e.title}</Text>
                         </Link>
@@ -113,7 +132,5 @@ export default function Topbar() {
         </DrawerContent>
       </Drawer>
     </>
-  ) : (
-    <></>
   );
 }
