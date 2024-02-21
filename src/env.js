@@ -8,7 +8,7 @@ export const env = createEnv({
    * Specify your server-side environment variables schema here. This way you can ensure the app
    * isn't built with invalid env vars.
    */
-  server: {
+  /* server: {
     DATABASE_URL: z
       .string()
       .url()
@@ -22,7 +22,7 @@ export const env = createEnv({
       // VERCEL_URL doesn't include `https` so it cant be validated as a URL
       process.env.VERCEL ? z.string() : z.string().url()
     ),
-  },
+  }, */
 
   /**
    * Specify your client-side environment variables schema here. This way you can ensure the app
