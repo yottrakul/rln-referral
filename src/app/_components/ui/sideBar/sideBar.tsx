@@ -113,7 +113,7 @@ export default function Navbar() {
         flexDir="column"
         justifyContent="space-between"
         overflow="hidden"
-        _hover={{ width: "250px" }}
+        className="nav"
       >
         <Flex p="4" flexDir="column" alignItems="flex-start" as="nav">
           <Flex mb={navSize == "small" ? "2" : "5"} ml={navSize == "small" ? "" : "2"} transition={`margin 0.25s`}>
@@ -144,8 +144,9 @@ export default function Navbar() {
           <Box
             w={navSize == "small" ? "0px" : "100%"}
             h={navSize == "small" ? "0px" : "40px"}
-            transition={`width 0.25s,height 0.25s 0.25s`}
+            transition={`width 0.25s,height 0.25s`}
             overflow={"hidden"}
+            className="btn"
           >
             <Button mx={2} px={6} bg={"#9E57DA"} color={"white"} rightIcon={<fa6.FaPlus />}>
               สร้างคำขอ
@@ -184,7 +185,7 @@ export default function Navbar() {
           <Divider display={navSize == "small" ? "none" : "flex"} />
           <Flex mt={4} align={"center"}>
             <Avatar size={"sm"} mb={navSize == "small" ? "4" : ""} />
-            <Flex flexDir={"column"} mx={4} display={navSize == "small" ? "none" : "flex"}>
+            <Flex flexDir={"column"} mx={4} display={navSize == "small" ? "none" : "flex"} className="name">
               <Tooltip label="กรกฎ กิ่งแก้วกรกฎ กิ่งแก้วกรกฎ กิ่งแก้วกรกฎ กิ่งแก้ว" aria-label="A tooltip">
                 <Heading fontSize={"lg"} noOfLines={1}>
                   กรกฎ กิ่งแก้วกรกฎ กิ่งแก้วกรกฎ กิ่งแก้วกรกฎ กิ่งแก้ว
