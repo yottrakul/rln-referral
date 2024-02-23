@@ -1,3 +1,5 @@
+import { Box } from "@chakra-ui/react";
+
 export default function Dashboard() {
-  return <main>dashboard</main>;
+  return <Box w={"full"}>Dashboard</Box>;
 }
