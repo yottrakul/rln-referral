@@ -1,18 +1,37 @@
 "use client";
 import { LoginSchema } from "@/app/_schemas";
-import { FormControl, FormLabel, Input, Button, FormErrorMessage, Box, Alert, AlertIcon } from "@chakra-ui/react";
+import {
+  FormControl,
+  FormLabel,
+  Input,
+  Button,
+  FormErrorMessage,
+  Alert,
+  AlertIcon,
+  Spinner,
+  VStack,
+  Card,
+  CardBody,
+  Divider,
+  AbsoluteCenter,
+  Box,
+  Text,
+  HStack,
+} from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import type * as z from "zod";
 import GoogleIcon from "../../icons/GoogleIcon";
-import { login } from "@/app/_actions/auth/login";
 import { useState, useTransition } from "react";
 import { signIn } from "next-auth/react";
 import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
+import { useRouter } from "next/navigation";
 
 export default function LoginForm() {
   const [isPending, startTransition] = useTransition();
-  const [error, setIsError] = useState<string | undefined>("");
+  const [errorMsg, setErrorMsg] = useState("");
+  const router = useRouter();
+
   const {
     handleSubmit,
     register,
@@ -25,48 +44,84 @@ export default function LoginForm() {
     },
   });
   const onSubmit = (value: z.infer<typeof LoginSchema>) => {
-    setIsError("");
+    setErrorMsg("");
     startTransition(async () => {
-      const data = await login(value);
-      setIsError(data?.error);
+      const res = await signIn("credentials", { email: value.email, password: value.password, redirect: false });
+      if (res?.error) {
+        switch (res.error) {
+          case "CredentialsSignin":
+            setErrorMsg("Invalid email or password");
+            break;
+          case "OAuthSignin":
+            setErrorMsg("Invalid Google account");
+            break;
+          case "OAuthCallback":
+            setErrorMsg("Google account has been disabled");
+            break;
+          default:
+            setErrorMsg("Something went wrong. Please try again later.");
+        }
+      } else {
+        router.push(DEFAULT_LOGIN_REDIRECT);
+      }
     });
   };
 
   const onGoogleLogin = async () => {
-    await signIn("google", { callbackUrl: DEFAULT_LOGIN_REDIRECT });
+    startTransition(async () => {
+      await signIn("google", { callbackUrl: DEFAULT_LOGIN_REDIRECT });
+    });
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <FormControl isInvalid={Boolean(errors.email)}>
-        <FormLabel>Email address</FormLabel>
-        <Input {...register("email")} type="email" />
-        {errors.email && <FormErrorMessage>{errors.email.message}</FormErrorMessage>}
-      </FormControl>
-      <FormControl isInvalid={Boolean(errors.password)}>
-        <FormLabel mt={4}>Password</FormLabel>
-        <Input {...register("password")} type="password" />
-        {errors.password && <FormErrorMessage>{errors.password.message}</FormErrorMessage>}
-      </FormControl>
-      {error && (
-        <Alert mt={4} status="error">
-          <AlertIcon />
-          {error}
-        </Alert>
-      )}
-      <Button isDisabled={isPending} w={"100%"} type="submit" mt={4} colorScheme="blue">
-        Login
-      </Button>
-      <Button
-        onClick={() => onGoogleLogin()}
-        isDisabled={isPending}
-        variant="outline"
-        w={"100%"}
-        mt={4}
-        colorScheme="blue"
-      >
-        <GoogleIcon boxSize={6} />
-      </Button>
-    </form>
+    <Card borderRadius={"28px"} p={5}>
+      <CardBody>
+        <Text fontSize={"4xl"} fontWeight={"400"}>
+          RLN Login
+        </Text>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <VStack spacing={4}>
+            <FormControl isInvalid={Boolean(errors.email)}>
+              <FormLabel>Email address</FormLabel>
+              <Input {...register("email")} type="email" />
+              {errors.email && <FormErrorMessage>{errors.email.message}</FormErrorMessage>}
+            </FormControl>
+            <FormControl isInvalid={Boolean(errors.password)}>
+              <FormLabel>Password</FormLabel>
+              <Input {...register("password")} type="password" />
+              {errors.password && <FormErrorMessage>{errors.password.message}</FormErrorMessage>}
+            </FormControl>
+            {errorMsg && (
+              <Alert status="error">
+                <AlertIcon />
+                {errorMsg}
+              </Alert>
+            )}
+            <Button isDisabled={isPending} w={"100%"} type="submit" colorScheme="blue">
+              {isPending ? <Spinner size="sm" /> : "Login"}
+            </Button>
+            <Box position="relative" py={4} w="100%">
+              <Divider />
+              <AbsoluteCenter bg="white" px="4" color="#959595">
+                Or
+              </AbsoluteCenter>
+            </Box>
+
+            <Button onClick={() => onGoogleLogin()} isDisabled={isPending} variant="outline" w={"100%"}>
+              {isPending ? (
+                <Spinner size="sm" />
+              ) : (
+                <HStack>
+                  <GoogleIcon boxSize={6} />
+                  <Text fontWeight={"400"} color={"gray"}>
+                    Sign in with google
+                  </Text>
+                </HStack>
+              )}
+            </Button>
+          </VStack>
+        </form>
+      </CardBody>
+    </Card>
   );
 }

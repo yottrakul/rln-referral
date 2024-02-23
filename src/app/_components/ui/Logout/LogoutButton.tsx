@@ -1,14 +1,10 @@
 "use client";
 import { Button } from "@chakra-ui/react";
-import { logout } from "@/app/_actions/auth/logout";
+import { signOut } from "next-auth/react";
 
 function LogoutButton() {
-  const handleLogout = async () => {
-    await logout();
-  };
-
   return (
-    <Button colorScheme="red" onClick={handleLogout}>
+    <Button colorScheme="red" onClick={() => signOut()}>
       Logout
     </Button>
   );

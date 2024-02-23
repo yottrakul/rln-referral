@@ -1,6 +1,7 @@
 import "@/styles/globals.css";
 
 import { ChakraUIProviders } from "./_components/providers/ChakraProvider";
+import AuthProviders from "./_components/providers/AuthProvider";
 
 export const metadata = {
   title: "RCS",
@@ -12,7 +13,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body>
-        <ChakraUIProviders>{children}</ChakraUIProviders>
+        <AuthProviders>
+          <ChakraUIProviders>{children}</ChakraUIProviders>
+        </AuthProviders>
       </body>
     </html>
   );
