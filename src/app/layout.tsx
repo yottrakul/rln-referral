@@ -1,7 +1,7 @@
 import "@/styles/globals.css";
 
-import { ChakraUIProviders } from "./_components/providers/ChakraProvider";
-import AuthProviders from "./_components/providers/AuthProvider";
+import { ChakraUIProviders } from "@/app/_components/providers/ChakraProvider";
+import AuthProviders from "@/app/_components/providers/AuthProvider";
 
 export const metadata = {
   title: "RCS",
