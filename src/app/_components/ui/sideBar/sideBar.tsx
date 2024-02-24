@@ -28,9 +28,11 @@ import { TbAmbulance } from "react-icons/tb";
 import { MdDriveFileMoveOutline } from "react-icons/md";
 import { useEffect, useState } from "react";
 import Navitem from "../navitem/Navitem";
+import { usePathname, useRouter } from "next/navigation";
 
 export default function Navbar() {
-  const [active, changeActive] = useState(location.pathname);
+  const router = usePathname();
+  const [active, changeActive] = useState(router);
   const [navSize, changenavSize] = useState("large");
 
   const [isMobile] = useMediaQuery("(max-width: 1000px)", {

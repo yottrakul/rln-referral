@@ -84,7 +84,9 @@ export default function Topbar() {
           <DrawerHeader></DrawerHeader>
           <DrawerBody>
             {navItem.map((e) => {
-              return <Navitem key={e.title} navSize={e.navSize} icon={e.icon} title={e.title} link={e.link} active />;
+              return (
+                <Navitem key={e.title} navSize={e.navSize} icon={e.icon} title={e.title} link={e.link} active="test" />
+              );
             })}
             <Flex mt={30} flexDir={"column"} w="100%" alignItems="flex-start" alignContent="center">
               <Menu>
