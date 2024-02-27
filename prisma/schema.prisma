@@ -5,6 +5,13 @@ generator client {
     provider = "prisma-client-js"
 }
 
+generator zod {
+    provider           = "zod-prisma-types"
+    createInputTypes   = false // default is true
+    createPartialTypes = true // default is false
+    output             = "../src/app/_schemas/generated/zod"
+}
+
 // datasource db {
 //     provider = "sqlite"
 //     // NOTE: When using mysql or sqlserver, uncomment the @db.Text annotations in model Account below

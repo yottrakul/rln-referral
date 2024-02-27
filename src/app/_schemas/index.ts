@@ -1,9 +1,17 @@
 import * as z from "zod";
-import { Role } from "@prisma/client";
+import { Role, Status } from "@prisma/client";
 
-// const userRole = ["ADMIN", "PHYSICIAN", "MEDICAL_ASSISTANT"] as const;
+/////////////////////////////////////////
+// ENUMS
+/////////////////////////////////////////
 
-export const UserRoleSchema = z.nativeEnum(Role);
+export const RoleSchema = z.nativeEnum(Role);
+
+export type RoleType = `${z.infer<typeof RoleSchema>}`;
+
+export const StatusSchema = z.nativeEnum(Status);
+
+export type StatusType = `${z.infer<typeof StatusSchema>}`;
 
 export const LoginSchema = z.object({
   email: z.string().email(),

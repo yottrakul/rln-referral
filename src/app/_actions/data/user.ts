@@ -1,5 +1,6 @@
 "use server";
 import { db } from "@/server/db";
+import { Patient_infoSchema } from "@/app/_schemas/generated/zod";
 
 export const getUserByEmail = async (email: string) => {
   try {
@@ -36,4 +37,21 @@ export const getUserAll = async () => {
   } catch (error) {
     return null;
   }
+};
+
+export const createUser = async (data: unknown) => {
+  const validData = Patient_infoSchema.omit({ id: true }).safeParse(data);
+
+  if (!validData.success) {
+    return {
+      error: validData.error.flatten(),
+      success: false,
+    };
+  }
+
+  console.log(validData.data);
+  return {
+    success: true,
+    msg: "User created",
+  };
 };
