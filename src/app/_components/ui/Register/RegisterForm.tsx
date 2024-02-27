@@ -92,6 +92,11 @@ const RegisterForm = () => {
         {/* {errors.role && <div>hello</div>} */}
         {errors.role && <FormErrorMessage>{errors.role.message}</FormErrorMessage>}
       </FormControl>
+      <FormControl isInvalid={Boolean(errors.hospitalId)}>
+        <FormLabel mt={4}>HospitalID</FormLabel>
+        <Input {...register("hospitalId")} />
+        {errors.hospitalId && <FormErrorMessage>{errors.hospitalId.message}</FormErrorMessage>}
+      </FormControl>
       {success && (
         <Alert mt={4} status="success">
           <AlertIcon />

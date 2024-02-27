@@ -25,4 +25,5 @@ export const RegisterSchema = z.object({
   role: z.nativeEnum(Role, {
     errorMap: () => ({ message: "Invalid role" }),
   }),
+  hospitalId: z.number().int().min(1, "Hospital ID is required"),
 });
