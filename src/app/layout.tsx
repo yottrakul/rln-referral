@@ -1,9 +1,7 @@
 import "@/styles/globals.css";
 
-import { ChakraUIProviders } from "./_components/providers/ChakraProvider";
-import Sidebar from "./_components/ui/sideBar/sideBar";
-import { Flex } from "@chakra-ui/react";
-import Topbar from "./_components/ui/topBar/Topbar";
+import { ChakraUIProviders } from "@/app/_components/providers/ChakraProvider";
+import AuthProviders from "@/app/_components/providers/AuthProvider";
 
 export const metadata = {
   title: "RCS",
@@ -15,13 +13,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body>
-        <ChakraUIProviders>
-          <Topbar />
-          <Flex>
-            <Sidebar />
-            {children}
-          </Flex>
-        </ChakraUIProviders>
+        <AuthProviders>
+          <ChakraUIProviders>{children}</ChakraUIProviders>
+        </AuthProviders>
       </body>
     </html>
   );

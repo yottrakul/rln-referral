@@ -69,7 +69,7 @@ export default function Navbar() {
     },
     {
       title: "role",
-      link: "/backoffice_role",
+      link: "/test/dashboard",
     },
   ];
 
