@@ -16,9 +16,8 @@ generator client {
 
 // prisma/schema.prisma
 datasource db {
-    provider  = "postgresql"
-    url       = env("DATABASE_URL")
-    directUrl = env("DIRECT_URL")
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
 }
 
 // model Post {
@@ -69,8 +68,81 @@ model User {
     image         String?
     password      String? // @db.Text
     role          Role      @default(GUEST)
+    hospitalId    Int
+    hospital      Hospital  @relation(fields: [hospitalId], references: [id])
     accounts      Account[]
     sessions      Session[]
+}
+
+model Hospital {
+    id                 Int                   @id @default(autoincrement())
+    hospitalName       String
+    sendCases          Referral_case[]       @relation("send_cases")
+    reciveCases        Referral_case[]       @relation("recive_cases")
+    hospitalUser       User[]
+    historyProcessList Hitory_process_list[]
+}
+
+model Hitory_process_list {
+    id         Int      @id @default(autoincrement())
+    hospitalId Int
+    sender     Int      @default(0)
+    recive     Int      @default(0)
+    reject     Int      @default(0)
+    accept     Int      @default(0)
+    createAt   DateTime @default(now())
+    hospital   Hospital @relation(fields: [hospitalId], references: [id])
+}
+
+model Referral_case {
+    id               String            @id @default(cuid())
+    patientId        Int
+    status           Status
+    senderHospital   Int
+    receiverHospital Int
+    hospitalSend     Hospital          @relation("send_cases", fields: [senderHospital], references: [id])
+    hospitalReceive  Hospital          @relation("recive_cases", fields: [receiverHospital], references: [id])
+    medRecord        Med_record[]
+    logCaseStatus    Log_case_status[]
+    startCaseFrom    String
+    patient          Patient_info      @relation(fields: [patientId], references: [id])
+}
+
+model Patient_info {
+    id               Int             @id @default(autoincrement())
+    refCases         Referral_case[]
+    citizenId        String          @unique
+    patientFirstname String          @db.VarChar(255)
+    patientSurname   String          @db.VarChar(255)
+    brithDate        DateTime        @db.Date
+    gender           String
+    bloodType        String?
+    houseNumber      String?
+    moo              String?
+    subDistrict      String?
+    subArea          String?
+    province         String?
+    postalCode       String?
+}
+
+model Med_record {
+    id       String        @id @default(cuid())
+    case     String
+    date     DateTime
+    doctor   String
+    hospital String
+    detail   String
+    cases    Referral_case @relation(fields: [case], references: [id])
+}
+
+model Log_case_status {
+    caseId     String
+    statusTo   String
+    statusFrom String
+    changeAt   DateTime
+    case       Referral_case @relation(fields: [caseId], references: [id])
+
+    @@id([caseId, statusTo, statusFrom])
 }
 
 // model VerificationToken {
@@ -99,4 +171,11 @@ enum Role {
     PHYSICIAN
     MEDICAL_ASSISTANT
     GUEST
+}
+
+enum Status {
+    PENDING
+    ACCEPT
+    REJECT
+    COMPLETE
 }
