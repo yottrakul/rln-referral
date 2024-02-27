@@ -18,16 +18,6 @@ export const getUserByEmail = async (email: string) => {
   }
 };
 
-export const getUserAll = async () => {
-  try {
-    const user = await db.user.findMany();
-
-    return user;
-  } catch (error) {
-    return null;
-  }
-}
-
 export const getUserById = async (id: string) => {
   try {
     const user = await db.user.findUnique({
