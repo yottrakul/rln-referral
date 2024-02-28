@@ -75,8 +75,8 @@ model User {
     image         String?
     password      String? // @db.Text
     role          Role      @default(GUEST)
-    hospitalId    Int
-    hospital      Hospital  @relation(fields: [hospitalId], references: [id])
+    hospitalId    Int?
+    hospital      Hospital? @relation(fields: [hospitalId], references: [id])
     accounts      Account[]
     sessions      Session[]
 }
