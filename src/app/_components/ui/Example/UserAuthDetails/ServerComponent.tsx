@@ -1,5 +1,5 @@
-import { getServerAuthSession } from "@/server/auth";
 import { Card, Text, Avatar } from "@chakra-ui/react";
+import { getServerAuthSession } from "@/server/auth";
 
 export default async function UserDetailsServerComponent() {
   const session = await getServerAuthSession();

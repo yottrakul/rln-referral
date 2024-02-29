@@ -101,13 +101,17 @@ export const authOptions: NextAuthOptions = {
         if (validatedFields.success) {
           const { email, password } = validatedFields.data;
           const user = await getUserByEmail(email);
-          if (!user?.password) return null;
+          if (!user?.password) {
+            throw new Error("Invalid email or password");
+          }
           const passwordMatch = await bcrypt.compare(password, user.password);
           if (passwordMatch) {
             return user;
+          } else {
+            throw new Error("Invalid email or password");
           }
         }
-        return null;
+        throw new Error("Something went wrong. Please try again.");
       },
     }),
     /**

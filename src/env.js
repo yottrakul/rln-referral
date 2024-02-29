@@ -8,9 +8,11 @@ export const env = createEnv({
    */
   server: {
     DATABASE_URL: z
-      .string()
-      .url()
-      .refine((str) => !str.includes("YOUR_MYSQL_URL_HERE"), "You forgot to change the default URL"),
+      .string({
+        required_error: "DATABASE_URL is required please set it in your .env file or in your environment variables.",
+      })
+      .url({ message: "DATABASE_URL must be a valid URL" })
+      .refine((str) => !str.includes("YOUR_POSTGRESQL_URL_HERE"), "You forgot to change the default URL"),
     NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
     // NEXTAUTH_SECRET: process.env.NODE_ENV === "production" ? z.string() : z.string().optional(),
     NEXTAUTH_URL: z.preprocess(
