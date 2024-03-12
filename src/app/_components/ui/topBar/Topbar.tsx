@@ -12,7 +12,6 @@ import {
   Menu,
   MenuButton,
   useDisclosure,
-  useMediaQuery,
   Text,
   Button,
   Icon,
@@ -28,10 +27,10 @@ import Link from "next/link";
 
 export default function Topbar() {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [isMobile] = useMediaQuery("(max-width: 480px)", {
-    ssr: true,
-    fallback: false,
-  });
+  // const [isMobile] = useMediaQuery("(max-width: 480px)", {
+  //   ssr: true,
+  //   fallback: false,
+  // });
 
   const navItem = [
     {
@@ -83,17 +82,10 @@ export default function Topbar() {
           <DrawerCloseButton />
           <DrawerHeader></DrawerHeader>
           <DrawerBody>
-            <Flex
-              flexDirection={"column"}
-              onClick={() => {
-                onClose();
-              }}
-            >
-              {navItem.map((e) => {
-                return <Navitem key={e.title} navSize={e.navSize} icon={e.icon} title={e.title} link={e.link} active />;
-              })}
-            </Flex>
-            <Flex mt={5} flexDir={"column"} w="100%" alignItems="flex-start" alignContent="center">
+            {navItem.map((e) => {
+              return <Navitem key={e.title} icon={e.icon} title={e.title} link={e.link} active="test" />;
+            })}
+            <Flex mt={30} flexDir={"column"} w="100%" alignItems="flex-start" alignContent="center">
               <Menu>
                 <MenuButton
                   px={3}

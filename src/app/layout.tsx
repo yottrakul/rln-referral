@@ -1,7 +1,10 @@
 import "@/styles/globals.css";
 
 import { ChakraUIProviders } from "@/app/_components/providers/ChakraProvider";
+import { getServerAuthSession } from "@/server/auth";
 import AuthProviders from "@/app/_components/providers/AuthProvider";
+import { ColorModeScript } from "@chakra-ui/react";
+import { config } from "@/styles/theme";
 
 export const metadata = {
   title: "RCS",
@@ -9,11 +12,13 @@ export const metadata = {
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const session = await getServerAuthSession();
   return (
     <html lang="en">
       <body>
-        <AuthProviders>
+        <ColorModeScript initialColorMode={config.initialColorMode} />
+        <AuthProviders session={session}>
           <ChakraUIProviders>{children}</ChakraUIProviders>
         </AuthProviders>
       </body>

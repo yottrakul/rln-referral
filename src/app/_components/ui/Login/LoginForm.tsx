@@ -48,19 +48,7 @@ export default function LoginForm() {
     startTransition(async () => {
       const res = await signIn("credentials", { email: value.email, password: value.password, redirect: false });
       if (res?.error) {
-        switch (res.error) {
-          case "CredentialsSignin":
-            setErrorMsg("Invalid email or password");
-            break;
-          case "OAuthSignin":
-            setErrorMsg("Invalid Google account");
-            break;
-          case "OAuthCallback":
-            setErrorMsg("Google account has been disabled");
-            break;
-          default:
-            setErrorMsg("Something went wrong. Please try again later.");
-        }
+        setErrorMsg(res.error);
       } else {
         router.push(DEFAULT_LOGIN_REDIRECT);
       }

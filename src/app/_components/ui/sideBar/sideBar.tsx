@@ -3,7 +3,6 @@ import { ChevronDownIcon, HamburgerIcon } from "@chakra-ui/icons";
 import {
   Flex,
   Text,
-  Avatar,
   Button,
   IconButton,
   Icon,
@@ -12,154 +11,223 @@ import {
   MenuItem,
   Menu,
   Divider,
-  Heading,
   useMediaQuery,
-  Tooltip,
   Link,
+  Box,
+  useDisclosure,
+  Drawer,
+  DrawerBody,
+  DrawerCloseButton,
+  DrawerContent,
+  DrawerHeader,
+  DrawerOverlay,
+  Spacer,
 } from "@chakra-ui/react";
-import nextLink from "next/link";
-import { IoHomeOutline } from "react-icons/io5";
+import { IoHomeOutline, IoDocumentTextOutline, IoPersonOutline } from "react-icons/io5";
 import { LuFolderInput } from "react-icons/lu";
-import { HiOutlineOfficeBuilding } from "react-icons/hi";
-import { FaUserFriends } from "react-icons/fa";
+import { TbAmbulance } from "react-icons/tb";
+import { FaMagnifyingGlass, FaPlus } from "react-icons/fa6";
+import { MdAccessTime, MdDriveFileMoveOutline } from "react-icons/md";
 import { useEffect, useState } from "react";
 import Navitem from "../navitem/Navitem";
+import { usePathname } from "next/navigation";
+import { HiOutlineOfficeBuilding } from "react-icons/hi";
+import UserProfile from "./Userprofile";
+
+const navItem = [
+  {
+    title: "Dashboard",
+    icon: IoHomeOutline,
+    link: "/dashboard",
+  },
+  {
+    title: "รายการคำขอ",
+    icon: LuFolderInput,
+    link: "/backoffice_user",
+  },
+  {
+    title: "ค้นหารายชื่อ",
+    icon: FaMagnifyingGlass,
+    link: "/consult",
+  },
+  {
+    title: "ประวัติ",
+    icon: MdAccessTime,
+    link: "/consult",
+  },
+  {
+    title: "คู่มือการใช้งาน",
+    icon: IoDocumentTextOutline,
+    link: "/consult",
+  },
+  {
+    title: "จัดการผู้ใช้",
+    icon: IoPersonOutline,
+    link: "/consult",
+  },
+];
+
+const backOfficeItem = [
+  {
+    title: "User Management",
+    link: "/backoffice_user",
+  },
+  {
+    title: "role",
+    link: "/test/dashboard",
+  },
+];
 
 export default function Navbar() {
-  const [navSize, changenavSize] = useState("large");
+  const router = usePathname();
+  const [active, changeActive] = useState(router);
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const [isMobile] = useMediaQuery("(max-width: 480px)", {
+  const [isMdSize] = useMediaQuery("(min-width: 768px)", {
     ssr: true,
     fallback: false,
   });
 
   useEffect(() => {
-    if (isMobile) {
-      changenavSize("small");
-    } else {
-      changenavSize("large");
+    if (isMdSize && isOpen) {
+      onClose();
     }
-  }, [isMobile]);
+  }, [onClose, isOpen, isMdSize]);
 
-  const navItem = [
-    {
-      title: "Dashboard",
-      icon: IoHomeOutline,
-      navSize: navSize,
-      link: "/dashboard",
-    },
-    {
-      title: "Refferal",
-      icon: LuFolderInput,
-      navSize: navSize,
-      link: "/dashboard",
-    },
-    {
-      title: "Consult",
-      icon: FaUserFriends,
-      navSize: navSize,
-      link: "/consult",
-    },
-  ];
-
-  const backOfficeItem = [
-    {
-      title: "User Management",
-      link: "/backoffice_user",
-    },
-    {
-      title: "role",
-      link: "/test/dashboard",
-    },
-  ];
+  // // TODO กด Link ใน Drawer แล้วปิดเอง
+  // // TODO แก้ md กระพริบ
+  // // TODO ทำพื้นหลังให้ Navbar ข้างบนเป็นสีเทา
+  // // TODO เพิ่ม Avatar ใน Navbar
+  // TODO Schema NavLink
 
   return (
-    <>
-      <Flex
-        display={{ base: "none", sm: "none", md: "flex", lg: "flex" }}
-        bg={""}
-        pos="sticky"
-        left="0"
-        minH="100vh"
-        boxShadow="lg"
-        w={navSize == "small" ? "75px" : "250px"}
-        flexDir="column"
-        justifyContent="space-between"
-      >
-        <Flex px={4} flexDir="column" alignItems={"flex-start"} as="nav">
-          <IconButton
-            mt={5}
-            px={3}
-            aria-label={"hamburger"}
-            bg="none"
-            _hover={{ bg: "#F3f4f7" }}
-            icon={<HamburgerIcon />}
-            color="black"
-            onClick={() => {
-              if (navSize == "small") {
-                changenavSize("large");
-              } else {
-                changenavSize("small");
-              }
-            }}
-          />
-          {navItem.map((e) => {
-            return <Navitem key={e.title} navSize={e.navSize} icon={e.icon} title={e.title} link={e.link} active />;
-          })}
-          <Flex
-            mt={5}
-            flexDir={"column"}
-            w="100%"
-            alignItems={navSize == "small" ? "center" : "flex-start"}
-            alignContent="center"
-          >
-            <Menu>
-              <Flex>
-                <MenuButton px={3} bg="none" _hover={{ bg: "#f3f4f7" }} as={Button} w={"full"}>
-                  <Flex alignItems={"center"}>
-                    <Icon
-                      my={2}
-                      mr={navSize == "small" ? 0 : 5}
-                      fontSize="xl"
-                      as={HiOutlineOfficeBuilding}
-                      color="black"
-                    />
-                    <Text display={navSize == "small" ? "none" : "flex"} fontWeight="medium">
+    <Box h={"100%"} pos={"sticky"} left={0} top={0} zIndex={100} bg={"white"}>
+      <Flex boxShadow={"sm"} bg={"#ffffffea"} p={4} display={{ base: "flex", md: "none" }}>
+        <IconButton
+          aria-label={"hamburger"}
+          variant={"ghost"}
+          icon={<HamburgerIcon boxSize={5} />}
+          color="black"
+          onClick={onOpen}
+        />
+        <Spacer />
+        <Flex>{!isMdSize && <UserProfile />}</Flex>
+      </Flex>
+      <Drawer placement="left" onClose={onClose} isOpen={isOpen} size={"md"}>
+        <DrawerOverlay />
+        <DrawerContent>
+          <DrawerCloseButton />
+          <DrawerHeader></DrawerHeader>
+          <DrawerBody>
+            {navItem.map((e) => {
+              return (
+                <Navitem
+                  onClick={() => onClose()}
+                  key={e.title}
+                  icon={e.icon}
+                  title={e.title}
+                  link={e.link}
+                  active="test"
+                />
+              );
+            })}
+            <Flex mt={30} flexDir={"column"} w="100%" alignItems="flex-start" alignContent="center">
+              <Menu>
+                <MenuButton
+                  px={3}
+                  bg="none"
+                  _hover={{ bg: "#f3f4f7" }}
+                  w="100%"
+                  as={Button}
+                  rightIcon={<ChevronDownIcon />}
+                >
+                  <Flex alignItems="center">
+                    <Icon my={2} mr={5} fontSize="xl" as={HiOutlineOfficeBuilding} color="black" />
+                    <Text display={"flex"} fontWeight="medium">
                       Back Office
                     </Text>
-                    <Icon my={2} ml={navSize == "small" ? 0 : 2} fontSize="xl" as={ChevronDownIcon} color="black" />
                   </Flex>
                 </MenuButton>
-              </Flex>
-              <MenuList>
-                {backOfficeItem.map((e) => {
-                  return (
-                    <Link key={e.title} as={nextLink} href={e.link}>
-                      <MenuItem>
-                        <Text>{e.title}</Text>
+                <MenuList>
+                  {backOfficeItem.map((e) => {
+                    return (
+                      <MenuItem
+                        key={e.title}
+                        onClick={() => {
+                          onClose();
+                        }}
+                      >
+                        <Link href={e.link}>
+                          <Text>{e.title}</Text>
+                        </Link>
                       </MenuItem>
-                    </Link>
-                  );
-                })}
-              </MenuList>
-            </Menu>
+                    );
+                  })}
+                </MenuList>
+              </Menu>
+            </Flex>
+          </DrawerBody>
+        </DrawerContent>
+      </Drawer>
+
+      <Flex
+        minH="100vh"
+        boxShadow="lg"
+        w={{ md: "75px", lg: "250px" }}
+        transition={`width 0.25s ease-in-out`}
+        flexDir="column"
+        overflow="hidden"
+        className="nav"
+        display={{ base: "none", md: "flex" }}
+      >
+        <Flex pl={4} mt={4} mb={1}>
+          <Flex>
+            <Icon as={TbAmbulance} boxSize={8} mt={4} />
+            <Icon as={MdDriveFileMoveOutline} boxSize={4} mt={2} />
+          </Flex>
+          <Flex>
+            <Box w={"150px"} ml={3} style={{ fontWeight: "500" }}>
+              Refferral & <br />
+              &nbsp; Consult System +
+            </Box>
           </Flex>
         </Flex>
-        <Flex p="5%" w="100%" flexDir="column" alignItems={navSize == "small" ? "center" : "flex-start"} mb={4}>
-          <Divider display={navSize == "small" ? "none" : "flex"} />
-          <Flex mt={4} align={"center"}>
-            <Avatar size={"sm"} />
-            <Flex flexDir={"column"} m={4} display={navSize == "small" ? "none" : "flex"}>
-              <Tooltip label="กรกฎ กิ่งแก้วกรกฎ กิ่งแก้วกรกฎ กิ่งแก้วกรกฎ กิ่งแก้ว" aria-label="A tooltip">
-                <Heading fontSize={"lg"} noOfLines={1}>
-                  กรกฎ กิ่งแก้วกรกฎ กิ่งแก้วกรกฎ กิ่งแก้วกรกฎ กิ่งแก้ว
-                </Heading>
-              </Tooltip>
-              <Text fontSize={"md"}>แพทย์</Text>
-            </Flex>
+        <Flex p="4" flexDir="column" alignItems="flex-start" as="nav">
+          <Box
+            opacity={{ md: 0, lg: 1 }}
+            transition={`opacity 1s ease-in , width 0.5s ease-in-out 0.5s, height 0.5s ease-in-out`}
+            w={{ md: "0px", lg: "100%" }}
+            h={{ md: "0px", lg: "40px" }}
+            className="btn"
+            overflow={"hidden"}
+          >
+            <Button mx={2} px={6} bg={"#9E57DA"} _hover={{ bg: "#7943a5" }} color={"white"} rightIcon={<FaPlus />}>
+              สร้างคำขอ
+            </Button>
+          </Box>
+
+          {navItem.map((e) => {
+            return (
+              <Box
+                key={e.title}
+                w="100%"
+                onClick={() => {
+                  changeActive(e.link);
+                }}
+              >
+                <Navitem key={e.title} icon={e.icon} title={e.title} link={e.link} active={active} />
+              </Box>
+            );
+          })}
+        </Flex>
+        <Spacer />
+        <Divider />
+        <Flex px={4} h={"73px"} w="auto" flexDir="column">
+          <Flex mt={4} gap={4}>
+            <UserProfile />
           </Flex>
         </Flex>
       </Flex>
-    </>
+    </Box>
   );
 }
