@@ -1,6 +1,5 @@
 import { Box, Flex } from "@chakra-ui/react";
 import Navbar from "@/app/_components/ui/sideBar/sideBar";
-import { getServerAuthSession } from "@/server/auth";
 import AuthProviders from "@/app/_components/providers/AuthProvider";
 
 export const metadata = {
@@ -9,9 +8,8 @@ export const metadata = {
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const session = await getServerAuthSession();
   return (
-    <AuthProviders session={session}>
+    <AuthProviders>
       <Flex direction={{ base: "column", md: "row" }}>
         <Navbar />
         <Box flex={1}>{children}</Box>
