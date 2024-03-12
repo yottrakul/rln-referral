@@ -12,15 +12,12 @@ export const metadata = {
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
-export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const session = await getServerAuthSession();
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <body>
         <ColorModeScript initialColorMode={config.initialColorMode} />
-        <AuthProviders session={session}>
-          <ChakraUIProviders>{children}</ChakraUIProviders>
-        </AuthProviders>
+        <ChakraUIProviders>{children}</ChakraUIProviders>
       </body>
     </html>
   );
