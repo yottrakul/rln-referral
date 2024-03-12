@@ -22,7 +22,7 @@ export const HospitalScalarFieldEnumSchema = z.enum(['id','hospitalName']);
 
 export const Hitory_process_listScalarFieldEnumSchema = z.enum(['id','hospitalId','sender','recive','reject','accept','createAt']);
 
-export const Referral_caseScalarFieldEnumSchema = z.enum(['id','patientId','status','senderHospital','receiverHospital','startCaseFrom']);
+export const Referral_caseScalarFieldEnumSchema = z.enum(['id','patientId','status','senderHospital','startHospital','receiverHospital']);
 
 export const Patient_infoScalarFieldEnumSchema = z.enum(['id','citizenId','patientFirstname','patientSurname','brithDate','gender','bloodType','houseNumber','moo','subDistrict','subArea','province','postalCode']);
 
@@ -43,6 +43,14 @@ export type RoleType = `${z.infer<typeof RoleSchema>}`
 export const StatusSchema = z.enum(['PENDING','ACCEPT','REJECT','COMPLETE']);
 
 export type StatusType = `${z.infer<typeof StatusSchema>}`
+
+export const GenderSchema = z.enum(['MALE','FEMALE','UNDEFINED']);
+
+export type GenderType = `${z.infer<typeof GenderSchema>}`
+
+export const BloodTypeSchema = z.enum(['A','B','AB','O','UNDEFINED']);
+
+export type BloodTypeType = `${z.infer<typeof BloodTypeSchema>}`
 
 /////////////////////////////////////////
 // MODELS
@@ -175,8 +183,8 @@ export const Referral_caseSchema = z.object({
   id: z.string().cuid(),
   patientId: z.number().int(),
   senderHospital: z.number().int(),
+  startHospital: z.number().int(),
   receiverHospital: z.number().int(),
-  startCaseFrom: z.string(),
 })
 
 export type Referral_case = z.infer<typeof Referral_caseSchema>
@@ -194,13 +202,13 @@ export type Referral_casePartial = z.infer<typeof Referral_casePartialSchema>
 /////////////////////////////////////////
 
 export const Patient_infoSchema = z.object({
+  gender: GenderSchema,
+  bloodType: BloodTypeSchema,
   id: z.number().int(),
   citizenId: z.string(),
   patientFirstname: z.string(),
   patientSurname: z.string(),
   brithDate: z.coerce.date(),
-  gender: z.string(),
-  bloodType: z.string().nullable(),
   houseNumber: z.string().nullable(),
   moo: z.string().nullable(),
   subDistrict: z.string().nullable(),
