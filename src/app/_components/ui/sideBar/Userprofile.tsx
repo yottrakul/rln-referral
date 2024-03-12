@@ -1,11 +1,12 @@
-"use client";
 import { Avatar, Flex, Tooltip, Heading, Text, Menu, MenuList, MenuButton, MenuItem } from "@chakra-ui/react";
 import { IoIosLogOut } from "react-icons/io";
-import { useSession } from "next-auth/react";
 import { signOut } from "next-auth/react";
+import { getServerAuthSession } from "@/server/auth";
+import { getToken } from "next-auth/jwt";
+import MenuItemLogout from "../Logout/MenuItemLogout";
 
-export default function Userprofile() {
-  const { data: session } = useSession();
+export default async function Userprofile() {
+  const session = await getServerAuthSession();
   return (
     <>
       <Menu>
@@ -18,9 +19,7 @@ export default function Userprofile() {
           />
         </MenuButton>
         <MenuList>
-          <MenuItem onClick={() => signOut()} icon={<IoIosLogOut size={25} color={"#F56565"} />}>
-            Logout
-          </MenuItem>
+          <MenuItemLogout />
         </MenuList>
       </Menu>
 

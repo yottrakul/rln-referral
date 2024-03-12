@@ -78,7 +78,7 @@ const backOfficeItem = [
   },
 ];
 
-export default function Navbar() {
+export default function Navbar({ children }: { children: React.ReactNode }) {
   const router = usePathname();
   const [active, changeActive] = useState(router);
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -111,7 +111,7 @@ export default function Navbar() {
           onClick={onOpen}
         />
         <Spacer />
-        <Flex>{!isMdSize && <UserProfile />}</Flex>
+        <Flex>{!isMdSize && children}</Flex>
       </Flex>
       <Drawer placement="left" onClose={onClose} isOpen={isOpen} size={"md"}>
         <DrawerOverlay />
@@ -224,7 +224,7 @@ export default function Navbar() {
         <Divider />
         <Flex px={4} h={"73px"} w="auto" flexDir="column">
           <Flex mt={4} gap={4}>
-            <UserProfile />
+            {children}
           </Flex>
         </Flex>
       </Flex>
