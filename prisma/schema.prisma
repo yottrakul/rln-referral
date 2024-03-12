@@ -84,52 +84,54 @@ model User {
 model Hospital {
     id                 Int                   @id @default(autoincrement())
     hospitalName       String
-    sendCases          Referral_case[]       @relation("send_cases")
-    reciveCases        Referral_case[]       @relation("recive_cases")
+    sendCases          Referral_case[] @relation("send_cases")
+    reciveCases        Referral_case[] @relation("recive_cases")
+    startCaseFrom      Referral_case[] @relation("startCaseFrom")
     hospitalUser       User[]
     historyProcessList Hitory_process_list[]
 }
 
 model Hitory_process_list {
-    id         Int      @id @default(autoincrement())
-    hospitalId Int
-    sender     Int      @default(0)
-    recive     Int      @default(0)
-    reject     Int      @default(0)
-    accept     Int      @default(0)
-    createAt   DateTime @default(now())
-    hospital   Hospital @relation(fields: [hospitalId], references: [id])
+    id                  Int      @id @default(autoincrement())
+    hospitalId          Int
+    sender              Int @default(0)
+    recive              Int @default(0)
+    reject              Int @default(0)
+    accept              Int @default(0)
+    createAt            DateTime @default(now())
+    hospital            Hospital @relation(fields: [hospitalId], references: [id])
 }
 
 model Referral_case {
-    id               String            @id @default(cuid())
-    patientId        Int
-    status           Status
-    senderHospital   Int
-    receiverHospital Int
-    hospitalSend     Hospital          @relation("send_cases", fields: [senderHospital], references: [id])
-    hospitalReceive  Hospital          @relation("recive_cases", fields: [receiverHospital], references: [id])
-    medRecord        Med_record[]
-    logCaseStatus    Log_case_status[]
-    startCaseFrom    String
-    patient          Patient_info      @relation(fields: [patientId], references: [id])
+    id                 String           @id @default(cuid())
+    patientId          Int
+    status             Status
+    senderHospital     Int
+    startHospital      Int
+    receiverHospital   Int
+    hospitalSend       Hospital         @relation("send_cases",fields: [senderHospital], references: [id])
+    hospitalReceive    Hospital         @relation("recive_cases",fields: [receiverHospital], references: [id])
+    medRecord          Med_record[]
+    logCaseStatus     Log_case_status[]
+    startCaseFrom     Hospital          @relation("startCaseFrom",fields: [startHospital], references: [id])
+    patient           Patient_info      @relation(fields: [patientId], references: [id])
 }
 
 model Patient_info {
-    id               Int             @id @default(autoincrement())
-    refCases         Referral_case[]
-    citizenId        String          @unique
-    patientFirstname String          @db.VarChar(255)
-    patientSurname   String          @db.VarChar(255)
-    brithDate        DateTime        @db.Date
-    gender           String
-    bloodType        String?
-    houseNumber      String?
-    moo              String?
-    subDistrict      String?
-    subArea          String?
-    province         String?
-    postalCode       String?
+    id                 Int          @id @default(autoincrement())
+    refCases           Referral_case[]
+    citizenId          String       @db.Char(13)       @unique
+    patientFirstname   String       @db.VarChar(255)
+    patientSurname     String       @db.VarChar(255)
+    brithDate          DateTime     @db.Date
+    gender             Gender            
+    bloodType          BloodType
+    houseNumber        String?
+    moo                String?
+    subDistrict        String?
+    subArea            String?
+    province           String?
+    postalCode         String?
 }
 
 model Med_record {
@@ -185,4 +187,18 @@ enum Status {
     ACCEPT
     REJECT
     COMPLETE
+}
+
+enum Gender {
+    MALE
+    FEMALE
+    UNDEFINED
+}
+
+enum BloodType {
+    A
+    B
+    AB
+    O
+    UNDEFINED
 }

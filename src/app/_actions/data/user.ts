@@ -1,12 +1,10 @@
 "use server";
 import { db } from "@/server/db";
-import { Patient_infoSchema, UserSchema } from "@/app/_schemas/generated/zod";
+import { Patient_infoSchema } from "@/app/_schemas/generated/zod";
+import { type Status } from "@prisma/client";
 import { type User } from "@/app/_schemas/generated/zod";
 
-interface UserResponse {
-  success: boolean;
-  msg: string;
-}
+const USER_LIMIT_PER_PAGE = 10;
 
 export const getUserByEmail = async (email: string) => {
   try {
@@ -60,4 +58,86 @@ export const createUser = async (data: unknown) => {
     success: true,
     msg: "User created",
   };
+};
+
+export const getProcessListSender = async (hospitalId: number, page: number) => {
+  page = Math.max(1, page);
+
+  try {
+    const processList = await db.patient_info.findMany({
+      include: {
+        refCases: {
+          where: {
+            senderHospital: {
+              equals: hospitalId,
+            },
+          },
+          skip: (page - 1) * 10,
+          take: 10,
+        },
+      },
+    });
+
+    return processList;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+export const getProcessListRecive = async (hospitalId: number, page: number) => {
+  page = Math.max(1, page);
+
+  try {
+    const processList = await db.patient_info.findMany({
+      include: {
+        refCases: {
+          where: {
+            receiverHospital: {
+              equals: hospitalId,
+            },
+          },
+          skip: (page - 1) * 10,
+          take: 10,
+        },
+      },
+    });
+
+    return processList;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+export const getProcessListAR = async (
+  status: Exclude<Status, "PENDING" | "COMPLETE">,
+  hospitalId: number,
+  page: number
+) => {
+  page = Math.max(1, page);
+
+  try {
+    const processList = await db.referral_case.findMany({
+      select: {
+        id: true,
+        status: true,
+        patient: true,
+        hospitalSend: true,
+        hospitalReceive: true,
+        startCaseFrom: true,
+      },
+
+      skip: (page - 1) * 10,
+      take: USER_LIMIT_PER_PAGE,
+      where: {
+        status: status,
+        senderHospital: hospitalId,
+      },
+    });
+    // console.dir(processList,{depth: Infinity});
+    return processList;
+  } catch (error) {
+    throw error;
+  }
 };
