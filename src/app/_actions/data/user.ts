@@ -1,6 +1,12 @@
 "use server";
 import { db } from "@/server/db";
-import { Patient_infoSchema } from "@/app/_schemas/generated/zod";
+import { Patient_infoSchema, UserSchema } from "@/app/_schemas/generated/zod";
+import { type User } from "@/app/_schemas/generated/zod";
+
+interface UserResponse {
+  success: boolean;
+  msg: string;
+}
 
 export const getUserByEmail = async (email: string) => {
   try {
@@ -30,12 +36,12 @@ export const getUserById = async (id: string) => {
   }
 };
 
-export const getUserAll = async () => {
+export const getUserAll = async (): Promise<User[]> => {
   try {
     const users = await db.user.findMany();
     return users;
   } catch (error) {
-    return null;
+    throw new Error("Error fetching users");
   }
 };
 

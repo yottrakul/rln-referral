@@ -101,7 +101,7 @@ export default function Navbar() {
   // TODO Schema NavLink
 
   return (
-    <Box h={"100%"} pos={"sticky"} left={0} top={0} zIndex={100}>
+    <Box h={"100%"} pos={"sticky"} left={0} top={0} zIndex={100} bg={"white"}>
       <Flex boxShadow={"sm"} bg={"#ffffffea"} p={4} display={{ base: "flex", md: "none" }}>
         <IconButton
           aria-label={"hamburger"}

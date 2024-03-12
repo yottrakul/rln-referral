@@ -1,10 +1,14 @@
 import UserManagement from "@/app/_components/ui/user/UserManagement";
+import { Suspense } from "react";
 
-export default function backoffice_user() {
+export default async function backoffice_user() {
   return (
     <main>
-      <UserManagement />
-      <UserManagement />
+      {/* <SearchUser/> */}
+      <Suspense fallback={<div>Loading...</div>}>
+        <UserManagement />
+      </Suspense>
+      {/* <Pagination/> */}
     </main>
   );
 }
