@@ -1,5 +1,5 @@
 import { extendTheme, type ThemeConfig } from "@chakra-ui/react";
-import { tableTheme } from "@/app/_components/ui/Table/tablet-theme";
+import { tableTheme } from "@/app/_components/ui/table/tablet-theme";
 import { fonts } from "@/app/_lib/fonts";
 
 export const config: ThemeConfig = {
