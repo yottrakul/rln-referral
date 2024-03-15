@@ -29,7 +29,7 @@ import { TbAmbulance } from "react-icons/tb";
 import { FaMagnifyingGlass, FaPlus } from "react-icons/fa6";
 import { MdAccessTime, MdDriveFileMoveOutline } from "react-icons/md";
 import { useEffect, useState } from "react";
-import Navitem from "../navitem/Navitem";
+import Navitem from "../NavItem/Navitem";
 import { usePathname } from "next/navigation";
 import { HiOutlineOfficeBuilding } from "react-icons/hi";
 import UserProfile from "./Userprofile";

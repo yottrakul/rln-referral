@@ -1,9 +1,6 @@
 import { Box, Flex } from "@chakra-ui/react";
 import Navbar from "@/app/_components/ui/sideBar/sideBar";
 import AuthProviders from "@/app/_components/providers/AuthProvider";
-import Userprofile from "../_components/ui/sideBar/Userprofile";
-import { Suspense } from "react";
-import UserprofileSkeleton from "../_components/ui/sideBar/UserprofileSkeleton";
 import { getServerAuthSession } from "@/server/auth";
 
 export const metadata = {

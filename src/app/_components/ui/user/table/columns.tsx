@@ -3,9 +3,9 @@ import { type User } from "@/app/_schemas/generated/zod";
 import { Avatar, Badge, Box, Text, HStack, Button } from "@chakra-ui/react";
 import { createColumnHelper } from "@tanstack/react-table";
 import { FaGear } from "react-icons/fa6";
-import DataTableColumnHeader from "@/app/_components/ui/table/DataTableColumnHeader";
-import CheckboxWithIndeterminate from "../../table/CheckboxWithIndeterminate";
-import CheckboxTable from "../../table/Checkbox";
+import DataTableColumnHeader from "@/app/_components/ui/Table/DataTableColumnHeader";
+import CheckboxWithIndeterminate from "../../Table/CheckboxWithIndeterminate";
+import CheckboxTable from "../../Table/Checkbox";
 
 // Create Column Helper for User
 const columnHelper = createColumnHelper<User>();

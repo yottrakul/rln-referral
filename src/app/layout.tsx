@@ -1,8 +1,6 @@
 import "@/styles/globals.css";
 
 import { ChakraUIProviders } from "@/app/_components/providers/ChakraProvider";
-import { getServerAuthSession } from "@/server/auth";
-import AuthProviders from "@/app/_components/providers/AuthProvider";
 import { ColorModeScript } from "@chakra-ui/react";
 import { config } from "@/styles/theme";
 

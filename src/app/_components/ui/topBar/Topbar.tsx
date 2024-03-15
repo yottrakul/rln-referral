@@ -21,7 +21,7 @@ import {
 import { FaUserFriends } from "react-icons/fa";
 import { IoHomeOutline } from "react-icons/io5";
 import { LuFolderInput } from "react-icons/lu";
-import Navitem from "../navitem/Navitem";
+import Navitem from "../NavItem/Navitem";
 import { HiOutlineOfficeBuilding } from "react-icons/hi";
 import Link from "next/link";
 

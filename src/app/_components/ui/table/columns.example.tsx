@@ -3,7 +3,7 @@ import { type User } from "@/app/_schemas/generated/zod";
 import { Avatar, Badge, Box, Text, HStack, Button, Checkbox } from "@chakra-ui/react";
 import { createColumnHelper } from "@tanstack/react-table";
 import { FaGear } from "react-icons/fa6";
-import DataTableColumnHeader from "@/app/_components/ui/table/DataTableColumnHeader";
+import DataTableColumnHeader from "@/app/_components/ui/Table/DataTableColumnHeader";
 import CheckboxWithIndeterminate from "./CheckboxWithIndeterminate";
 import CheckboxTable from "./Checkbox";
 
