@@ -32,7 +32,7 @@ import { useEffect, useState } from "react";
 import Navitem from "@/app/_components/ui/navItem/Navitem";
 import { usePathname } from "next/navigation";
 import { HiOutlineOfficeBuilding } from "react-icons/hi";
-import UserProfile from "@/app/_components/ui/nav/Userprofile";
+import UserProfile from "@/app/_components/ui/Nav/Userprofile";
 
 const navItem = [
   {

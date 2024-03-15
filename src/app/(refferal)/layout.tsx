@@ -1,5 +1,5 @@
 import { Box, Flex } from "@chakra-ui/react";
-import Navbar from "@/app/_components/ui/nav/SideBar";
+import Navbar from "@/app/_components/ui/Nav/sideBar";
 import AuthProviders from "@/app/_components/providers/AuthProvider";
 import { getServerAuthSession } from "@/server/auth";
 
