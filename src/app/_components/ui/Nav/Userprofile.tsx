@@ -1,8 +1,7 @@
 "use client";
 import { Avatar, Flex, Tooltip, Heading, Text, Menu, MenuList, MenuButton, MenuItem } from "@chakra-ui/react";
 import { IoIosLogOut } from "react-icons/io";
-import { useSession } from "next-auth/react";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 
 export default function Userprofile() {
   const { data: session } = useSession();

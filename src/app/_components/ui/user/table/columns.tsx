@@ -4,8 +4,8 @@ import { Avatar, Badge, Box, Text, HStack, Button } from "@chakra-ui/react";
 import { createColumnHelper } from "@tanstack/react-table";
 import { FaGear } from "react-icons/fa6";
 import DataTableColumnHeader from "@/app/_components/ui/table/DataTableColumnHeader";
-import CheckboxWithIndeterminate from "../../table/CheckboxWithIndeterminate";
-import CheckboxTable from "../../table/Checkbox";
+import CheckboxWithIndeterminate from "@/app/_components/ui/table/CheckboxWithIndeterminate";
+import CheckboxTable from "@/app/_components/ui/table/Checkbox";
 
 // Create Column Helper for User
 const columnHelper = createColumnHelper<User>();
