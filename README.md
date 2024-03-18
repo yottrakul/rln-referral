@@ -1,28 +1,68 @@
-# Create T3 App
+# RLN - Referral System
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+The Referral System is a beneficial system for patients, doctors, nurses, and hospitals. It helps patients receive appropriate and timely care, reduces waiting times, distributes patients evenly across hospitals, and enables doctors and nurses to work together effectively.
 
-## What's next? How do I make an app with this?
+## Tech-Stacks
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+| Type               | Technology     | Version | Documentation                                       |
+| ------------------ | -------------- | ------- | --------------------------------------------------- |
+| **Web Frameworks** | Next.js        | 14.0.4  | [Next.js](https://nextjs.org)                       |
+| **ENV Validation** | T3-env         | 0.7.1   | [Create.t3.gg](https://env.t3.gg/docs/introduction) |
+| **Authentication** | NextAuth.js    | 4.24.5  | [NextAuth.js](https://next-auth.js.org)             |
+| **ORM**            | Prisma         | 5.6.0   | [Prisma](https://prisma.io)                         |
+| **UI Components**  | ChakraUI       | 2.8.2   | [ChakraUI](https://chakra-ui.com/)                  |
+| **Table package**  | TanStack-Table | 8.13.2  | [TanStack/react-table](https://chakra-ui.com/)      |
+| **Validation**     | Zod            | 3.22.4  | [Zod](https://zod.dev/)                             |
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+## Run Locally
 
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
+---
 
-## Learn More
+1. Clone the repository
 
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
+```
+git clone https://github.com/yottrakul/rln-referral.git
+```
 
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
+2. Install dependencies using Yarn
 
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
+```
+yarn
+```
 
-## How do I deploy this?
+3. Copy the .env.example to .env and update the variables in root path
 
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+```
+cp .env.example .env
+```
+
+4. Config following description in env.example
+
+- [] Google OAuth Client ID and Client Secret [Documentation](https://developers.google.com/identity/protocols/oauth2), [Configuration](https://console.developers.google.com/apis/credentials)
+
+- [] Connection String for Prisma
+- [] NextAuth Secret
+
+> Google Authorized JavaScript origins
+>
+> - For production: https://{YOUR_DOMAIN}
+> - For development: http://localhost:3000
+
+> Google Authorized redirect URIs
+>
+> - For production: https://{YOUR_DOMAIN}/api/auth/callback/google
+> - For development: http://localhost:3000/api/auth/callback/google
+
+5. Push Database Schema with Prisma
+
+```
+yarn db:push
+```
+
+6. Run Development Server
+
+```
+yarn dev
+```
+
+7. Go to localhost and Sign in with Google OAuth or Credentials and change **ROLE** in database to **ADMIN** for access into dashboard
