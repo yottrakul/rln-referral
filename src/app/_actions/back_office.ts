@@ -1,11 +1,11 @@
 "use server";
 
 import { db } from "@/server/db";
-import { RegisterSchema, UpdateUserSchema, type UserSchemaWithOutPassword } from "@/app/_schemas";
+import { RegisterSchema, RoleSchema, UpdateUserSchema, type UserSchemaWithOutPassword } from "@/app/_schemas";
 import { type z } from "zod";
 import { prismaExclude } from "@/app/_lib";
 import bcrypt from "bcryptjs";
-import { type Prisma, Role } from "@prisma/client";
+import { type Prisma, type Role } from "@prisma/client";
 
 export type UserWithOutPassword = z.infer<typeof UserSchemaWithOutPassword>;
 const LIMIT_PER_PAGE = 10;
@@ -211,11 +211,17 @@ export const getUserByProvider = async (provider: string) => {
 
 export const getUserByQueryAndRole = async (query: string, role?: string) => {
   role = role?.toUpperCase();
-  const isInRoleEnum = Object.values(Role).includes(role as Role);
-  // Checl valid role from Role enum
-  if (!isInRoleEnum || role?.length === 0) {
+  const validRole = RoleSchema.safeParse(role);
+
+  if (!validRole.success || role?.length === 0) {
     role = undefined;
   }
+
+  // const isInRoleEnum = Object.values(Role).includes(role as Role);
+  // Checl valid role from Role enum
+  // if (!validRole.data || role?.length === 0) {
+  //   role = undefined;
+  // }
 
   try {
     const users = await db.user.findMany({

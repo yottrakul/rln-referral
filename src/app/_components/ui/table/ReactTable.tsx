@@ -62,13 +62,21 @@ export default function ReactTable<TData, TValue>({
           ))}
         </Thead>
         <Tbody>
-          {table.getRowModel().rows.map((row) => (
-            <Tr data-state={rowSelection ? (row.getIsSelected() ? "selected" : "false") : null} key={row.id}>
-              {row.getVisibleCells().map((cell) => (
-                <Td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</Td>
-              ))}
+          {table.getRowModel().rows.length ? (
+            table.getRowModel().rows.map((row) => (
+              <Tr data-state={rowSelection ? (row.getIsSelected() ? "selected" : "false") : null} key={row.id}>
+                {row.getVisibleCells().map((cell) => (
+                  <Td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</Td>
+                ))}
+              </Tr>
+            ))
+          ) : (
+            <Tr>
+              <Td colSpan={columns.length} textAlign={"center"} h={24}>
+                No Results
+              </Td>
             </Tr>
-          ))}
+          )}
         </Tbody>
       </Table>
     </TableContainer>
