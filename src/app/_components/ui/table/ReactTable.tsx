@@ -45,6 +45,10 @@ export default function ReactTable<TData, TValue>({
     }
   }, [rowSelection, table, onRowSelectStateChange]);
 
+  useEffect(() => {
+    setRowSelection({});
+  }, [data]);
+
   return (
     <TableContainer>
       <Table>

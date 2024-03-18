@@ -1,5 +1,5 @@
 "use client";
-import { type User } from "@/app/_schemas/generated/zod";
+import { type UserWithOutPassword } from "@/app/_actions/back_office";
 import { Avatar, Badge, Box, Text, HStack, Button } from "@chakra-ui/react";
 import { createColumnHelper } from "@tanstack/react-table";
 import { FaGear } from "react-icons/fa6";
@@ -8,7 +8,7 @@ import CheckboxWithIndeterminate from "@/app/_components/ui/table/CheckboxWithIn
 import CheckboxTable from "@/app/_components/ui/table/Checkbox";
 
 // Create Column Helper for User
-const columnHelper = createColumnHelper<User>();
+const columnHelper = createColumnHelper<UserWithOutPassword>();
 
 // Roles Badge Color
 export const roleColor = {

@@ -1,3 +1,4 @@
+import { UserSchema } from "./generated/zod/index";
 import * as z from "zod";
 import { Role, Status } from "@prisma/client";
 
@@ -33,7 +34,7 @@ export const RegisterSchema = z.object({
   role: z.nativeEnum(Role, {
     errorMap: () => ({ message: "Invalid role" }),
   }),
-  hospitalId: z.number().int().min(1, "Hospital ID is required").optional(),
+  hospitalId: z.coerce.number().int().min(1, "Hospital ID is required"),
 });
 
 /////////////////////////////////////////
@@ -44,4 +45,19 @@ export const NavigationSchema = z.object({
   label: z.string(),
   href: z.string(),
   icon: z.string(),
+});
+
+/////////////////////////////////////////
+// Users
+/////////////////////////////////////////
+
+export const UserSchemaWithOutPassword = UserSchema.omit({ password: true });
+export const UpdateUserSchema = z.object({
+  password: z.string().min(1, "Password is required").optional(),
+  name: z.string().min(1, "Name is required"),
+  role: z.nativeEnum(Role, {
+    errorMap: () => ({ message: "Invalid role" }),
+  }),
+  hospitalId: z.coerce.number().int().min(1, "Hospital ID is required").optional(),
+  image: z.string().url().optional(),
 });

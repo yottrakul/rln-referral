@@ -1,10 +1,15 @@
-import { getUserAll } from "@/app/_actions/data/user";
+import { getUserByQueryAndRole } from "@/app/_actions/back_office";
 import UserManagementTable from "@/app/_components/ui/user/table/UserManagementTable";
 import { unstable_noStore as noStore } from "next/cache";
 
-export default async function UserManagement() {
+interface UserManagementProps {
+  query?: string;
+  role?: string;
+}
+
+export default async function UserManagement({ query = "", role = "" }: UserManagementProps) {
   noStore();
-  const users = await getUserAll();
+  const users = await getUserByQueryAndRole(query, role);
 
   return (
     <>

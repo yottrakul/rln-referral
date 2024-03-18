@@ -14,7 +14,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     <AuthProviders session={session}>
       <Flex direction={{ base: "column", md: "row" }}>
         <Navbar />
-        <Box flex={1}>{children}</Box>
+        <Box overflowX={"auto"} flex={1} px={{ base: 4, md: 6, lg: 8 }} pt={4}>
+          {children}
+        </Box>
       </Flex>
     </AuthProviders>
   );

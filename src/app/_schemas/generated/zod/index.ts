@@ -36,6 +36,22 @@ export const QueryModeSchema = z.enum(['default','insensitive']);
 
 export const NullsOrderSchema = z.enum(['first','last']);
 
+export const AccountOrderByRelevanceFieldEnumSchema = z.enum(['id','userId','type','provider','providerAccountId','refresh_token','access_token','token_type','scope','id_token','session_state']);
+
+export const SessionOrderByRelevanceFieldEnumSchema = z.enum(['id','sessionToken','userId']);
+
+export const UserOrderByRelevanceFieldEnumSchema = z.enum(['id','name','email','image','password']);
+
+export const HospitalOrderByRelevanceFieldEnumSchema = z.enum(['hospitalName']);
+
+export const Referral_caseOrderByRelevanceFieldEnumSchema = z.enum(['id']);
+
+export const Patient_infoOrderByRelevanceFieldEnumSchema = z.enum(['citizenId','patientFirstname','patientSurname','houseNumber','moo','subDistrict','subArea','province','postalCode']);
+
+export const Med_recordOrderByRelevanceFieldEnumSchema = z.enum(['id','case','doctor','hospital','detail']);
+
+export const Log_case_statusOrderByRelevanceFieldEnumSchema = z.enum(['caseId','statusTo','statusFrom']);
+
 export const RoleSchema = z.enum(['ADMIN','PHYSICIAN','MEDICAL_ASSISTANT','GUEST']);
 
 export type RoleType = `${z.infer<typeof RoleSchema>}`
