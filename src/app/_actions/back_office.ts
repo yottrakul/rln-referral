@@ -1,14 +1,17 @@
 "use server";
 
 import { db } from "@/server/db";
-import { RegisterSchema, RoleSchema, UpdateUserSchema, type UserSchemaWithOutPassword } from "@/app/_schemas";
+import { RegisterSchema, RoleSchema, UserRegisterWithRefineSchema } from "@/app/_schemas";
 import { type z } from "zod";
-import { prismaExclude } from "@/app/_lib";
+import { getValidPage, prismaExclude } from "@/app/_lib";
 import bcrypt from "bcryptjs";
 import { type Prisma, type Role } from "@prisma/client";
-
-export type UserWithOutPassword = z.infer<typeof UserSchemaWithOutPassword>;
-const LIMIT_PER_PAGE = 10;
+import { type HospitalRegisterSchema } from "../_components/ui/back_office/HospitalRegister";
+import { type Hospital } from "@prisma/client";
+import { type PromiseResponse } from "@/app/_lib/definition";
+import { type UserWithOutPassword } from "@/app/_lib/definition";
+import { unstable_noStore as noStore } from "next/cache";
+import { LIMIT_PER_PAGE } from "@/app/_lib/definition";
 
 export const getUserAll = async () => {
   try {
@@ -22,6 +25,7 @@ export const getUserAll = async () => {
 };
 
 export const getUserById = async (id: string) => {
+  noStore();
   try {
     const user = await db.user.findUnique({
       where: {
@@ -64,7 +68,7 @@ export const createUser = async (data: unknown) => {
 };
 
 export const updateUser = async (id: string, data: unknown) => {
-  const validData = UpdateUserSchema.safeParse(data);
+  const validData = UserRegisterWithRefineSchema.safeParse(data);
   if (!validData.success) {
     console.error(validData.error.flatten());
     throw new Error("Invalid data format");
@@ -94,7 +98,7 @@ export const updateUser = async (id: string, data: unknown) => {
         role,
         hospital: {
           update: {
-            id: hospitalId,
+            id: hospitalId ?? undefined,
           },
         },
         image,
@@ -105,7 +109,7 @@ export const updateUser = async (id: string, data: unknown) => {
         role,
         hospital: {
           update: {
-            id: hospitalId,
+            id: hospitalId ?? undefined,
           },
         },
         image,
@@ -209,7 +213,11 @@ export const getUserByProvider = async (provider: string) => {
   }
 };
 
-export const getUserByQueryAndRole = async (query: string, role?: string) => {
+export const getUserByQueryAndRole = async (query: string, role?: string, page = "1") => {
+  noStore();
+  // check page is valid
+  const validPage = getValidPage(page);
+  // check role is valid
   role = role?.toUpperCase();
   const validRole = RoleSchema.safeParse(role);
 
@@ -217,36 +225,94 @@ export const getUserByQueryAndRole = async (query: string, role?: string) => {
     role = undefined;
   }
 
-  // const isInRoleEnum = Object.values(Role).includes(role as Role);
-  // Checl valid role from Role enum
-  // if (!validRole.data || role?.length === 0) {
-  //   role = undefined;
-  // }
+  const queryUser: Prisma.UserFindManyArgs = {
+    where: {
+      role: role as Role,
+      OR: [
+        {
+          email: {
+            contains: query,
+          },
+        },
+        {
+          name: {
+            contains: query,
+            mode: "insensitive",
+          },
+        },
+      ],
+    },
+    select: prismaExclude("User", ["password"]),
+    take: LIMIT_PER_PAGE,
+    skip: (validPage - 1) * LIMIT_PER_PAGE,
+  };
 
   try {
-    const users = await db.user.findMany({
-      where: {
-        role: role as Role,
-        OR: [
-          {
-            email: {
-              contains: query,
-            },
-          },
-          {
-            name: {
-              contains: query,
-              mode: "insensitive",
-            },
-          },
-        ],
-      },
-      select: prismaExclude("User", ["password"]),
-      take: LIMIT_PER_PAGE,
-    });
+    // const users = await db.user.findMany(queryUser);
+    const [users, total] = await db.$transaction([
+      db.user.findMany(queryUser),
+      db.user.count({
+        where: queryUser.where,
+      }),
+    ]);
 
-    return users as UserWithOutPassword[];
+    return {
+      pegination: {
+        total,
+      },
+      data: users as UserWithOutPassword[],
+    };
   } catch (error) {
     throw new Error("Error fetching users");
+  }
+};
+
+// Method for form HospitalRegister
+export const createHospital = async ({
+  hospitalName,
+}: z.infer<typeof HospitalRegisterSchema>): PromiseResponse<Hospital> => {
+  try {
+    const exitingHospital = await db.hospital.findUnique({
+      where: {
+        hospitalName,
+      },
+    });
+
+    if (exitingHospital) {
+      return {
+        success: false,
+        message: {
+          error: "Hospital already exists",
+        },
+      };
+    }
+
+    const hospital = await db.hospital.create({
+      data: {
+        hospitalName,
+      },
+    });
+
+    return {
+      success: true,
+      message: `Hospital created (ID: ${hospital.id})`,
+      data: hospital,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: {
+        error: "Error creating hospital",
+      },
+    };
+  }
+};
+
+export const getHospitalAll = async () => {
+  try {
+    const hospitals = await db.hospital.findMany();
+    return hospitals;
+  } catch (error) {
+    throw new Error("Error fetching hospitals");
   }
 };

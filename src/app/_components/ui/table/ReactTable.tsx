@@ -1,5 +1,5 @@
 "use client";
-import { Table, TableContainer, Thead, Tr, Th, Tbody, Td } from "@chakra-ui/react";
+import { Table, TableContainer, Thead, Tr, Th, Tbody, Td, type TableContainerProps } from "@chakra-ui/react";
 import {
   type ColumnDef,
   type SortingState,
@@ -15,12 +15,13 @@ type ReactTableProps<TData, TValue> = {
   data: TData[];
   columns: ColumnDef<TData, TValue>[];
   onRowSelectStateChange?: Dispatch<SetStateAction<TData[]>>;
-};
+} & TableContainerProps;
 
 export default function ReactTable<TData, TValue>({
   data,
   columns,
   onRowSelectStateChange,
+  ...rest
 }: ReactTableProps<TData, TValue>) {
   // SelectRow State
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
@@ -50,7 +51,7 @@ export default function ReactTable<TData, TValue>({
   }, [data]);
 
   return (
-    <TableContainer>
+    <TableContainer {...rest}>
       <Table>
         <Thead>
           {table.getHeaderGroups().map((headerGroup) => (

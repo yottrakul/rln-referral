@@ -17,6 +17,7 @@ export default function SearchBar({ placeholder = "Search", ...rest }: SearchBar
     const newSearchParams = new URLSearchParams(searchParams);
     if (e.target.value) {
       newSearchParams.set("query", e.target.value);
+      newSearchParams.set("page", "1");
     } else {
       newSearchParams.delete("query");
     }

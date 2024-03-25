@@ -16,7 +16,7 @@ export const AccountScalarFieldEnumSchema = z.enum(['id','userId','type','provid
 
 export const SessionScalarFieldEnumSchema = z.enum(['id','sessionToken','userId','expires']);
 
-export const UserScalarFieldEnumSchema = z.enum(['id','name','email','emailVerified','image','password','role','hospitalId']);
+export const UserScalarFieldEnumSchema = z.enum(['id','name','prefixName','firstName','lastName','email','emailVerified','image','password','role','hospitalId']);
 
 export const HospitalScalarFieldEnumSchema = z.enum(['id','hospitalName']);
 
@@ -40,7 +40,7 @@ export const AccountOrderByRelevanceFieldEnumSchema = z.enum(['id','userId','typ
 
 export const SessionOrderByRelevanceFieldEnumSchema = z.enum(['id','sessionToken','userId']);
 
-export const UserOrderByRelevanceFieldEnumSchema = z.enum(['id','name','email','image','password']);
+export const UserOrderByRelevanceFieldEnumSchema = z.enum(['id','name','prefixName','firstName','lastName','email','image','password']);
 
 export const HospitalOrderByRelevanceFieldEnumSchema = z.enum(['hospitalName']);
 
@@ -130,6 +130,9 @@ export const UserSchema = z.object({
   role: RoleSchema,
   id: z.string().cuid(),
   name: z.string().nullable(),
+  prefixName: z.string().nullable(),
+  firstName: z.string().nullable(),
+  lastName: z.string().nullable(),
   email: z.string().nullable(),
   emailVerified: z.coerce.date().nullable(),
   image: z.string().nullable(),

@@ -2,13 +2,7 @@
 import { Select } from "@chakra-ui/react";
 import { type Role } from "@prisma/client";
 import { useRouter, useSearchParams } from "next/navigation";
-
-const roleCustomName: Record<Role, string> = {
-  ADMIN: "ผู้ดูแลระบบ",
-  PHYSICIAN: "แพทย์",
-  MEDICAL_ASSISTANT: "ผู้ช่วยแพทย์",
-  GUEST: "ผู้ใช้ทั่วไป",
-};
+import { ROLE_NAME } from "@/app/_lib/definition";
 
 export default function RoleFilterBar() {
   const searchParams = useSearchParams();
@@ -17,6 +11,7 @@ export default function RoleFilterBar() {
     const newSearchParams = new URLSearchParams(searchParams);
     if (e.target.value) {
       newSearchParams.set("role", e.target.value);
+      newSearchParams.set("page", "1");
     } else {
       newSearchParams.delete("role");
     }
@@ -25,10 +20,10 @@ export default function RoleFilterBar() {
   return (
     <Select defaultValue={searchParams.get("role")?.toUpperCase()} onChange={handleSelect} flex={1}>
       <option value="">ทั้งหมด</option>
-      {Object.keys(roleCustomName).map((role) => {
+      {Object.keys(ROLE_NAME).map((role) => {
         return (
           <option key={role} value={role}>
-            {roleCustomName[role as Role]}
+            {ROLE_NAME[role as Role]}
           </option>
         );
       })}
