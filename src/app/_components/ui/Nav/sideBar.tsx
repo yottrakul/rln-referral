@@ -43,7 +43,7 @@ const navItem = [
   {
     title: "รายการคำขอ",
     icon: LuFolderInput,
-    link: "/backoffice_user",
+    link: "/request",
   },
   {
     title: "ค้นหารายชื่อ",
@@ -63,7 +63,7 @@ const navItem = [
   {
     title: "จัดการผู้ใช้",
     icon: IoPersonOutline,
-    link: "/consult",
+    link: "/backoffice_user",
   },
 ];
 
