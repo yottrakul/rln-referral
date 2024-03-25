@@ -1,6 +1,5 @@
 "use client";
 import { type UserWithOutPassword } from "@/app/_lib/definition";
-import { error } from "console";
 import type React from "react";
 import { createContext, useContext, useState } from "react";
 
@@ -24,7 +23,7 @@ function UserManagementContextProvider({ children }: { children: React.ReactNode
   //   const userContextValue = useUserContext();
   const [user, setUser] = useState<UserWithOutPassword[]>([]);
 
-  const deleteUser = (id: string[]) => {
+  const deleteUser = (id: string) => {
     setUser((userData) => userData.filter((user) => user.id != id));
   };
   const setUserData = (users: UserWithOutPassword[]) => {
