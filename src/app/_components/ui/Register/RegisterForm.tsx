@@ -104,6 +104,12 @@ const RegisterForm = () => {
           {error}
         </Alert>
       )}
+      {errors.hospitalId && (
+        <Alert mt={4} status="error">
+          <AlertIcon />
+          {errors.hospitalId.message}
+        </Alert>
+      )}
       <Button isDisabled={isPending} w={"100%"} type="submit" mt={4} colorScheme="blue">
         Add User
       </Button>

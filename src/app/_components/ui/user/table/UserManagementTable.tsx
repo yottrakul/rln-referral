@@ -2,7 +2,7 @@
 import { useState } from "react";
 import ReactTable from "@/app/_components/ui/table/ReactTable";
 import { userColumn } from "@/app/_components/ui/user/table/columns";
-import { type UserWithOutPassword } from "@/app/_actions/back_office";
+import { type UserWithOutPassword } from "@/app/_lib/definition";
 
 interface UserManagementTableProps {
   data: UserWithOutPassword[];
@@ -17,7 +17,7 @@ export default function UserManagementTable({ data }: UserManagementTableProps) 
 
   return (
     <>
-      <ReactTable data={data} columns={userColumn} onRowSelectStateChange={setUserSelected} />
+      <ReactTable w={"full"} data={data} columns={userColumn} onRowSelectStateChange={setUserSelected} />
     </>
   );
 }

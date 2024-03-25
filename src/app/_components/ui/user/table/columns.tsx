@@ -1,11 +1,13 @@
 "use client";
-import { type UserWithOutPassword } from "@/app/_actions/back_office";
+import { type UserWithOutPassword } from "@/app/_lib/definition";
 import { Avatar, Badge, Box, Text, HStack, Button } from "@chakra-ui/react";
 import { createColumnHelper } from "@tanstack/react-table";
 import { FaGear } from "react-icons/fa6";
 import DataTableColumnHeader from "@/app/_components/ui/table/DataTableColumnHeader";
 import CheckboxWithIndeterminate from "@/app/_components/ui/table/CheckboxWithIndeterminate";
 import CheckboxTable from "@/app/_components/ui/table/Checkbox";
+import Link from "next/link";
+import ModifyRoleButton from "@/app/_components/ui/back_office/ModifyRoleButton";
 
 // Create Column Helper for User
 const columnHelper = createColumnHelper<UserWithOutPassword>();
@@ -72,16 +74,6 @@ export const userColumn = [
   columnHelper.display({
     id: "user_action",
     header: () => <div></div>,
-    cell: ({ row }) => (
-      <Button
-        onClick={() => {
-          console.log("user id:", row.original.id);
-        }}
-        leftIcon={<FaGear />}
-        variant="outline"
-      >
-        Modify Roles
-      </Button>
-    ),
+    cell: ({ row }) => <ModifyRoleButton id={row.original.id} />,
   }),
 ];

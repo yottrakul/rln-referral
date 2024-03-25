@@ -1,15 +1,14 @@
 import { Box, Button, HStack } from "@chakra-ui/react";
-import { MdDelete } from "react-icons/md";
-import { FaPlus } from "react-icons/fa";
+import AddUserButton from "./AddUserButton";
+import { getHospitalAll } from "@/app/_actions/back_office";
 
-export default function UserAction() {
+export default async function UserAction() {
+  const hospitals = await getHospitalAll();
   return (
     <Box marginInlineStart={"auto"}>
       <HStack>
         <Button colorScheme="red">ลบ</Button>
-        <Button colorScheme="teal" rightIcon={<FaPlus />}>
-          เพิ่มผู้ใช้งาน
-        </Button>
+        <AddUserButton hospitals={hospitals} />
       </HStack>
     </Box>
   );

@@ -72,6 +72,9 @@ model Session {
 model User {
     id            String    @id @default(cuid())
     name          String?
+    prefixName    String?
+    firstName     String?
+    lastName      String?
     email         String?   @unique
     emailVerified DateTime?
     image         String?
@@ -85,7 +88,7 @@ model User {
 
 model Hospital {
     id                 Int                   @id @default(autoincrement())
-    hospitalName       String
+    hospitalName       String                @unique
     sendCases          Referral_case[]       @relation("send_cases")
     reciveCases        Referral_case[]       @relation("recive_cases")
     startCaseFrom      Referral_case[]       @relation("startCaseFrom")

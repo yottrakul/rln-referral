@@ -4,15 +4,15 @@ The Referral System is a beneficial system for patients, doctors, nurses, and ho
 
 ## Tech-Stacks
 
-| Type               | Technology     | Version | Documentation                                       |
-| ------------------ | -------------- | ------- | --------------------------------------------------- |
-| **Web Frameworks** | Next.js        | 14.0.4  | [Next.js](https://nextjs.org)                       |
-| **ENV Validation** | T3-env         | 0.7.1   | [Create.t3.gg](https://env.t3.gg/docs/introduction) |
-| **Authentication** | NextAuth.js    | 4.24.5  | [NextAuth.js](https://next-auth.js.org)             |
-| **ORM**            | Prisma         | 5.6.0   | [Prisma](https://prisma.io)                         |
-| **UI Components**  | ChakraUI       | 2.8.2   | [ChakraUI](https://chakra-ui.com/)                  |
-| **Table package**  | TanStack-Table | 8.13.2  | [TanStack/react-table](https://chakra-ui.com/)      |
-| **Validation**     | Zod            | 3.22.4  | [Zod](https://zod.dev/)                             |
+| Type               | Technology     | Version | Documentation                                             |
+| ------------------ | -------------- | ------- | --------------------------------------------------------- |
+| **Web Frameworks** | Next.js        | 14.0.4  | [Next.js](https://nextjs.org)                             |
+| **ENV Validation** | T3-env         | 0.7.1   | [Create.t3.gg](https://env.t3.gg/docs/introduction)       |
+| **Authentication** | NextAuth.js    | 4.24.5  | [NextAuth.js](https://next-auth.js.org)                   |
+| **ORM**            | Prisma         | 5.6.0   | [Prisma](https://prisma.io)                               |
+| **UI Components**  | ChakraUI       | 2.8.2   | [ChakraUI](https://chakra-ui.com/)                        |
+| **Table package**  | TanStack-Table | 8.13.2  | [TanStack/react-table](https://tanstack.com/table/latest) |
+| **Validation**     | Zod            | 3.22.4  | [Zod](https://zod.dev/)                                   |
 
 ## Run Locally
 

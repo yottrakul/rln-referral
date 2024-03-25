@@ -21,7 +21,14 @@ declare module "next-auth" {
       id: string;
       // ...other properties
       role: Role;
+      firstName?: string;
+      lastName?: string;
     } & DefaultSession["user"];
+  }
+
+  interface Profile extends GoogleProfile {
+    firstName: string;
+    lastName: string;
   }
 
   // interface User {
@@ -33,6 +40,8 @@ declare module "next-auth" {
 declare module "next-auth/jwt" {
   interface JWT {
     role: Role;
+    firstName?: string;
+    lastName?: string;
   }
 }
 
@@ -60,13 +69,21 @@ export const authOptions: NextAuthOptions = {
         session.user.id = token.sub;
       }
 
+      // เพิ่มชื่อและนามสกุล ให้กับ session ที่ได้จาก token
+      session.user.firstName = token.firstName;
+      session.user.lastName = token.lastName;
+
       // เพิ่ม role ให้กับ session ที่ได้จาก token
       session.user.role = token.role;
 
       return session;
     },
-    async jwt({ token }) {
+    async jwt({ token, profile }) {
       // เพิ่ม role ให้กับ token
+      if (profile) {
+        token.firstName = profile.firstName;
+        token.lastName = profile.lastName;
+      }
       if (token.sub) {
         const exitingUser = await getUserById(token.sub);
         if (exitingUser?.role) {
@@ -87,6 +104,8 @@ export const authOptions: NextAuthOptions = {
           name: profile.name,
           email: profile.email,
           image: profile.picture,
+          firstName: profile.given_name,
+          lastName: profile.family_name,
         };
       },
     }),
