@@ -67,73 +67,73 @@ export const createUser = async (data: unknown) => {
   }
 };
 
-export const updateUser = async (id: string, data: unknown) => {
-  const validData = UserRegisterWithRefineSchema.safeParse(data);
-  if (!validData.success) {
-    console.error(validData.error.flatten());
-    throw new Error("Invalid data format");
-  }
+// export const updateUser = async (id: string, data: unknown) => {
+//   const validData = UserRegisterWithRefineSchema.safeParse(data);
+//   if (!validData.success) {
+//     console.error(validData.error.flatten());
+//     throw new Error("Invalid data format");
+//   }
 
-  const { name, role, hospitalId, image, password } = validData.data;
-  const hashedPassword = password ? await bcrypt.hash(password, 10) : undefined;
-  let updateData: Prisma.UserUpdateInput;
+//   const { name, role, hospitalId, image, password } = validData.data;
+//   const hashedPassword = password ? await bcrypt.hash(password, 10) : undefined;
+//   let updateData: Prisma.UserUpdateInput;
 
-  try {
-    const haveProvider = await db.user.findUnique({
-      where: {
-        id,
-      },
-      select: {
-        accounts: {
-          select: {
-            provider: true,
-          },
-        },
-      },
-    });
+//   try {
+//     const haveProvider = await db.user.findUnique({
+//       where: {
+//         id,
+//       },
+//       select: {
+//         accounts: {
+//           select: {
+//             provider: true,
+//           },
+//         },
+//       },
+//     });
 
-    if (haveProvider) {
-      updateData = {
-        name,
-        role,
-        hospital: {
-          update: {
-            id: hospitalId ?? undefined,
-          },
-        },
-        image,
-      };
-    } else {
-      updateData = {
-        name,
-        role,
-        hospital: {
-          update: {
-            id: hospitalId ?? undefined,
-          },
-        },
-        image,
-        password: hashedPassword,
-      };
-    }
+//     if (haveProvider) {
+//       updateData = {
+//         name,
+//         role,
+//         hospital: {
+//           update: {
+//             id: hospitalId ?? undefined,
+//           },
+//         },
+//         image,
+//       };
+//     } else {
+//       updateData = {
+//         name,
+//         role,
+//         hospital: {
+//           update: {
+//             id: hospitalId ?? undefined,
+//           },
+//         },
+//         image,
+//         password: hashedPassword,
+//       };
+//     }
 
-    const user = await db.user.update({
-      where: {
-        id,
-      },
-      data: updateData,
-      select: prismaExclude("User", ["password"]),
-    });
+//     const user = await db.user.update({
+//       where: {
+//         id,
+//       },
+//       data: updateData,
+//       select: prismaExclude("User", ["password"]),
+//     });
 
-    return {
-      success: true,
-      message: `User id: ${id} updated`,
-      user,
-    };
-  } catch (error) {
-    throw new Error(`Error updating user id: ${id}`);
-  }
-};
+//     return {
+//       success: true,
+//       message: `User id: ${id} updated`,
+//       user,
+//     };
+//   } catch (error) {
+//     throw new Error(`Error updating user id: ${id}`);
+//   }
+// };
 
 export const deleteUser = async (id: string) => {
   try {
