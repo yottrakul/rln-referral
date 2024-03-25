@@ -1,3 +1,4 @@
+import UserManagementContext from "@/app/_components/context/UserManagementContext";
 import ModalLoadingSkeleton from "@/app/_components/ui/back_office/ModalLoadingSkeleton";
 import UpdateUserModal from "@/app/_components/ui/back_office/UpdateUserModal";
 import UserFilterControl from "@/app/_components/ui/back_office/UserFilterControl";
@@ -16,15 +17,17 @@ export default async function backoffice_user({
   const page = searchParams?.page ?? "1";
   return (
     <main>
-      <UserFilterControl />
-      <Suspense key={query + role + page} fallback={<div>Loading...</div>}>
-        <UserManagement query={query} role={role} page={page} />
-      </Suspense>
-      {updateid ? (
-        <Suspense key={updateid} fallback={<ModalLoadingSkeleton />}>
-          <UpdateUserModal isOpen={showModal} id={updateid} />
+      <UserManagementContext>
+        <UserFilterControl />
+        <Suspense key={query + role + page} fallback={<div>Loading...</div>}>
+          <UserManagement query={query} role={role} page={page} />
         </Suspense>
-      ) : null}
+        {updateid ? (
+          <Suspense key={updateid} fallback={<ModalLoadingSkeleton />}>
+            <UpdateUserModal isOpen={showModal} id={updateid} />
+          </Suspense>
+        ) : null}
+      </UserManagementContext>
     </main>
   );
 }
