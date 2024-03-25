@@ -1,7 +1,6 @@
 import { UserSchema } from "./generated/zod/index";
 import * as z from "zod";
 import { Role, Status } from "@prisma/client";
-import { type File } from "buffer";
 import { MAX_FILE_SIZE, ACCEPTED_IMAGE_TYPES } from "@/app/_lib/definition";
 
 /////////////////////////////////////////
