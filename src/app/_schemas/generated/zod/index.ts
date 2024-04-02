@@ -20,15 +20,15 @@ export const UserScalarFieldEnumSchema = z.enum(['id','name','prefixName','first
 
 export const HospitalScalarFieldEnumSchema = z.enum(['id','hospitalName']);
 
-export const Hitory_process_listScalarFieldEnumSchema = z.enum(['id','hospitalId','sender','recive','reject','accept','createAt']);
+export const ReferralCaseScalarFieldEnumSchema = z.enum(['id','patientId','status','senderHospital','startHospital','receiverHospital']);
 
-export const Referral_caseScalarFieldEnumSchema = z.enum(['id','patientId','status','senderHospital','startHospital','receiverHospital']);
+export const PatientScalarFieldEnumSchema = z.enum(['id','citizenId','patientFirstname','patientSurname','brithDate','gender','bloodType','houseNumber','moo','subDistrict','subArea','province','postalCode']);
 
-export const Patient_infoScalarFieldEnumSchema = z.enum(['id','citizenId','patientFirstname','patientSurname','brithDate','gender','bloodType','houseNumber','moo','subDistrict','subArea','province','postalCode']);
-
-export const Med_recordScalarFieldEnumSchema = z.enum(['id','case','date','doctor','hospital','detail']);
+export const Med_recordScalarFieldEnumSchema = z.enum(['id','caseId','createdAt','doctorId','detail']);
 
 export const Log_case_statusScalarFieldEnumSchema = z.enum(['caseId','statusTo','statusFrom','changeAt']);
+
+export const Hitory_process_listScalarFieldEnumSchema = z.enum(['id','hospitalId','sender','recive','reject','accept','createAt']);
 
 export const SortOrderSchema = z.enum(['asc','desc']);
 
@@ -44,11 +44,11 @@ export const UserOrderByRelevanceFieldEnumSchema = z.enum(['id','name','prefixNa
 
 export const HospitalOrderByRelevanceFieldEnumSchema = z.enum(['hospitalName']);
 
-export const Referral_caseOrderByRelevanceFieldEnumSchema = z.enum(['id']);
+export const ReferralCaseOrderByRelevanceFieldEnumSchema = z.enum(['id']);
 
-export const Patient_infoOrderByRelevanceFieldEnumSchema = z.enum(['citizenId','patientFirstname','patientSurname','houseNumber','moo','subDistrict','subArea','province','postalCode']);
+export const PatientOrderByRelevanceFieldEnumSchema = z.enum(['citizenId','patientFirstname','patientSurname','houseNumber','moo','subDistrict','subArea','province','postalCode']);
 
-export const Med_recordOrderByRelevanceFieldEnumSchema = z.enum(['id','case','doctor','hospital','detail']);
+export const Med_recordOrderByRelevanceFieldEnumSchema = z.enum(['id','caseId','doctorId','detail']);
 
 export const Log_case_statusOrderByRelevanceFieldEnumSchema = z.enum(['caseId','statusTo','statusFrom']);
 
@@ -170,34 +170,10 @@ export const HospitalPartialSchema = HospitalSchema.partial()
 export type HospitalPartial = z.infer<typeof HospitalPartialSchema>
 
 /////////////////////////////////////////
-// HITORY PROCESS LIST SCHEMA
-/////////////////////////////////////////
-
-export const Hitory_process_listSchema = z.object({
-  id: z.number().int(),
-  hospitalId: z.number().int(),
-  sender: z.number().int(),
-  recive: z.number().int(),
-  reject: z.number().int(),
-  accept: z.number().int(),
-  createAt: z.coerce.date(),
-})
-
-export type Hitory_process_list = z.infer<typeof Hitory_process_listSchema>
-
-/////////////////////////////////////////
-// HITORY PROCESS LIST PARTIAL SCHEMA
-/////////////////////////////////////////
-
-export const Hitory_process_listPartialSchema = Hitory_process_listSchema.partial()
-
-export type Hitory_process_listPartial = z.infer<typeof Hitory_process_listPartialSchema>
-
-/////////////////////////////////////////
 // REFERRAL CASE SCHEMA
 /////////////////////////////////////////
 
-export const Referral_caseSchema = z.object({
+export const ReferralCaseSchema = z.object({
   status: StatusSchema,
   id: z.string().cuid(),
   patientId: z.number().int(),
@@ -206,21 +182,21 @@ export const Referral_caseSchema = z.object({
   receiverHospital: z.number().int(),
 })
 
-export type Referral_case = z.infer<typeof Referral_caseSchema>
+export type ReferralCase = z.infer<typeof ReferralCaseSchema>
 
 /////////////////////////////////////////
 // REFERRAL CASE PARTIAL SCHEMA
 /////////////////////////////////////////
 
-export const Referral_casePartialSchema = Referral_caseSchema.partial()
+export const ReferralCasePartialSchema = ReferralCaseSchema.partial()
 
-export type Referral_casePartial = z.infer<typeof Referral_casePartialSchema>
+export type ReferralCasePartial = z.infer<typeof ReferralCasePartialSchema>
 
 /////////////////////////////////////////
-// PATIENT INFO SCHEMA
+// PATIENT SCHEMA
 /////////////////////////////////////////
 
-export const Patient_infoSchema = z.object({
+export const PatientSchema = z.object({
   gender: GenderSchema,
   bloodType: BloodTypeSchema,
   id: z.number().int(),
@@ -236,15 +212,15 @@ export const Patient_infoSchema = z.object({
   postalCode: z.string().nullable(),
 })
 
-export type Patient_info = z.infer<typeof Patient_infoSchema>
+export type Patient = z.infer<typeof PatientSchema>
 
 /////////////////////////////////////////
-// PATIENT INFO PARTIAL SCHEMA
+// PATIENT PARTIAL SCHEMA
 /////////////////////////////////////////
 
-export const Patient_infoPartialSchema = Patient_infoSchema.partial()
+export const PatientPartialSchema = PatientSchema.partial()
 
-export type Patient_infoPartial = z.infer<typeof Patient_infoPartialSchema>
+export type PatientPartial = z.infer<typeof PatientPartialSchema>
 
 /////////////////////////////////////////
 // MED RECORD SCHEMA
@@ -252,10 +228,9 @@ export type Patient_infoPartial = z.infer<typeof Patient_infoPartialSchema>
 
 export const Med_recordSchema = z.object({
   id: z.string().cuid(),
-  case: z.string(),
-  date: z.coerce.date(),
-  doctor: z.string(),
-  hospital: z.string(),
+  caseId: z.string(),
+  createdAt: z.coerce.date(),
+  doctorId: z.string(),
   detail: z.string(),
 })
 
@@ -289,3 +264,27 @@ export type Log_case_status = z.infer<typeof Log_case_statusSchema>
 export const Log_case_statusPartialSchema = Log_case_statusSchema.partial()
 
 export type Log_case_statusPartial = z.infer<typeof Log_case_statusPartialSchema>
+
+/////////////////////////////////////////
+// HITORY PROCESS LIST SCHEMA
+/////////////////////////////////////////
+
+export const Hitory_process_listSchema = z.object({
+  id: z.number().int(),
+  hospitalId: z.number().int(),
+  sender: z.number().int(),
+  recive: z.number().int(),
+  reject: z.number().int(),
+  accept: z.number().int(),
+  createAt: z.coerce.date(),
+})
+
+export type Hitory_process_list = z.infer<typeof Hitory_process_listSchema>
+
+/////////////////////////////////////////
+// HITORY PROCESS LIST PARTIAL SCHEMA
+/////////////////////////////////////////
+
+export const Hitory_process_listPartialSchema = Hitory_process_listSchema.partial()
+
+export type Hitory_process_listPartial = z.infer<typeof Hitory_process_listPartialSchema>

@@ -1,11 +1,11 @@
 "use server";
 
 import { db } from "@/server/db";
-import { RegisterSchema, RoleSchema, UserRegisterWithRefineSchema } from "@/app/_schemas";
+import { RoleSchema, CreateUserSchema } from "@/app/_schemas";
 import { type z } from "zod";
-import { getValidPage, prismaExclude } from "@/app/_lib";
+import { getValidPage, prismaExclude, userImageAdaptor, usersImageAdaptor } from "@/app/_lib";
 import bcrypt from "bcryptjs";
-import { type Prisma, type Role } from "@prisma/client";
+import { User, type Prisma, type Role } from "@prisma/client";
 import { type HospitalRegisterSchema } from "../_components/ui/back_office/HospitalRegister";
 import { type Hospital } from "@prisma/client";
 import { type PromiseResponse } from "@/app/_lib/definition";
@@ -34,20 +34,64 @@ export const getUserById = async (id: string) => {
       select: prismaExclude("User", ["password"]),
     });
 
-    return user as UserWithOutPassword;
+    if (user) {
+      return userImageAdaptor(user);
+    }
+
+    return null;
   } catch (error) {
     throw new Error(`Error fetching user id: ${id}`);
   }
 };
 
-export const createUser = async (data: unknown) => {
-  const validData = RegisterSchema.safeParse(data);
+export const getUserAccountTypeById = async (id: string) => {
+  noStore();
+  try {
+    const userAccountsType = await db.user.findUnique({
+      where: {
+        id,
+      },
+      select: {
+        accounts: {
+          select: {
+            type: true,
+          },
+        },
+      },
+    });
+
+    if (userAccountsType) {
+      return userAccountsType.accounts[0]?.type;
+    } else {
+      return null;
+    }
+  } catch (error) {
+    throw new Error(`Error fetching user id: ${id}`);
+  }
+};
+
+export const createUser = async (data: unknown): PromiseResponse<UserWithOutPassword> => {
+  const validData = CreateUserSchema.safeParse(data);
   if (!validData.success) {
     console.error(validData.error.flatten());
-    throw new Error("Invalid data format");
+    return {
+      success: false,
+      message: {
+        error: "Invalid data format",
+      },
+    };
   }
 
-  const { email, name, password, role, hospitalId } = validData.data;
+  const { email, name, password, role, hospitalId, image } = validData.data;
+  const exitUser = await getUserByEmail(email);
+  if (exitUser) {
+    return {
+      success: false,
+      message: {
+        error: "User already exists",
+      },
+    };
+  }
   const hashedPassword = await bcrypt.hash(password, 10);
   try {
     const user = await db.user.create({
@@ -57,13 +101,23 @@ export const createUser = async (data: unknown) => {
         password: hashedPassword,
         role,
         hospitalId,
+        image,
       },
       select: prismaExclude("User", ["password"]),
     });
 
-    return user as UserWithOutPassword;
+    return {
+      success: true,
+      message: `User created (ID: ${user.id})`,
+      data: user as UserWithOutPassword,
+    };
   } catch (error) {
-    return null;
+    return {
+      success: false,
+      message: {
+        error: "Error creating user",
+      },
+    };
   }
 };
 
@@ -256,11 +310,14 @@ export const getUserByQueryAndRole = async (query: string, role?: string, page =
       }),
     ]);
 
+    // map secureimg endpoint to image
+    const usersSecureImg = usersImageAdaptor(users);
+
     return {
       pegination: {
         total,
       },
-      data: users as UserWithOutPassword[],
+      data: usersSecureImg as UserWithOutPassword[],
     };
   } catch (error) {
     throw new Error("Error fetching users");

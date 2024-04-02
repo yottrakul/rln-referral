@@ -1,6 +1,6 @@
 "use server";
 import { db } from "@/server/db";
-import { Patient_infoSchema } from "@/app/_schemas/generated/zod";
+import { PatientSchema } from "@/app/_schemas/generated/zod";
 import { type Status } from "@prisma/client";
 import { type User } from "@/app/_schemas/generated/zod";
 
@@ -44,7 +44,7 @@ export const getUserAll = async (): Promise<User[]> => {
 };
 
 export const createUser = async (data: unknown) => {
-  const validData = Patient_infoSchema.omit({ id: true }).safeParse(data);
+  const validData = PatientSchema.omit({ id: true }).safeParse(data);
 
   if (!validData.success) {
     return {
@@ -64,7 +64,7 @@ export const getProcessListSender = async (hospitalId: number, page: number) => 
   page = Math.max(1, page);
 
   try {
-    const processList = await db.patient_info.findMany({
+    const processList = await db.patient.findMany({
       include: {
         refCases: {
           where: {
@@ -89,7 +89,7 @@ export const getProcessListRecive = async (hospitalId: number, page: number) => 
   page = Math.max(1, page);
 
   try {
-    const processList = await db.patient_info.findMany({
+    const processList = await db.patient.findMany({
       include: {
         refCases: {
           where: {
@@ -118,7 +118,7 @@ export const getProcessListAR = async (
   page = Math.max(1, page);
 
   try {
-    const processList = await db.referral_case.findMany({
+    const processList = await db.referralCase.findMany({
       select: {
         id: true,
         status: true,

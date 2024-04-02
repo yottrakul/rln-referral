@@ -1,8 +1,7 @@
 import { UserSchema } from "./generated/zod/index";
 import * as z from "zod";
 import { Role, Status } from "@prisma/client";
-import { type File } from "buffer";
-import { MAX_FILE_SIZE, ACCEPTED_IMAGE_TYPES } from "@/app/_lib/definition";
+import { MAX_IMAGE_FILE_SIZE, ACCEPTED_IMAGE_TYPES } from "@/app/_lib/definition";
 
 /////////////////////////////////////////
 // ENUMS
@@ -68,6 +67,16 @@ export const NavigationSchema = z.object({
 /////////////////////////////////////////
 // type UserSchemaType = z.infer<typeof UserSchema>;
 
+export const CreateUserSchema = UserSchema.omit({
+  id: true,
+  emailVerified: true,
+}).merge(
+  z.object({
+    email: z.string().email(),
+    password: z.string(),
+  })
+);
+
 export const UserSchemaWithOutPassword = UserSchema.omit({ password: true });
 export const UpdateUserSchema = z.object({
   password: z.string().min(1, "Password is required").optional(),
@@ -93,7 +102,7 @@ export const UserRegisterSchema = z.object({
       return files[0];
     })
     .refine((e) => {
-      return e?.size ?? 0 <= MAX_FILE_SIZE;
+      return e?.size ?? 0 <= MAX_IMAGE_FILE_SIZE;
     }, `Max image size is 5MB.`)
     .refine((e) => {
       if (!e) return true;

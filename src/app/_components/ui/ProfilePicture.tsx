@@ -3,18 +3,22 @@ import { Input, Avatar, Button, useMergeRefs, VStack } from "@chakra-ui/react";
 import { type FieldValues, type UseFormRegister, type Path } from "react-hook-form";
 
 interface ProfilePictureProps<TFormValue extends FieldValues> {
+  isDisabled?: boolean;
   label: Path<TFormValue>;
   register: UseFormRegister<TFormValue>;
+  src?: string;
 }
 
 export default function ProfilePicture<TFormValue extends FieldValues>({
+  isDisabled,
   register,
   label,
+  src,
 }: ProfilePictureProps<TFormValue>) {
   const _inputRef = useRef<HTMLInputElement>(null);
   const { ref: registerRef, onChange, ...rest } = register(label);
 
-  const [preview, setPreview] = useState<string>("");
+  const [preview, setPreview] = useState<string>(src ?? "");
 
   const inputRef = useMergeRefs(_inputRef, registerRef);
 
@@ -52,7 +56,7 @@ export default function ProfilePicture<TFormValue extends FieldValues>({
 
       <Avatar src={preview} size={"xl"} />
 
-      <Button colorScheme="purple" onClick={onUpload}>
+      <Button isDisabled={isDisabled} colorScheme="purple" onClick={onUpload}>
         {uploadButtonLabel}
       </Button>
     </VStack>
