@@ -26,10 +26,10 @@ import { PREFIX_NAME_TH as prefixNames } from "@/app/_lib/const";
 import type { ModalProps } from "@chakra-ui/react";
 import { type Hospital } from "@prisma/client";
 import { ROLE_NAME, type UserWithOutPassword } from "@/app/_lib/definition";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import ProfilePicture from "@/app/_components/ui/ProfilePicture";
 import { uploadFile } from "@/app/_actions/s3/actions";
-import { createUser, getUserByEmail } from "@/app/_actions/back_office";
+import { createUser, getUserByEmail, updateUser } from "@/app/_actions/back_office";
 
 // interface UserModalProps extends Omit<ModalProps, "children"> {
 //   hospitals: Hospital[];
@@ -51,7 +51,7 @@ type UserModalProps =
       account?: AccountType;
     } & Omit<ModalProps, "children">);
 
-const UserModal = ({ account = "credential", data, isEdit, hospitals, onClose, ...rest }: UserModalProps) => {
+const UserModal = memo(({ account = "credential", data, isEdit, hospitals, onClose, ...rest }: UserModalProps) => {
   const toast = useToast();
   const formRef = useRef<HTMLFormElement | null>(null);
   const [isPending, setIsPending] = useState(false);
@@ -104,8 +104,36 @@ const UserModal = ({ account = "credential", data, isEdit, hospitals, onClose, .
     const handleSubmit = async () => {
       setError(null);
       if (isEdit) {
-        console.log(value);
-        setIsPending(false);
+        // add to formdata
+        formDataImage.append("id", data?.id ?? "");
+        Object.entries(value).forEach(([key, val]) => {
+          if (val === null || val === undefined) {
+            return;
+          }
+
+          if ((key as keyof typeof value) === "image") {
+            formDataImage.append("image", val as File);
+          } else if (typeof val === "string") {
+            formDataImage.append(key, val);
+          }
+        });
+
+        try {
+          const res = await updateUser(formDataImage);
+          if (!!res) {
+            reset();
+            onClose();
+          } else {
+            throw new Error("Create user failed");
+          }
+        } catch (error) {
+          if (error instanceof Error) {
+            setError(error.message);
+          }
+          throw new Error("Create user failed");
+        } finally {
+          setIsPending(false);
+        }
       } else {
         let imageKey: string | undefined = "";
 
@@ -119,7 +147,6 @@ const UserModal = ({ account = "credential", data, isEdit, hospitals, onClose, .
             }
             const res = await uploadFile(formDataImage);
             if (res.success) {
-              console.log(res.data);
               imageKey = res.data;
             }
           } catch (error) {
@@ -130,7 +157,6 @@ const UserModal = ({ account = "credential", data, isEdit, hospitals, onClose, .
             throw new Error("Upload image failed");
           }
         }
-        console.log("imageKey:", imageKey);
 
         // Create user
         const newUser = {
@@ -314,6 +340,8 @@ const UserModal = ({ account = "credential", data, isEdit, hospitals, onClose, .
       </Modal>
     );
   }
-};
+});
+
+UserModal.displayName = "UserModal";
 
 export default UserModal;
