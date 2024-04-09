@@ -22,7 +22,7 @@ export const HospitalScalarFieldEnumSchema = z.enum(['id','hospitalName']);
 
 export const ReferralCaseScalarFieldEnumSchema = z.enum(['id','patientId','status','senderHospital','startHospital','receiverHospital']);
 
-export const PatientScalarFieldEnumSchema = z.enum(['id','citizenId','patientFirstname','patientSurname','brithDate','gender','bloodType','houseNumber','moo','subDistrict','subArea','province','postalCode']);
+export const PatientScalarFieldEnumSchema = z.enum(['id','citizenId','patientFirstname','patientSurname','birthDate','gender','bloodType','houseNumber','moo','subDistrict','subArea','province','postalCode']);
 
 export const Med_recordScalarFieldEnumSchema = z.enum(['id','caseId','createdAt','doctorId','detail']);
 
@@ -50,7 +50,7 @@ export const PatientOrderByRelevanceFieldEnumSchema = z.enum(['citizenId','patie
 
 export const Med_recordOrderByRelevanceFieldEnumSchema = z.enum(['id','caseId','doctorId','detail']);
 
-export const Log_case_statusOrderByRelevanceFieldEnumSchema = z.enum(['caseId','statusTo','statusFrom']);
+export const Log_case_statusOrderByRelevanceFieldEnumSchema = z.enum(['caseId']);
 
 export const RoleSchema = z.enum(['ADMIN','PHYSICIAN','MEDICAL_ASSISTANT','GUEST']);
 
@@ -203,7 +203,7 @@ export const PatientSchema = z.object({
   citizenId: z.string(),
   patientFirstname: z.string(),
   patientSurname: z.string(),
-  brithDate: z.coerce.date(),
+  birthDate: z.coerce.date(),
   houseNumber: z.string().nullable(),
   moo: z.string().nullable(),
   subDistrict: z.string().nullable(),
