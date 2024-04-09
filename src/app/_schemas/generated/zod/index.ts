@@ -56,7 +56,7 @@ export const RoleSchema = z.enum(['ADMIN','PHYSICIAN','MEDICAL_ASSISTANT','GUEST
 
 export type RoleType = `${z.infer<typeof RoleSchema>}`
 
-export const StatusSchema = z.enum(['PENDING','ACCEPT','REJECT','COMPLETE']);
+export const StatusSchema = z.enum(['NONE','PENDING','ACCEPT','REJECT','COMPLETE']);
 
 export type StatusType = `${z.infer<typeof StatusSchema>}`
 
@@ -249,9 +249,9 @@ export type Med_recordPartial = z.infer<typeof Med_recordPartialSchema>
 /////////////////////////////////////////
 
 export const Log_case_statusSchema = z.object({
+  statusTo: StatusSchema,
+  statusFrom: StatusSchema,
   caseId: z.string(),
-  statusTo: z.string(),
-  statusFrom: z.string(),
   changeAt: z.coerce.date(),
 })
 

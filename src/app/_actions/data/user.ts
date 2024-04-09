@@ -36,8 +36,7 @@ export const getUserById = async (id: string) => {
 
 export const getUserAll = async (): Promise<User[]> => {
   try {
-    const users = await db.user.findMany();
-    return users;
+    return await db.user.findMany();
   } catch (error) {
     throw new Error("Error fetching users");
   }
@@ -116,7 +115,6 @@ export const getProcessListAR = async (
   page: number
 ) => {
   page = Math.max(1, page);
-
   try {
     const processList = await db.referralCase.findMany({
       select: {
@@ -128,14 +126,13 @@ export const getProcessListAR = async (
         startCaseFrom: true,
       },
 
-      skip: (page - 1) * 10,
-      take: USER_LIMIT_PER_PAGE,
-      where: {
-        status: status,
-        senderHospital: hospitalId,
-      },
-    });
-    // console.dir(processList,{depth: Infinity});
+        where:{
+          status: status,
+          senderHospital: hospitalId
+        }
+      }
+    )
+    console.dir(processList,{depth: Infinity});
     return processList;
   } catch (error) {
     throw error;

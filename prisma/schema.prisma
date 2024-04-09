@@ -141,8 +141,8 @@ model Med_record {
 
 model Log_case_status {
     caseId     String
-    statusTo   String
-    statusFrom String
+    statusTo   Status
+    statusFrom Status
     changeAt   DateTime
     case       ReferralCase @relation(fields: [caseId], references: [id])
 
@@ -189,6 +189,7 @@ enum Role {
 }
 
 enum Status {
+    NONE
     PENDING
     ACCEPT
     REJECT
