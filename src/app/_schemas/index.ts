@@ -1,7 +1,8 @@
 import { UserSchema } from "./generated/zod/index";
 import * as z from "zod";
-import { Role, Status } from "@prisma/client";
+import { Role, Status, Gender } from "@prisma/client";
 import { MAX_IMAGE_FILE_SIZE, ACCEPTED_IMAGE_TYPES } from "@/app/_lib/definition";
+import { isValidThaiID } from "@/app/_lib";
 
 /////////////////////////////////////////
 // ENUMS
@@ -188,4 +189,18 @@ export const UserUpdateSchemaServerAction = UserRegisterSchema.merge(
 export const HospitalSchema = z.object({
   id: z.coerce.number().int({ message: "Invalid hospital ID" }),
   hospitalName: z.string().min(1, "Hospital name is required"),
+});
+
+/////////////////////////////////////////
+// Request
+/////////////////////////////////////////
+
+export const CreateRequestSchema = z.object({
+  citizenId: z.string().min(13, "Citizen ID is required").refine(isValidThaiID, { message: "Invalid Citizen ID" }),
+  patientFirstname: z.string().min(1, "Patient first name is required"),
+  patientSurname: z.string().min(1, "Patient surname is required"),
+  birthDate: z.date(),
+  gender: z.nativeEnum(Gender, {
+    errorMap: () => ({ message: "Invalid Gender" }),
+  }),
 });

@@ -118,7 +118,7 @@ model Patient {
     citizenId        String         @unique @db.Char(13)
     patientFirstname String         @db.VarChar(255)
     patientSurname   String         @db.VarChar(255)
-    brithDate        DateTime       @db.Date
+    birthDate        DateTime       @db.Date
     gender           Gender
     bloodType        BloodType
     houseNumber      String?

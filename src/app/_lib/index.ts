@@ -90,3 +90,41 @@ export const userImageAdaptor = (user: UserWithOutPassword) => {
     return user;
   }
 };
+
+export const isValidThaiID = (idNumber: string): boolean => {
+  // ตรวจสอบความยาวของเลขบัตรประชาชน
+  if (idNumber.length !== 13) {
+    return false;
+  }
+
+  // ตรวจสอบว่าเลขทั้งหมดเป็นตัวเลขหรือไม่
+  if (!/^\d+$/.test(idNumber)) {
+    return false;
+  }
+
+  // ตรวจสอบ Check Digit
+  const checkDigit = parseInt(idNumber.charAt(12));
+  const calculatedCheckDigit = calculateCheckDigit(idNumber.substr(0, 12));
+  if (checkDigit !== calculatedCheckDigit) {
+    return false;
+  }
+
+  return true;
+};
+
+// ฟังก์ชันสำหรับคำนวณ Check Digit
+export const calculateCheckDigit = (idNumber: string): number => {
+  const multipliers: number[] = [13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2];
+  let sum = 0;
+  for (let i = 0; i < 12; i++) {
+    sum += parseInt(idNumber[i]!) * multipliers[i]!;
+  }
+  const remainder = sum % 11;
+  let checkDigit;
+  if (remainder === 0) {
+    checkDigit = 0;
+  } else {
+    checkDigit = 11 - remainder;
+  }
+  return checkDigit;
+};

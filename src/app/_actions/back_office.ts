@@ -1,11 +1,11 @@
 "use server";
 
 import { db } from "@/server/db";
-import { RoleSchema, CreateUserSchema, UserUpdateSchema, UserUpdateSchemaServerAction } from "@/app/_schemas";
+import { RoleSchema, CreateUserSchema, UserUpdateSchemaServerAction } from "@/app/_schemas";
 import { type z } from "zod";
 import { getValidPage, prismaExclude, userImageAdaptor, usersImageAdaptor } from "@/app/_lib";
 import bcrypt from "bcryptjs";
-import { User, type Prisma, type Role } from "@prisma/client";
+import { type Prisma, type Role } from "@prisma/client";
 import { type HospitalRegisterSchema } from "../_components/ui/back_office/HospitalRegister";
 import { type Hospital } from "@prisma/client";
 import { type PromiseResponse } from "@/app/_lib/definition";

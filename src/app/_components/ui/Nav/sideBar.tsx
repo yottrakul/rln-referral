@@ -201,9 +201,11 @@ export default function Navbar() {
             className="btn"
             overflow={"hidden"}
           >
-            <Button mx={2} px={6} bg={"#9E57DA"} _hover={{ bg: "#7943a5" }} color={"white"} rightIcon={<FaPlus />}>
-              สร้างคำขอ
-            </Button>
+            <Link href="/create-request">
+              <Button mx={2} px={6} bg={"#9E57DA"} _hover={{ bg: "#7943a5" }} color={"white"} rightIcon={<FaPlus />}>
+                สร้างคำขอ
+              </Button>
+            </Link>
           </Box>
 
           {navItem.map((e) => {
