@@ -18,7 +18,7 @@ const AddUserButton = memo(({ hospitals }: AddUserButtonProps) => {
       <Button rightIcon={<FaPlus />} onClick={onOpen} colorScheme="teal">
         เพิ่มผู้ใช้งาน
       </Button>
-      <UserModal size={"xl"} hospitals={hospitals} isOpen={isOpen} onClose={onClose} />
+      <UserModal hospitals={hospitals} isOpen={isOpen} onClose={onClose} />
     </>
   );
 });
