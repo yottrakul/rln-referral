@@ -1,6 +1,6 @@
 import { UserSchema } from "./generated/zod/index";
 import * as z from "zod";
-import { Role, Status, Gender } from "@prisma/client";
+import { Role, Status, Gender, BloodType } from "@prisma/client";
 import { MAX_IMAGE_FILE_SIZE, ACCEPTED_IMAGE_TYPES } from "@/app/_lib/definition";
 import { isValidThaiID } from "@/app/_lib";
 
@@ -29,6 +29,8 @@ const passwordMatch = ({ password, confirmPassword }: { password?: string | null
 
 // Regex for password is at least 4 characters
 export const passwordRegex = new RegExp(/^([a-zA-Z\d]|\s){4,}$/);
+export const phoneNumberRegex = new RegExp(/^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/g);
+export const postalCodeRegex = new RegExp(/^\d{5}(?:[-\s]\d{4})?$/g);
 
 /////////////////////////////////////////
 // SCHEMAS
@@ -192,15 +194,37 @@ export const HospitalSchema = z.object({
 });
 
 /////////////////////////////////////////
-// Request
+// Referral Request
 /////////////////////////////////////////
 
-export const CreateRequestSchema = z.object({
-  citizenId: z.string().min(13, "Citizen ID is required").refine(isValidThaiID, { message: "Invalid Citizen ID" }),
-  patientFirstname: z.string().min(1, "Patient first name is required"),
-  patientSurname: z.string().min(1, "Patient surname is required"),
-  birthDate: z.date(),
-  gender: z.nativeEnum(Gender, {
-    errorMap: () => ({ message: "Invalid Gender" }),
+export const CreatePatientSchema = z.object({
+  citizenId: z.string().min(1, "โปรดระบุเลขหมายบัตรประชาชน").refine(isValidThaiID, { message: "Invalid Citizen ID" }),
+  patientFirstname: z.string().min(1, "โปรดระบุชื่อจริง"),
+  patientSurname: z.string().min(1, "โปรดระบุนามสกุล"),
+  birthDate: z.coerce.date({
+    errorMap: () => ({ message: "โปรดระบุวันเดือนปีเกิด" }),
   }),
+  gender: z.nativeEnum(Gender, {
+    errorMap: () => ({ message: "โปรดระบุเพศ" }),
+  }),
+  phone: z
+    .union([z.string().regex(phoneNumberRegex, { message: "โปรดระบุหมายเลขโทรศัพท์ที่ถูกต้อง" }), z.string().length(0)])
+    .optional(),
+  bloodType: z.nativeEnum(BloodType, {
+    errorMap: () => ({ message: "โปรดระบุกรุ๊ปเลือด" }),
+  }),
+  houseNumber: z.string().optional(),
+  moo: z
+    .string()
+    .optional()
+    .transform((val) => {
+      console.log(val);
+      return val;
+    }),
+  subDistrict: z.string().optional(),
+  subArea: z.string().optional(),
+  province: z.string().optional(),
+  postalCode: z
+    .union([z.string().regex(postalCodeRegex, { message: "โปรดระบุรหัสไปรษณีย์ที่ถูกต้อง" }), z.string().length(0)])
+    .optional(),
 });

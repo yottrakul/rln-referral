@@ -30,7 +30,7 @@ import { FaMagnifyingGlass, FaPlus } from "react-icons/fa6";
 import { MdAccessTime, MdDriveFileMoveOutline } from "react-icons/md";
 import { useEffect, useState } from "react";
 import Navitem from "@/app/_components/ui/navitem/Navitem";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { HiOutlineOfficeBuilding } from "react-icons/hi";
 import UserProfile from "@/app/_components/ui/Nav/Userprofile";
 
@@ -79,8 +79,9 @@ const backOfficeItem = [
 ];
 
 export default function Navbar() {
-  const router = usePathname();
-  const [active, changeActive] = useState(router);
+  const pathname = usePathname();
+  const router = useRouter();
+  const [active, changeActive] = useState(pathname);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const [isMdSize] = useMediaQuery("(min-width: 768px)", {
@@ -201,11 +202,17 @@ export default function Navbar() {
             className="btn"
             overflow={"hidden"}
           >
-            <Link href="/create-request">
-              <Button mx={2} px={6} bg={"#9E57DA"} _hover={{ bg: "#7943a5" }} color={"white"} rightIcon={<FaPlus />}>
-                สร้างคำขอ
-              </Button>
-            </Link>
+            <Button
+              onClick={() => router.push("/create-request")}
+              mx={2}
+              px={6}
+              bg={"#9E57DA"}
+              _hover={{ bg: "#7943a5" }}
+              color={"white"}
+              rightIcon={<FaPlus />}
+            >
+              สร้างคำขอ
+            </Button>
           </Box>
 
           {navItem.map((e) => {

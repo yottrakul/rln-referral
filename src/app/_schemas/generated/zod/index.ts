@@ -22,7 +22,7 @@ export const HospitalScalarFieldEnumSchema = z.enum(['id','hospitalName']);
 
 export const ReferralCaseScalarFieldEnumSchema = z.enum(['id','patientId','status','senderHospital','startHospital','receiverHospital']);
 
-export const PatientScalarFieldEnumSchema = z.enum(['id','citizenId','patientFirstname','patientSurname','birthDate','gender','bloodType','houseNumber','moo','subDistrict','subArea','province','postalCode']);
+export const PatientScalarFieldEnumSchema = z.enum(['id','citizenId','patientFirstname','patientSurname','phone','birthDate','gender','bloodType','houseNumber','moo','subDistrict','subArea','province','postalCode']);
 
 export const Med_recordScalarFieldEnumSchema = z.enum(['id','caseId','createdAt','doctorId','detail']);
 
@@ -46,7 +46,7 @@ export const HospitalOrderByRelevanceFieldEnumSchema = z.enum(['hospitalName']);
 
 export const ReferralCaseOrderByRelevanceFieldEnumSchema = z.enum(['id']);
 
-export const PatientOrderByRelevanceFieldEnumSchema = z.enum(['citizenId','patientFirstname','patientSurname','houseNumber','moo','subDistrict','subArea','province','postalCode']);
+export const PatientOrderByRelevanceFieldEnumSchema = z.enum(['citizenId','patientFirstname','patientSurname','phone','houseNumber','moo','subDistrict','subArea','province','postalCode']);
 
 export const Med_recordOrderByRelevanceFieldEnumSchema = z.enum(['id','caseId','doctorId','detail']);
 
@@ -203,6 +203,7 @@ export const PatientSchema = z.object({
   citizenId: z.string(),
   patientFirstname: z.string(),
   patientSurname: z.string(),
+  phone: z.string().nullable(),
   birthDate: z.coerce.date(),
   houseNumber: z.string().nullable(),
   moo: z.string().nullable(),

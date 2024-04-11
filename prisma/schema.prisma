@@ -118,6 +118,7 @@ model Patient {
     citizenId        String         @unique @db.Char(13)
     patientFirstname String         @db.VarChar(255)
     patientSurname   String         @db.VarChar(255)
+    phone            String?
     birthDate        DateTime       @db.Date
     gender           Gender
     bloodType        BloodType
