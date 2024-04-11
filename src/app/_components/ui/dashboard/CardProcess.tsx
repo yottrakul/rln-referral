@@ -1,7 +1,7 @@
 "use client";
-import { getAllProcessList } from "@/app/_actions/board/card";
-import { type Status, type ReferralCase } from "@prisma/client";
+import { type Status } from "@prisma/client";
 import React, { useEffect } from "react";
+import { getAllProcessList } from "@/app/_actions/refferral-case";
 
 interface CardProcessProp {
   status: Status;
@@ -9,16 +9,22 @@ interface CardProcessProp {
 
 export default function CardProcess({ status }: CardProcessProp) {
   const [numRefCase, setNumRefCase] = React.useState<number>();
+  const [isError, setIsError] = React.useState<boolean>(false);
 
   useEffect(() => {
     const handleStatus = async () => {
+      setIsError(false);
       const referralCase = await getAllProcessList(status);
       if (referralCase) {
         setNumRefCase(referralCase.length);
       }
     };
-    handleStatus().catch(console.error);
+    handleStatus().catch(() => setIsError(true));
   }, [status]);
+
+  if (isError) {
+    return <div>Error</div>;
+  }
 
   return (
     <div>
