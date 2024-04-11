@@ -1,5 +1,4 @@
 "use client";
-import { ChevronDownIcon, HamburgerIcon } from "@chakra-ui/icons";
 import {
   Flex,
   Text,
@@ -23,60 +22,16 @@ import {
   DrawerOverlay,
   Spacer,
 } from "@chakra-ui/react";
-import { IoHomeOutline, IoDocumentTextOutline, IoPersonOutline } from "react-icons/io5";
-import { LuFolderInput } from "react-icons/lu";
-import { TbAmbulance } from "react-icons/tb";
-import { FaMagnifyingGlass, FaPlus } from "react-icons/fa6";
-import { MdAccessTime, MdDriveFileMoveOutline } from "react-icons/md";
-import { useEffect, useState } from "react";
 import Navitem from "@/app/_components/ui/navitem/Navitem";
-import { usePathname } from "next/navigation";
-import { HiOutlineOfficeBuilding } from "react-icons/hi";
 import UserProfile from "@/app/_components/ui/Nav/Userprofile";
-
-const navItem = [
-  {
-    title: "Dashboard",
-    icon: IoHomeOutline,
-    link: "/dashboard",
-  },
-  {
-    title: "รายการคำขอ",
-    icon: LuFolderInput,
-    link: "/backoffice_user",
-  },
-  {
-    title: "ค้นหารายชื่อ",
-    icon: FaMagnifyingGlass,
-    link: "/consult",
-  },
-  {
-    title: "ประวัติ",
-    icon: MdAccessTime,
-    link: "/consult",
-  },
-  {
-    title: "คู่มือการใช้งาน",
-    icon: IoDocumentTextOutline,
-    link: "/consult",
-  },
-  {
-    title: "จัดการผู้ใช้",
-    icon: IoPersonOutline,
-    link: "/consult",
-  },
-];
-
-const backOfficeItem = [
-  {
-    title: "User Management",
-    link: "/backoffice_user",
-  },
-  {
-    title: "role",
-    link: "/test/dashboard",
-  },
-];
+import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
+import { navItem } from "@/app/_lib/const";
+// icon
+import { HamburgerIcon } from "@chakra-ui/icons";
+import { TbAmbulance } from "react-icons/tb";
+import { FaPlus } from "react-icons/fa6";
+import { MdDriveFileMoveOutline } from "react-icons/md";
 
 export default function Navbar() {
   const router = usePathname();
@@ -113,59 +68,33 @@ export default function Navbar() {
         <Spacer />
         <Flex>{!isMdSize && <UserProfile />}</Flex>
       </Flex>
-      <Drawer placement="left" onClose={onClose} isOpen={isOpen} size={"md"}>
+      <Drawer placement="left" onClose={onClose} isOpen={isOpen} size={"xs"}>
         <DrawerOverlay />
         <DrawerContent>
           <DrawerCloseButton />
           <DrawerHeader></DrawerHeader>
           <DrawerBody>
+            <Box w={"100%"} h={"40px"}>
+              <Button mx={2} px={6} bg={"#9E57DA"} _hover={{ bg: "#7943a5" }} color={"white"} rightIcon={<FaPlus />}>
+                สร้างคำขอ
+              </Button>
+            </Box>
+
             {navItem.map((e) => {
               return (
-                <Navitem
-                  onClick={() => onClose()}
+                <Box
+                  style={{ marginLeft: "-6px" }}
                   key={e.title}
-                  icon={e.icon}
-                  title={e.title}
-                  link={e.link}
-                  active="test"
-                />
+                  w="100%"
+                  onClick={() => {
+                    changeActive(e.link);
+                    onClose();
+                  }}
+                >
+                  <Navitem key={e.title} icon={e.icon} title={e.title} link={e.link} active={active} />
+                </Box>
               );
             })}
-            <Flex mt={30} flexDir={"column"} w="100%" alignItems="flex-start" alignContent="center">
-              <Menu>
-                <MenuButton
-                  px={3}
-                  bg="none"
-                  _hover={{ bg: "#f3f4f7" }}
-                  w="100%"
-                  as={Button}
-                  rightIcon={<ChevronDownIcon />}
-                >
-                  <Flex alignItems="center">
-                    <Icon my={2} mr={5} fontSize="xl" as={HiOutlineOfficeBuilding} color="black" />
-                    <Text display={"flex"} fontWeight="medium">
-                      Back Office
-                    </Text>
-                  </Flex>
-                </MenuButton>
-                <MenuList>
-                  {backOfficeItem.map((e) => {
-                    return (
-                      <MenuItem
-                        key={e.title}
-                        onClick={() => {
-                          onClose();
-                        }}
-                      >
-                        <Link href={e.link}>
-                          <Text>{e.title}</Text>
-                        </Link>
-                      </MenuItem>
-                    );
-                  })}
-                </MenuList>
-              </Menu>
-            </Flex>
           </DrawerBody>
         </DrawerContent>
       </Drawer>
@@ -193,18 +122,31 @@ export default function Navbar() {
           </Flex>
         </Flex>
         <Flex p="4" flexDir="column" alignItems="flex-start" as="nav">
-          <Box
-            opacity={{ md: 0, lg: 1 }}
-            transition={`opacity 1s ease-in , width 0.5s ease-in-out 0.5s, height 0.5s ease-in-out`}
-            w={{ md: "0px", lg: "100%" }}
-            h={{ md: "0px", lg: "40px" }}
-            className="btn"
-            overflow={"hidden"}
-          >
-            <Button mx={2} px={6} bg={"#9E57DA"} _hover={{ bg: "#7943a5" }} color={"white"} rightIcon={<FaPlus />}>
-              สร้างคำขอ
-            </Button>
-          </Box>
+          <Flex>
+            <Box
+              transition={`width 0.15s ease-in-out, height 0.15s ease-in-out`}
+              w={{ md: "0px", lg: "100%" }}
+              h="40px"
+              className="btn"
+              overflow={"hidden"}
+            >
+              <Button mx={2} px={6} bg={"#9E57DA"} _hover={{ bg: "#7943a5" }} color={"white"} rightIcon={<FaPlus />}>
+                สร้างคำขอ
+              </Button>
+            </Box>
+            <Box
+              style={{ marginLeft: "-2.5px" }}
+              transition={`width 0.15s ease-in-out, height 0.15s ease-in-out`}
+              w={{ md: "100%", lg: "0px" }}
+              h="40px"
+              className="btns"
+              overflow={"hidden"}
+            >
+              <Button bg={"white"} color={"#9E57DA"}>
+                <Icon as={FaPlus}></Icon>
+              </Button>
+            </Box>
+          </Flex>
 
           {navItem.map((e) => {
             return (

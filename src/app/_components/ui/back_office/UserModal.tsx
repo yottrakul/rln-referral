@@ -1,5 +1,6 @@
 "use client";
 import {
+  useBreakpointValue,
   Modal,
   ModalOverlay,
   ModalContent,
@@ -16,6 +17,9 @@ import {
   Box,
   Button,
   useToast,
+  SimpleGrid,
+  Grid,
+  GridItem,
 } from "@chakra-ui/react";
 
 import { UserRegisterWithRefineSchema, UserUpdateSchema } from "@/app/_schemas";
@@ -171,6 +175,15 @@ const UserModal = ({ account = "credential", data, isEdit, hospitals, onClose, .
     });
   };
 
+  const Left = useBreakpointValue({
+    base: 12,
+    md: 3,
+  });
+  const Right = useBreakpointValue({
+    base: 12,
+    md: 8,
+  });
+
   const handleOnClose = useCallback(() => {
     if (isPending) return;
     reset();
@@ -181,112 +194,124 @@ const UserModal = ({ account = "credential", data, isEdit, hospitals, onClose, .
     return (
       <Modal onClose={handleOnClose} {...rest}>
         <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>{isEdit ? "แก้ไขผู้ใช้" : "เพิ่มผู้ใช้งาน"}</ModalHeader>
+        <ModalContent maxWidth={"900px"} minWidth={"400px"} mx={4}>
+          <ModalHeader mt={3}>
+            <Box pl={2} style={{ borderLeft: "10px solid #9E57DA" }}>
+              {isEdit ? "แก้ไขผู้ใช้" : "เพิ่มผู้ใช้งาน"}
+            </Box>
+          </ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Flex>
-              <form ref={formRef} onSubmit={handleSubmit(onSubmit)}>
-                <Flex>
-                  <ProfilePicture
-                    src={data?.image ?? undefined}
-                    isDisabled={isPending || isOAuth}
-                    register={register}
-                    label="image"
-                  />
-                  <Box>
-                    <FormControl isRequired isInvalid={!!errors.prefixName}>
-                      <FormLabel>คำนำหน้าชื่อ</FormLabel>
-                      <Select isDisabled={isPending} {...register("prefixName")} placeholder="-">
-                        {prefixNames.map((prefix) => (
-                          <option value={prefix} key={prefix}>
-                            {prefix}
-                          </option>
-                        ))}
-                      </Select>
-                      {errors.prefixName && <FormErrorMessage>{errors.prefixName.message}</FormErrorMessage>}
-                    </FormControl>
-                    <FormControl isReadOnly={isPending} isRequired isInvalid={!!errors.firstName}>
-                      <FormLabel>ชื่อจริง</FormLabel>
-                      <Input {...register("firstName")} />
-                      {errors.firstName && <FormErrorMessage>{errors.firstName.message}</FormErrorMessage>}
-                    </FormControl>
-                    <FormControl isReadOnly={isPending} isRequired isInvalid={!!errors.lastName}>
-                      <FormLabel>นามสกุล</FormLabel>
-                      <Input {...register("lastName")} />
-                      {errors.lastName && <FormErrorMessage>{errors.lastName.message}</FormErrorMessage>}
-                    </FormControl>
-                    <FormControl isReadOnly={isPending} isRequired isInvalid={!!errors.name}>
-                      <FormLabel>ชื่อผู้ใช้งาน</FormLabel>
-                      <Input {...register("name")} />
-                      {errors.name && <FormErrorMessage>{errors.name.message}</FormErrorMessage>}
-                    </FormControl>
-                    <FormControl
-                      isDisabled={isOAuth}
-                      isReadOnly={isPending}
-                      isRequired={!isEdit}
-                      isInvalid={!!errors.password}
-                    >
-                      <FormLabel>รหัสผ่าน</FormLabel>
-                      <Input type="password" {...register("password")} />
-                      {errors.password && <FormErrorMessage>{errors.password.message}</FormErrorMessage>}
-                    </FormControl>
-                    <FormControl
-                      isDisabled={isOAuth}
-                      isReadOnly={isPending}
-                      isRequired={!isEdit}
-                      isInvalid={!!errors.confirmPassword}
-                    >
-                      <FormLabel>ยืนยันรหัสผ่าน</FormLabel>
-                      <Input type="password" {...register("confirmPassword")} />
-                      {errors.confirmPassword && <FormErrorMessage>{errors.confirmPassword.message}</FormErrorMessage>}
-                    </FormControl>
-                    <FormControl
-                      isDisabled={isOAuth || isEdit}
-                      isReadOnly={isPending}
-                      isRequired={!isEdit}
-                      isInvalid={!!errors.email}
-                    >
-                      <FormLabel>อีเมล</FormLabel>
-                      <Input type="email" {...register("email")} />
-                      {errors.email && <FormErrorMessage>{errors.email.message}</FormErrorMessage>}
-                    </FormControl>
-                    <FormControl isInvalid={!!errors.hospitalId}>
-                      <FormLabel>โรงพยาบาล</FormLabel>
-                      <Select isDisabled={isPending} {...register("hospitalId")} placeholder="-">
-                        {hospitals.map((hospital) => {
-                          return (
-                            <option key={hospital.id + hospital.hospitalName} value={hospital.id}>
-                              {hospital.hospitalName}
-                            </option>
-                          );
-                        })}
-                      </Select>
-                      {errors.hospitalId && <FormErrorMessage>{errors.hospitalId.message}</FormErrorMessage>}
-                    </FormControl>
-                    <FormControl isRequired isInvalid={!!errors.role}>
-                      <FormLabel>สิทธิ์การใช้งาน</FormLabel>
-                      <Select isDisabled={isPending} {...register("role")} placeholder="-">
-                        {Object.keys(ROLE_NAME).map((role) => {
-                          return (
-                            <option key={role} value={role}>
-                              {ROLE_NAME[role as keyof typeof ROLE_NAME]}
-                            </option>
-                          );
-                        })}
-                      </Select>
-                      {errors.role && <FormErrorMessage>{errors.role.message}</FormErrorMessage>}
-                    </FormControl>
+            <form ref={formRef} onSubmit={handleSubmit(onSubmit)} style={{ width: "100%" }}>
+              <Grid templateColumns="repeat(12, 1fr)">
+                <GridItem colSpan={Left}>
+                  <Box mb={8}>
+                    <ProfilePicture
+                      src={data?.image ?? undefined}
+                      isDisabled={isPending || isOAuth}
+                      register={register}
+                      label="image"
+                    />
                   </Box>
-                </Flex>
-              </form>
-            </Flex>
+                </GridItem>
+                <GridItem colSpan={Right}>
+                  <Box>
+                    <SimpleGrid minChildWidth="215px" spacingX={6} spacingY={4}>
+                      <FormControl isRequired isInvalid={!!errors.prefixName}>
+                        <FormLabel>คำนำหน้าชื่อ</FormLabel>
+                        <Select isDisabled={isPending} {...register("prefixName")} placeholder="-">
+                          {prefixNames.map((prefix) => (
+                            <option value={prefix} key={prefix}>
+                              {prefix}
+                            </option>
+                          ))}
+                        </Select>
+                        {errors.prefixName && <FormErrorMessage>{errors.prefixName.message}</FormErrorMessage>}
+                      </FormControl>
+                      <FormControl isReadOnly={isPending} isRequired isInvalid={!!errors.firstName}>
+                        <FormLabel>ชื่อจริง</FormLabel>
+                        <Input {...register("firstName")} />
+                        {errors.firstName && <FormErrorMessage>{errors.firstName.message}</FormErrorMessage>}
+                      </FormControl>
+                      <FormControl isReadOnly={isPending} isRequired isInvalid={!!errors.lastName}>
+                        <FormLabel>นามสกุล</FormLabel>
+                        <Input {...register("lastName")} />
+                        {errors.lastName && <FormErrorMessage>{errors.lastName.message}</FormErrorMessage>}
+                      </FormControl>
+                      <FormControl isReadOnly={isPending} isRequired isInvalid={!!errors.name}>
+                        <FormLabel>ชื่อผู้ใช้งาน</FormLabel>
+                        <Input {...register("name")} />
+                        {errors.name && <FormErrorMessage>{errors.name.message}</FormErrorMessage>}
+                      </FormControl>
+                      <FormControl
+                        isDisabled={isOAuth}
+                        isReadOnly={isPending}
+                        isRequired={!isEdit}
+                        isInvalid={!!errors.password}
+                      >
+                        <FormLabel>รหัสผ่าน</FormLabel>
+                        <Input type="password" {...register("password")} />
+                        {errors.password && <FormErrorMessage>{errors.password.message}</FormErrorMessage>}
+                      </FormControl>
+                      <FormControl
+                        isDisabled={isOAuth}
+                        isReadOnly={isPending}
+                        isRequired={!isEdit}
+                        isInvalid={!!errors.confirmPassword}
+                      >
+                        <FormLabel>ยืนยันรหัสผ่าน</FormLabel>
+                        <Input type="password" {...register("confirmPassword")} />
+                        {errors.confirmPassword && (
+                          <FormErrorMessage>{errors.confirmPassword.message}</FormErrorMessage>
+                        )}
+                      </FormControl>
+                      <FormControl
+                        isDisabled={isOAuth || isEdit}
+                        isReadOnly={isPending}
+                        isRequired={!isEdit}
+                        isInvalid={!!errors.email}
+                      >
+                        <FormLabel>อีเมล</FormLabel>
+                        <Input type="email" {...register("email")} />
+                        {errors.email && <FormErrorMessage>{errors.email.message}</FormErrorMessage>}
+                      </FormControl>
+                      <FormControl isInvalid={!!errors.hospitalId}>
+                        <FormLabel>โรงพยาบาล</FormLabel>
+                        <Select isDisabled={isPending} {...register("hospitalId")} placeholder="-">
+                          {hospitals.map((hospital) => {
+                            return (
+                              <option key={hospital.id + hospital.hospitalName} value={hospital.id}>
+                                {hospital.hospitalName}
+                              </option>
+                            );
+                          })}
+                        </Select>
+                        {errors.hospitalId && <FormErrorMessage>{errors.hospitalId.message}</FormErrorMessage>}
+                      </FormControl>
+                      <FormControl isRequired isInvalid={!!errors.role}>
+                        <FormLabel>สิทธิ์การใช้งาน</FormLabel>
+                        <Select isDisabled={isPending} {...register("role")} placeholder="-">
+                          {Object.keys(ROLE_NAME).map((role) => {
+                            return (
+                              <option key={role} value={role}>
+                                {ROLE_NAME[role as keyof typeof ROLE_NAME]}
+                              </option>
+                            );
+                          })}
+                        </Select>
+                        {errors.role && <FormErrorMessage>{errors.role.message}</FormErrorMessage>}
+                      </FormControl>
+                    </SimpleGrid>
+                  </Box>
+                </GridItem>
+              </Grid>
+            </form>
           </ModalBody>
           <ModalFooter>
             <Button isDisabled={isPending} colorScheme={isEdit ? "blue" : "green"} onClick={handleSubmit(onSubmit)}>
               {isEdit ? "แก้ไขผู้ใช้" : "เพิ่มผู้ใช้"}
             </Button>
-            <Button isDisabled={isPending} colorScheme="red" onClick={handleOnClose}>
+            <Button ml={4} isDisabled={isPending} colorScheme="red" onClick={handleOnClose}>
               ยกเลิก
             </Button>
           </ModalFooter>
