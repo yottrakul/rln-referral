@@ -1,11 +1,11 @@
 "use server";
 
 import { db } from "@/server/db";
-import { RoleSchema, CreateUserSchema, UserUpdateSchema, UserUpdateSchemaServerAction } from "@/app/_schemas";
+import { RoleSchema, CreateUserSchema, UserUpdateSchemaServerAction } from "@/app/_schemas";
 import { type z } from "zod";
-import { getValidPage, prismaExclude, userImageAdaptor, usersImageAdaptor } from "@/app/_lib";
+import { getValidPage, prismaExclude, usersImageAdaptor, userImageAdaptor } from "@/app/_lib";
 import bcrypt from "bcryptjs";
-import { User, type Prisma, type Role } from "@prisma/client";
+import { type Prisma, type Role } from "@prisma/client";
 import { type HospitalRegisterSchema } from "../_components/ui/back_office/HospitalRegister";
 import { type Hospital } from "@prisma/client";
 import { type PromiseResponse } from "@/app/_lib/definition";
@@ -135,8 +135,6 @@ export const updateUser = async (formData: FormData): PromiseResponse<UserWithOu
 
     const userUpdateData = validData.data;
 
-    // เพิ่ม Schema สำหรับ validate ข้อมูล เฉพาะ func นี้ โดยเฉพาะ image
-
     const userUpdateQuery: Prisma.UserUpdateArgs = {
       where: {
         id: userUpdateData.id,
@@ -151,7 +149,6 @@ export const updateUser = async (formData: FormData): PromiseResponse<UserWithOu
     };
     const accountType = await getUserAccountTypeById(validData.data.id ?? "");
     if (accountType !== "oauth") {
-      // ถ้าเป็น OAuth จะไม่สามารถ update password ได้
       if (userUpdateData.password) {
         userUpdateQuery.data.password = await bcrypt.hash(userUpdateData.password, 10);
       }
@@ -194,74 +191,6 @@ export const updateUser = async (formData: FormData): PromiseResponse<UserWithOu
     }
   }
 };
-
-// export const updateUser = async (id: string, data: unknown) => {
-//   const validData = UserRegisterWithRefineSchema.safeParse(data);
-//   if (!validData.success) {
-//     console.error(validData.error.flatten());
-//     throw new Error("Invalid data format");
-//   }
-
-//   const { name, role, hospitalId, image, password } = validData.data;
-//   const hashedPassword = password ? await bcrypt.hash(password, 10) : undefined;
-//   let updateData: Prisma.UserUpdateInput;
-
-//   try {
-//     const haveProvider = await db.user.findUnique({
-//       where: {
-//         id,
-//       },
-//       select: {
-//         accounts: {
-//           select: {
-//             provider: true,
-//           },
-//         },
-//       },
-//     });
-
-//     if (haveProvider) {
-//       updateData = {
-//         name,
-//         role,
-//         hospital: {
-//           update: {
-//             id: hospitalId ?? undefined,
-//           },
-//         },
-//         image,
-//       };
-//     } else {
-//       updateData = {
-//         name,
-//         role,
-//         hospital: {
-//           update: {
-//             id: hospitalId ?? undefined,
-//           },
-//         },
-//         image,
-//         password: hashedPassword,
-//       };
-//     }
-
-//     const user = await db.user.update({
-//       where: {
-//         id,
-//       },
-//       data: updateData,
-//       select: prismaExclude("User", ["password"]),
-//     });
-
-//     return {
-//       success: true,
-//       message: `User id: ${id} updated`,
-//       user,
-//     };
-//   } catch (error) {
-//     throw new Error(`Error updating user id: ${id}`);
-//   }
-// };
 
 export const deleteUser = async (id: string) => {
   try {

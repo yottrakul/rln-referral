@@ -1,4 +1,4 @@
-import LogoutButton from "@/app/_components/ui/Logout/LogoutButton";
+import LogoutButton from "@/app/_components/ui/logout/LogoutButton";
 import { Box, Img } from "@chakra-ui/react";
 
 export default function Dashboard() {

@@ -1,17 +1,11 @@
 "use client";
 import {
   Flex,
-  Text,
   Button,
   IconButton,
   Icon,
-  MenuButton,
-  MenuList,
-  MenuItem,
-  Menu,
   Divider,
   useMediaQuery,
-  Link,
   Box,
   useDisclosure,
   Drawer,
@@ -22,8 +16,8 @@ import {
   DrawerOverlay,
   Spacer,
 } from "@chakra-ui/react";
-import Navitem from "@/app/_components/ui/navitem/Navitem";
-import UserProfile from "@/app/_components/ui/Nav/Userprofile";
+import Navitem from "@/app/_components/ui/navbar/Navitem";
+import UserProfile from "@/app/_components/ui/navbar/Userprofile";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { navItem } from "@/app/_lib/const";
@@ -34,8 +28,8 @@ import { FaPlus } from "react-icons/fa6";
 import { MdDriveFileMoveOutline } from "react-icons/md";
 
 export default function Navbar() {
-  const router = usePathname();
-  const [active, changeActive] = useState(router);
+  const pathname = usePathname();
+  const [active, changeActive] = useState(pathname);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const [isMdSize] = useMediaQuery("(min-width: 768px)", {
