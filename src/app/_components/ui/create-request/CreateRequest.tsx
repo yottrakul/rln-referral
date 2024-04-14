@@ -22,6 +22,7 @@ import {
   InputGroup,
   InputRightElement,
   Spinner,
+  Box,
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { type Hospital } from "@prisma/client";
@@ -39,8 +40,8 @@ interface CreateRequestProps {
 type Step = "patient" | "request" | "summary";
 
 export default function CreateRequest({ hospitals, containerStyle }: CreateRequestProps) {
-  const [step, setStep] = useState<Step>("patient");
-  const citizenID = useRef<string | null>(null);
+  const [step, setStep] = useState<Step>("request");
+  const [citizenID, setCitizenID] = useState<string | null>(null);
 
   const nextStep = useCallback(() => {
     // patient -> request -> summary
@@ -61,7 +62,7 @@ export default function CreateRequest({ hospitals, containerStyle }: CreateReque
 
   const handleCreateRequestFormNextStep = useCallback(
     (cityzen: unknown) => {
-      citizenID.current = cityzen as string;
+      setCitizenID(cityzen as string);
       nextStep();
     },
     [nextStep]
@@ -74,35 +75,30 @@ export default function CreateRequest({ hospitals, containerStyle }: CreateReque
       case "patient":
         return <CreateRequestForm nextStep={handleCreateRequestFormNextStep} />;
       case "request":
-        return <CreateRefferalForm citizenID={citizenID.current ?? "1929900784421"} />;
+        return <CreateRefferalForm citizenID={citizenID ?? "1929900784421"} />;
       default:
         return null;
     }
-  }, [step, handleCreateRequestFormNextStep]);
+  }, [step, handleCreateRequestFormNextStep, citizenID]);
 
   return (
-    <div>
-      <Grid
-        templateAreas={`"header"
-                       "main"`}
-        gridTemplateRows={"auto 1fr"}
-        sx={{
-          ...containerStyle,
-        }}
-      >
-        <GridItem area={"header"}>
-          <Text fontSize={"xl"} fontWeight={"bold"}>
-            สร้างคำขอ
-          </Text>
-        </GridItem>
+    <Grid
+      gridTemplateRows={"auto 1fr"}
+      sx={{
+        ...containerStyle,
+      }}
+    >
+      <GridItem>
+        <Text fontSize={"xl"} fontWeight={"bold"}>
+          สร้างคำขอ
+        </Text>
+      </GridItem>
 
-        <GridItem area={"main"}>
-          <SlideFade offsetX={"30px"} offsetY={"0px"} in={true}>
-            {mainRender()}
-          </SlideFade>
-        </GridItem>
-      </Grid>
-    </div>
+      {/* {mainRender()} */}
+      <SlideFade className="" key={step} offsetX={"30px"} offsetY={"0px"} in={true}>
+        {mainRender()}
+      </SlideFade>
+    </Grid>
   );
 }
 
@@ -127,6 +123,15 @@ const CreateRequestForm = memo(({ nextStep }: CreateRequestFormProps) => {
     formState: { errors },
   } = useForm<z.infer<typeof CreatePatientSchema>>({
     resolver: zodResolver(CreatePatientSchema),
+    defaultValues: {
+      houseNumber: "",
+      moo: "",
+      subDistrict: "",
+      subArea: "",
+      province: "",
+      postalCode: "",
+      phone: "",
+    },
   });
   const { ref: citizenFormRef, ...otherRegisterCityzenID } = useMemo(() => register("citizenId"), [register]);
 

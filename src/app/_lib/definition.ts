@@ -1,6 +1,6 @@
 import { type UserSchemaWithOutPassword } from "@/app/_schemas";
 import type { z } from "zod";
-import { type Role } from "@prisma/client";
+import { type Role, type Gender } from "@prisma/client";
 import { type UserSchema } from "@/app/_schemas/generated/zod";
 
 export const LIMIT_PER_PAGE = 10;
@@ -13,6 +13,28 @@ export const ROLE_NAME: Record<Role, string> = {
   PHYSICIAN: "แพทย์",
   MEDICAL_ASSISTANT: "ผู้ช่วยแพทย์",
   GUEST: "ผู้ใช้ทั่วไป",
+};
+
+export const patientSummaryHeaders = {
+  citizenId: "เลขประจำตัวประชาชน",
+  patientFirstname: "ชื่อ",
+  patientSurname: "นามสกุล",
+  birthDate: "วันเกิด",
+  gender: "เพศ",
+  phone: "เบอร์โทรศัพท์",
+  bloodType: "หมู่เลือด",
+  houseNumber: "บ้านเลขที่",
+  moo: "หมู่ที่",
+  subDistrict: "ตำบล",
+  subArea: "แขวง/อำเภอ",
+  province: "จังหวัด",
+  postalCode: "รหัสไปรษณีย์",
+};
+
+export const GENDER_NAME: Record<Gender, string> = {
+  FEMALE: "หญิง",
+  MALE: "ชาย",
+  UNDEFINED: "ไม่ระบุเพศ",
 };
 
 type Response<TData> =

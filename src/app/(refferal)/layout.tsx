@@ -16,7 +16,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <ReactQueryProvider>
         <Flex direction={{ base: "column", md: "row" }}>
           <Navbar />
-          <Box overflowX={"auto"} flex={1} px={{ base: 4, md: 6, lg: 8 }} pt={4}>
+          <Box overflowX={"auto"} flex={1} px={{ base: 4, md: 6, lg: 8 }}>
             {children}
           </Box>
         </Flex>

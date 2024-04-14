@@ -8,24 +8,20 @@ interface CreateRefferalFormProps {
 
 export default function CreateRefferalForm({ citizenID }: CreateRefferalFormProps) {
   return (
-    <>
-      <RequestFormLayout>
-        <GridItem>
-          <PatientSummary citizenID={citizenID} />
-        </GridItem>
-        <GridItem>
-          <MedRecordSummary />
-          <Button>สร้างคำขอ</Button>
-        </GridItem>
-      </RequestFormLayout>
-    </>
-  );
-}
-
-const RequestFormLayout = ({ children }: { children: React.ReactNode }) => {
-  return (
-    <Grid gridTemplateColumns={`repeat(2, 50%)`} gap={4}>
-      {children}
+    <Grid gridTemplateColumns={`minmax(0,1fr) minmax(0,1fr)`} gap={4}>
+      <GridItem>
+        <PatientSummary citizenID={citizenID} />
+      </GridItem>
+      <GridItem>
+        <Grid minH={"100%"} gridTemplateRows={"1fr auto"} gap={4}>
+          <GridItem>
+            <MedRecordSummary />
+          </GridItem>
+          <GridItem>
+            <Button>สร้างคำขอ</Button>
+          </GridItem>
+        </Grid>
+      </GridItem>
     </Grid>
   );
-};
+}
