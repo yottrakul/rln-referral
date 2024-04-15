@@ -1,5 +1,6 @@
 "use client";
 import { useDisclosure, Button } from "@chakra-ui/react";
+import { memo } from "react";
 
 import { FaPlus } from "react-icons/fa6";
 
@@ -10,16 +11,18 @@ interface AddUserButtonProps {
   hospitals: Hospital[];
 }
 
-const AddUserButton = ({ hospitals }: AddUserButtonProps) => {
+const AddUserButton = memo(({ hospitals }: AddUserButtonProps) => {
   const { isOpen, onClose, onOpen } = useDisclosure();
   return (
     <>
       <Button rightIcon={<FaPlus />} onClick={onOpen} colorScheme="teal">
         เพิ่มผู้ใช้งาน
       </Button>
-      <UserModal size={"xl"} hospitals={hospitals} isOpen={isOpen} onClose={onClose} />
+      <UserModal hospitals={hospitals} isOpen={isOpen} onClose={onClose} />
     </>
   );
-};
+});
+
+AddUserButton.displayName = "AddUserButton";
 
 export default AddUserButton;

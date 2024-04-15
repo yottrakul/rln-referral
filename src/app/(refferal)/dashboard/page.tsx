@@ -1,12 +1,11 @@
-import LogoutButton from "@/app/_components/ui/Logout/LogoutButton";
-import Card from "@/app/_components/ui/dashboard/Card";
-import { Box } from "@chakra-ui/react";
+import LogoutButton from "@/app/_components/ui/logout/LogoutButton";
+import { Box, Img } from "@chakra-ui/react";
 
 export default function Dashboard() {
   return (
     <Box w={"full"}>
-      {/* <LogoutButton /> */}
-      <Card />
+      {/* <Img src="http://localhost:3000/api/secureimg" alt="logo" /> */}
+      <LogoutButton />
     </Box>
   );
 }

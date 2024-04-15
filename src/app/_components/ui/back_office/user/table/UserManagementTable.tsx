@@ -1,9 +1,8 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import ReactTable from "@/app/_components/ui/table/ReactTable";
 import { userColumn } from "@/app/_components/ui/back_office/user/table/columns";
 import { type UserWithOutPassword } from "@/app/_lib/definition";
-import { useUserContext } from "@/app/_components/context/UserManagementContext";
 
 interface UserManagementTableProps {
   data: UserWithOutPassword[];
@@ -12,11 +11,9 @@ interface UserManagementTableProps {
 export default function UserManagementTable({ data }: UserManagementTableProps) {
   const [userSeleted, setUserSelected] = useState<UserWithOutPassword[]>([]);
 
-  const { user, setUserData } = useUserContext();
-
-  useEffect(() => {
-    setUserData(userSeleted);
-  }, [userSeleted]);
+  // useEffect(() => {
+  //   console.log(userSeleted);
+  // }, [userSeleted]);
 
   return (
     <>

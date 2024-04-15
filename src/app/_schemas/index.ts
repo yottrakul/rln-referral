@@ -1,7 +1,7 @@
 import { UserSchema } from "./generated/zod/index";
 import * as z from "zod";
 import { Role, Status } from "@prisma/client";
-import { MAX_FILE_SIZE, ACCEPTED_IMAGE_TYPES } from "@/app/_lib/definition";
+import { MAX_IMAGE_FILE_SIZE, ACCEPTED_IMAGE_TYPES } from "@/app/_lib/definition";
 
 /////////////////////////////////////////
 // ENUMS
@@ -67,6 +67,16 @@ export const NavigationSchema = z.object({
 /////////////////////////////////////////
 // type UserSchemaType = z.infer<typeof UserSchema>;
 
+export const CreateUserSchema = UserSchema.omit({
+  id: true,
+  emailVerified: true,
+}).merge(
+  z.object({
+    email: z.string().email(),
+    password: z.string(),
+  })
+);
+
 export const UserSchemaWithOutPassword = UserSchema.omit({ password: true });
 export const UpdateUserSchema = z.object({
   password: z.string().min(1, "Password is required").optional(),
@@ -92,7 +102,7 @@ export const UserRegisterSchema = z.object({
       return files[0];
     })
     .refine((e) => {
-      return e?.size ?? 0 <= MAX_FILE_SIZE;
+      return e?.size ?? 0 <= MAX_IMAGE_FILE_SIZE;
     }, `Max image size is 5MB.`)
     .refine((e) => {
       if (!e) return true;
@@ -138,11 +148,38 @@ export const UserUpdateSchema = UserRegisterSchema.merge(
       .string()
       .optional()
       .transform((val) => (val === "" ? undefined : val)),
+    prefixName: z.string().min(1, "Prefix name is required").nullable().optional(),
+    firstName: z.string().min(1, "First name is required").nullable().optional(),
+    lastName: z.string().min(1, "Last name is required").nullable().optional(),
+    id: z.string().optional(),
   })
 ).refine(passwordMatch, {
   message: "Password and confirm password do not match",
   path: ["confirmPassword"],
 });
+
+export const UserUpdateSchemaServerAction = UserRegisterSchema.merge(
+  z.object({
+    password: z
+      .union([z.string().regex(passwordRegex, { message: "Your password is not valid" }), z.string().length(0)])
+      .optional()
+      .transform((val) => (val === "" ? undefined : val)),
+    prefixName: z.string().min(1, "Prefix name is required").nullable().optional(),
+    firstName: z.string().min(1, "First name is required").nullable().optional(),
+    lastName: z.string().min(1, "Last name is required").nullable().optional(),
+    id: z.string().optional(),
+    image: z
+      .custom<File>()
+      .refine((e) => {
+        return e?.size ?? 0 <= MAX_IMAGE_FILE_SIZE;
+      }, `Max image size is 5MB.`)
+      .refine((e) => {
+        if (!e) return true;
+        return ACCEPTED_IMAGE_TYPES.includes(e.type);
+      }, "Only .jpg, .jpeg, .png and .webp formats are supported.")
+      .optional(),
+  })
+);
 
 /////////////////////////////////////////
 // Hospitals

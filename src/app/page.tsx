@@ -1,5 +1,5 @@
 import { Center, Container } from "@chakra-ui/react";
-import LoginForm from "@/app/_components/ui/Login/LoginForm";
+import LoginForm from "@/app/_components/ui/login/LoginForm";
 
 export default function Home() {
   return (

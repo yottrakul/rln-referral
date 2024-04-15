@@ -1,4 +1,4 @@
-import { getHospitalAll, getUserById } from "@/app/_actions/back_office";
+import { getHospitalAll, getUserAccountTypeById, getUserById } from "@/app/_actions/back_office";
 import UpdateUserModalWrapper from "@/app/_components/ui/back_office/UpdateUserModalWrapper";
 
 interface UpdateUserModalProps {
@@ -8,11 +8,14 @@ interface UpdateUserModalProps {
 
 export default async function UpdateUserModal({ id, isOpen }: UpdateUserModalProps) {
   const hospitals = await getHospitalAll();
-  const user = await getUserById(id);
+  const userData = getUserById(id);
+  const accountTypeData = getUserAccountTypeById(id);
+
+  const [user, accountType] = await Promise.all([userData, accountTypeData]);
 
   return (
     <>
-      <UpdateUserModalWrapper isOpen={isOpen} hospitals={hospitals} user={user} />
+      <UpdateUserModalWrapper isOpen={isOpen} hospitals={hospitals} user={user} account={accountType} />
     </>
   );
 }

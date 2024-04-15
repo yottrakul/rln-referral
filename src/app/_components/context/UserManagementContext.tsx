@@ -1,11 +1,12 @@
 "use client";
+import { deleteManyUser } from "@/app/_actions/back_office";
 import { type UserWithOutPassword } from "@/app/_lib/definition";
 import type React from "react";
 import { createContext, useContext, useState } from "react";
 
 interface UserManagementContext {
   user: UserWithOutPassword[];
-  deleteUser: (id: string) => void;
+  deleteUser: () => Promise<void>;
   setUserData: (users: UserWithOutPassword[]) => void;
 }
 
@@ -20,12 +21,17 @@ export const useUserContext = (): UserManagementContext => {
 const userManageMentContext = createContext<UserManagementContext | undefined>(undefined);
 
 function UserManagementContextProvider({ children }: { children: React.ReactNode }) {
-  //   const userContextValue = useUserContext();
   const [user, setUser] = useState<UserWithOutPassword[]>([]);
 
-  const deleteUser = (id: string) => {
-    setUser((userData) => userData.filter((user) => user.id != id));
+  const deleteUser = async () => {
+    // setUser((userData) => userData.filter((user) => user.id != id));
+    const user_id = user.map((e) => {
+      return e.id;
+    });
+
+    const res = await deleteManyUser(user_id);
   };
+
   const setUserData = (users: UserWithOutPassword[]) => {
     setUser(users);
   };
@@ -38,54 +44,3 @@ function UserManagementContextProvider({ children }: { children: React.ReactNode
 }
 
 export default UserManagementContextProvider;
-
-// 'use client';
-// import React, {
-//   createContext,
-//   useContext,
-//   useState,
-//   type ReactNode,
-// } from 'react';
-
-// interface NavbarColorContextType {
-//   navbarColor: ColorVariant;
-//   changeNavbarColor: (newColor: ColorVariant) => void;
-// }
-// interface NavbarColorProviderProps {
-//   children: ReactNode;
-// }
-
-// // For tailwind className ONLY!
-// export type ColorVariant = 'bg-primary' | 'bg-black';
-
-// const NavbarColorContext = createContext<NavbarColorContextType | undefined>(
-//   undefined
-// );
-
-// export const useNavbarColor = (): NavbarColorContextType => {
-//   const context = useContext(NavbarColorContext);
-//   if (!context) {
-//     // ถ้าไม่มีการ wrap ด้วย NavbarColorProvider จะไม่สามารถใช้ Context นี้ได้
-//     throw new Error('useNavbarColor must be used within a NavbarColorProvider');
-//   }
-//   return context;
-// };
-
-// export const NavbarColorProvider: React.FC<NavbarColorProviderProps> = ({
-//   children,
-// }) => {
-//   const [navbarColor, setNavbarColor] = useState<ColorVariant>('bg-black'); // เริ่มต้นด้วยสีเริ่มต้น
-
-//   const changeNavbarColor = (newColor: ColorVariant) => {
-//     // Prevent useless update state
-//     if (newColor === navbarColor) return;
-
-//     setNavbarColor(newColor);
-//   };
-
-//   return (
-//     <NavbarColorContext.Provider value={{ navbarColor, changeNavbarColor }}>
-//       {children}
-//     </NavbarColorContext.Provider>
-//   );
-// };

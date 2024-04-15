@@ -2,7 +2,7 @@ import UserManagementContext from "@/app/_components/context/UserManagementConte
 import ModalLoadingSkeleton from "@/app/_components/ui/back_office/ModalLoadingSkeleton";
 import UpdateUserModal from "@/app/_components/ui/back_office/UpdateUserModal";
 import UserFilterControl from "@/app/_components/ui/back_office/UserFilterControl";
-import UserManagement from "@/app/_components/ui/user/UserManagement";
+import UserManagement from "@/app/_components/ui/back_office/user/UserManagement";
 import { Suspense } from "react";
 
 export default async function backoffice_user({

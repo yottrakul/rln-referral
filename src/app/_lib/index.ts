@@ -1,5 +1,7 @@
-import { Prisma } from "@prisma/client";
+import { Prisma, type User } from "@prisma/client";
 import _ from "lodash";
+import { randomUUID } from "crypto";
+import { SECURE_IMAGE_ENDPOINT, type UserWithOutPassword } from "@/app/_lib/definition";
 
 type A<T extends string> = T extends `${infer U}ScalarFieldEnum` ? U : never;
 type Entity = A<keyof typeof Prisma>;
@@ -49,4 +51,42 @@ export const getValidPage = (page?: string | number) => {
 
 export const getTotalPage = (total: number, limitPerPage: number) => {
   return Math.ceil(total / limitPerPage);
+};
+
+export const generateUUID = () => {
+  const time = new Date().getTime();
+  const uuid = randomUUID();
+  return `${time}_${uuid}`;
+};
+
+export const usersImageAdaptor = (users: User[]) => {
+  return users.map((user) => {
+    if (user.image) {
+      if (user.image.startsWith("http")) {
+        return user;
+      } else {
+        return {
+          ...user,
+          image: `${SECURE_IMAGE_ENDPOINT}/${user.image}`,
+        };
+      }
+    } else {
+      return user;
+    }
+  });
+};
+
+export const userImageAdaptor = (user: UserWithOutPassword) => {
+  if (user.image) {
+    if (user.image.startsWith("http")) {
+      return user;
+    } else {
+      return {
+        ...user,
+        image: `${SECURE_IMAGE_ENDPOINT}/${user.image}`,
+      };
+    }
+  } else {
+    return user;
+  }
 };

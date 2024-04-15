@@ -8,6 +8,9 @@ import Credentials from "next-auth/providers/credentials";
 import { env } from "@/env";
 import { LoginSchema } from "@/app/_schemas";
 import bcrypt from "bcryptjs";
+import { z } from "zod";
+import { getFile, getSignedURL } from "@/app/_actions/s3/actions";
+import { SECURE_IMAGE_ENDPOINT } from "@/app/_lib/definition";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -42,6 +45,7 @@ declare module "next-auth/jwt" {
     role: Role;
     firstName?: string;
     lastName?: string;
+    image?: string;
   }
 }
 
@@ -76,6 +80,11 @@ export const authOptions: NextAuthOptions = {
       // เพิ่ม role ให้กับ session ที่ได้จาก token
       session.user.role = token.role;
 
+      // เพิ่ม image ให้กับ session ที่ได้จาก token
+      if (token.image) {
+        session.user.image = token.image;
+      }
+
       return session;
     },
     async jwt({ token, profile }) {
@@ -88,6 +97,14 @@ export const authOptions: NextAuthOptions = {
         const exitingUser = await getUserById(token.sub);
         if (exitingUser?.role) {
           token.role = exitingUser.role;
+        }
+        if (exitingUser?.image) {
+          const isURL = exitingUser.image.startsWith("http");
+          if (!isURL) {
+            token.image = `${SECURE_IMAGE_ENDPOINT}/${exitingUser.image.trim()}`;
+          } else {
+            token.image = exitingUser.image;
+          }
         }
       }
       return token;
