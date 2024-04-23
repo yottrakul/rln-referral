@@ -42,4 +42,4 @@ yarn-error.log*
 *.tsbuildinfo
 
 # zod auto generated files
-src/app/_schemas/generated/zod/index.ts
+/src/app/_schemas/generated/*.ts
