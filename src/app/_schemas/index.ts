@@ -3,6 +3,7 @@ import * as z from "zod";
 import { Role, Status, Gender, BloodType } from "@prisma/client";
 import { MAX_IMAGE_FILE_SIZE, ACCEPTED_IMAGE_TYPES } from "@/app/_lib/definition";
 import { isValidThaiID } from "@/app/_lib";
+import { type File } from "buffer";
 
 /////////////////////////////////////////
 // ENUMS
@@ -218,7 +219,6 @@ export const CreatePatientSchema = z.object({
     .string()
     .optional()
     .transform((val) => {
-      console.log(val);
       return val;
     }),
   subDistrict: z.string().optional(),
@@ -227,4 +227,17 @@ export const CreatePatientSchema = z.object({
   postalCode: z
     .union([z.string().regex(postalCodeRegex, { message: "โปรดระบุรหัสไปรษณีย์ที่ถูกต้อง" }), z.string().length(0)])
     .optional(),
+});
+
+export const CreateReferalRequestSchema = z.object({
+  senderHospital: z.string(),
+  startHospital: z.string(),
+  receiverHospital: z.string(),
+  patientId: z.string(),
+});
+
+export const CreateMedicalRecordSchema = z.object({
+  doctorId: z.coerce.string().min(1, "Doctor ID is required"),
+  detail: z.string(),
+  images: z.custom<FileList>(),
 });

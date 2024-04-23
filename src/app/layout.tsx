@@ -3,7 +3,6 @@ import "@/styles/globals.css";
 import { ChakraUIProviders } from "@/app/_components/providers/ChakraProvider";
 import { ColorModeScript } from "@chakra-ui/react";
 import { config } from "@/styles/theme";
-
 export const metadata = {
   title: "RCS",
   description: "RCS BY ...",

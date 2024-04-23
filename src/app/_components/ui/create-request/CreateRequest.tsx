@@ -32,6 +32,8 @@ import { type z } from "zod";
 import { SearchIcon } from "@chakra-ui/icons";
 import { useDebouncedCallback } from "use-debounce";
 import CreateRefferalForm from "@/app/_components/ui/create-request/CreateRefferalForm";
+import { type Patient } from "@/app/_schemas/generated/zod";
+import ErrorHandleUI from "@/app/_components/ui/error/ErrorHandleUI";
 interface CreateRequestProps {
   hospitals: Hospital[];
   containerStyle?: SystemStyleObject;
@@ -39,9 +41,27 @@ interface CreateRequestProps {
 
 type Step = "patient" | "request" | "summary";
 
+// TODO อย่าลืมลบรหัสตัวเอง และเปลี่ยนเป็นข้อมูลจริง patient
+const MOCK_PATHIENT = {
+  id: 1,
+  citizenId: "1929900784421",
+  patientFirstname: "ยชญ์ตระกูล",
+  patientSurname: "สุวรรณศรี",
+  phone: "0655264591",
+  birthDate: new Date("2001-05-01T00:00:00.000Z"),
+  gender: "MALE",
+  bloodType: "O",
+  houseNumber: "72/66",
+  moo: "",
+  subDistrict: "",
+  subArea: "",
+  province: "",
+  postalCode: "",
+} as Patient;
+
 export default function CreateRequest({ hospitals, containerStyle }: CreateRequestProps) {
-  const [step, setStep] = useState<Step>("request");
-  const [citizenID, setCitizenID] = useState<string | null>(null);
+  const [step, setStep] = useState<Step>("patient");
+  const [patient, setPatient] = useState<Patient | null>(MOCK_PATHIENT);
 
   const nextStep = useCallback(() => {
     // patient -> request -> summary
@@ -61,8 +81,8 @@ export default function CreateRequest({ hospitals, containerStyle }: CreateReque
   }, [step]);
 
   const handleCreateRequestFormNextStep = useCallback(
-    (cityzen: unknown) => {
-      setCitizenID(cityzen as string);
+    (patient: Patient) => {
+      setPatient(patient);
       nextStep();
     },
     [nextStep]
@@ -75,11 +95,11 @@ export default function CreateRequest({ hospitals, containerStyle }: CreateReque
       case "patient":
         return <CreateRequestForm nextStep={handleCreateRequestFormNextStep} />;
       case "request":
-        return <CreateRefferalForm citizenID={citizenID ?? "1929900784421"} />;
+        return <CreateRefferalForm patient={patient} hospitals={hospitals} />;
       default:
-        return null;
+        return <ErrorHandleUI />;
     }
-  }, [step, handleCreateRequestFormNextStep, citizenID]);
+  }, [step, handleCreateRequestFormNextStep, hospitals, patient]);
 
   return (
     <Grid
@@ -94,7 +114,6 @@ export default function CreateRequest({ hospitals, containerStyle }: CreateReque
         </Text>
       </GridItem>
 
-      {/* {mainRender()} */}
       <SlideFade className="" key={step} offsetX={"30px"} offsetY={"0px"} in={true}>
         {mainRender()}
       </SlideFade>
@@ -103,7 +122,7 @@ export default function CreateRequest({ hospitals, containerStyle }: CreateReque
 }
 
 type CreateRequestFormProps = {
-  nextStep: (citizenId?: string) => void;
+  nextStep: (patient: Patient) => void;
 };
 
 const CreateRequestForm = memo(({ nextStep }: CreateRequestFormProps) => {
@@ -156,12 +175,21 @@ const CreateRequestForm = memo(({ nextStep }: CreateRequestFormProps) => {
   const onSubmit = async (data: z.infer<typeof CreatePatientSchema>) => {
     try {
       const patient = await createRequest(data);
+      console.log(patient);
       if (patient.success) {
         toast({
           title: "สร้างคำขอสำเร็จ",
           status: "success",
         });
-        nextStep(patient.data?.citizenId);
+        if (patient.data) {
+          nextStep(patient.data);
+        }
+      } else {
+        toast({
+          title: "เกิดข้อผิดพลาด",
+          status: "error",
+          description: patient.message.error,
+        });
       }
     } catch (error) {}
   };

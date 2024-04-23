@@ -15,80 +15,70 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { useCallback } from "react";
 import { GENDER_NAME, patientSummaryHeaders } from "@/app/_lib/definition";
+import { type Patient } from "@/app/_schemas/generated/zod";
+import ErrorHandleUI from "@/app/_components/ui/error/ErrorHandleUI";
+import _, { isNull, isUndefined } from "lodash";
 
 interface PatientSummaryProps {
-  citizenID: string;
+  patient: Patient | null;
 }
 
-export default function PatientSummary({ citizenID }: PatientSummaryProps) {
-  const { data, isError, isLoading, isFetching } = useQuery({
-    queryKey: ["patientSummary", citizenID],
-    queryFn: async () => {
-      const res = await getPatientByCitizenId(citizenID);
-      if (res.success) {
-        return res.data;
-      }
-      throw new Error(res.message.error);
-    },
-    staleTime: 0,
-  });
+export default function PatientSummary({ patient }: PatientSummaryProps) {
+  // const { data, isError, isLoading, isFetching } = useQuery({
+  //   queryKey: ["patientSummary", citizenID],
+  //   queryFn: async () => {
+  //     const res = await getPatientByCitizenId(citizenID);
+  //     if (res.success) {
+  //       return res.data;
+  //     }
+  //     throw new Error(res.message.error);
+  //   },
+  //   staleTime: 0,
+  // });
 
   const mainRender = useCallback(() => {
-    if (isLoading || isFetching) {
-      return Array.from({ length: 6 }).map((_, index) => {
+    if (isNull(patient)) {
+      return <ErrorHandleUI />;
+    } else {
+      return _.map(patient, (value, key) => {
+        let finalValue: string;
+        const headerName = patientSummaryHeaders[key as keyof typeof patientSummaryHeaders];
+        if (isUndefined(headerName)) return;
+
+        if (isNull(value)) {
+          finalValue = "-";
+        } else {
+          finalValue = value.toString();
+        }
+
+        if (key === "birthDate") {
+          const age = new Date().getFullYear() - new Date(finalValue).getFullYear();
+          finalValue = new Date(finalValue).toLocaleDateString("th-TH") + ` (${age} ปี)`;
+        } else if (key === "gender") {
+          finalValue = GENDER_NAME[finalValue as keyof typeof GENDER_NAME];
+        }
+
+        if (finalValue.length === 0) {
+          finalValue = "-";
+        }
+
         return (
-          <Stack key={index}>
-            <Skeleton height="20px" w={"30%"} />
-            <Skeleton height="20px" />
-          </Stack>
+          <Box key={key + finalValue}>
+            <Heading size="sm" textTransform="uppercase">
+              {headerName}
+            </Heading>
+            <Text pt="2" fontSize="md">
+              {finalValue}
+            </Text>
+          </Box>
         );
       });
-    } else if (isError) {
-      return <Text textColor="red.400">เกิดข้อผิดพลาด</Text>;
-    } else {
-      if (data) {
-        return Object.entries(data).map(([key, value]: [string, string | Date]) => {
-          let finalValue: string;
-          const headerName = patientSummaryHeaders[key as keyof typeof patientSummaryHeaders];
-          if (key === "birthDate") {
-            const age = new Date().getFullYear() - new Date(value).getFullYear();
-            finalValue = new Date(value).toLocaleDateString("th-TH") + ` (${age} ปี)`;
-          } else if (key === "gender") {
-            finalValue = GENDER_NAME[value as keyof typeof GENDER_NAME];
-          } else {
-            finalValue = value.toString();
-            if (finalValue.length === 0) {
-              finalValue = "-";
-            }
-          }
-          return (
-            <Box key={key + value.toString()}>
-              <Heading size="sm" textTransform="uppercase">
-                {headerName}
-              </Heading>
-              <Text pt="2" fontSize="md">
-                {finalValue}
-              </Text>
-            </Box>
-          );
-        });
-      }
     }
-  }, [isLoading, isFetching, isError, data]);
+  }, [patient]);
 
   return (
-    <Card
-      sx={{
-        borderTop: "0.5rem solid",
-        borderColor: "purple.500",
-      }}
-    >
-      <CardHeader
-        sx={{
-          borderBottom: "1px solid",
-          borderColor: "gray.200",
-        }}
-      >
+    <Card variant={"solid"} overflow={"auto"}>
+      <CardHeader pos={"sticky"} top={"0"} zIndex={10} bgColor={"white"}>
         <Heading size="md">ข้อมูลผู้ป่วย</Heading>
       </CardHeader>
       <CardBody>
