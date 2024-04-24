@@ -3,16 +3,20 @@ import { Card, CardHeader, CardBody, CardFooter, Text } from "@chakra-ui/react";
 import { PiNumberCircleOneLight } from "react-icons/pi";
 import { Box } from "@chakra-ui/react";
 import style from "./Dashboard.module.css";
+import CardProcess from "../dashboard/CardProcess";
+import { type Status } from "@prisma/client";
 
 interface CardOverviewProps {
   //icon: IconType;
   title: string;
-  body: string;
+  body: Status;
   date: string;
   bgcolor: string;
 }
 
 export default function CardOverview({ title, body, date, bgcolor }: CardOverviewProps) {
+
+
   return (
     <Box w={"full"}>
       <Card size="md">
@@ -25,7 +29,8 @@ export default function CardOverview({ title, body, date, bgcolor }: CardOvervie
           </Flex>
         </CardHeader>
         <CardBody>
-          <Text className={style.custom1}>{body} รายการ</Text>
+          {/* <Text className={style.custom1}>{cardInformation} รายการ</Text> */}
+          <Text className={style.custom1}><CardProcess status={body}/> รายการ</Text>
         </CardBody>
         <Divider></Divider>
         <CardFooter>
