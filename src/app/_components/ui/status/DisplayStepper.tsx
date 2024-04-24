@@ -50,14 +50,8 @@ export default function DisplayStepper() {
                 </StepIndicator>
                 <Flex flexDir={"column"} alignItems={"center"}>
                   <StepTitle>{step.title}</StepTitle>
-                  <StepDescription>
-                    <Text fontSize={"lg"}>วันที่ {step.description}</Text>
-                  </StepDescription>
-                  <StepDescription>
-                    <Text textAlign={"start"} fontSize={"lg"}>
-                      เวลา {step.description2}
-                    </Text>
-                  </StepDescription>
+                  <StepDescription>{step.description}</StepDescription>
+                  <StepDescription>เวลา {step.description2}</StepDescription>
                 </Flex>
               </VStack>
               <StepSeparator />

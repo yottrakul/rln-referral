@@ -2,6 +2,7 @@ import { type UserSchemaWithOutPassword } from "@/app/_schemas";
 import type { z } from "zod";
 import { type Role } from "@prisma/client";
 import { type UserSchema } from "@/app/_schemas/generated/zod";
+import { type getMedRecord } from "@/app/_actions/case";
 
 export const LIMIT_PER_PAGE = 10;
 export const MAX_IMAGE_FILE_SIZE = 3 * 1024 * 1024; // 3MB
@@ -32,3 +33,6 @@ export type PromiseResponse<TData> = Promise<Response<TData>>;
 
 export type UserWithOutPassword = z.infer<typeof UserSchemaWithOutPassword>;
 export type User = z.infer<typeof UserSchema>;
+
+// MedRecordType
+export type MedRecordType = Awaited<ReturnType<typeof getMedRecord>>;
