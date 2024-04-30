@@ -27,9 +27,9 @@ export default function CardProcess({ status }: CardProcessProp) {
   }
 
   return (
-    <div>
+    <>
       {numRefCase?.toString()}
       {/* {JSON.stringify(referralCase)} */}
-    </div>
+    </>
   );
 }
