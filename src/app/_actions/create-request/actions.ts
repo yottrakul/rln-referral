@@ -1,7 +1,7 @@
 "use server";
 
 import { type PromiseResponse } from "@/app/_lib/definition";
-import { CreatePatientSchema } from "@/app/_schemas";
+import { CreateMedicalRecordSchemaBackEnd, CreatePatientSchema, CreateReferalRequestSchema } from "@/app/_schemas";
 import { type Patient, PatientSchema, PatientPartialSchema } from "@/app/_schemas/generated/zod";
 import { db } from "@/server/db";
 import { isUndefined } from "lodash";
@@ -9,6 +9,120 @@ import { type z } from "zod";
 import { type UserWithOutPassword } from "@/app/_lib/definition";
 import { prismaExclude, usersImageAdaptor } from "@/app/_lib";
 import { unstable_noStore as noStore } from "next/cache";
+import { toPDF } from "@/app/_lib/pdf/core";
+import { uploadFileType } from "@/app/_actions/s3/actions";
+
+export const createCase = async (data: unknown, medData: unknown) => {
+  console.log(medData);
+  const safeData = CreateReferalRequestSchema.safeParse(data);
+  const safeMedData = CreateMedicalRecordSchemaBackEnd.safeParse(medData);
+
+  if (!safeData.success || !safeMedData.success) {
+    if (!safeData.success) {
+      console.error(safeData.error.flatten());
+    }
+    if (!safeMedData.success) {
+      console.error(safeMedData.error.flatten());
+    }
+    throw new Error("Bad Request");
+  }
+
+  console.log(safeData);
+  console.log(safeMedData);
+
+  try {
+    // Create Case
+    const caseData = await db.referralCase.upsert({
+      where: {
+        patientId: safeData.data.patientId,
+      },
+      create: {
+        ...safeData.data,
+        status: "PENDING",
+      },
+      update: {
+        senderHospital: safeData.data.senderHospital,
+        receiverHospital: safeData.data.receiverHospital,
+        status: "PENDING",
+      },
+    });
+    // End Create Case
+    // ทำแค่รองรับ Med ตัวเดียว!!
+    // PDF Section
+    if (safeMedData.data.length > 0 && safeMedData.data[0]) {
+      // Create MedRecord Section
+      const medRecordData = await db.med_record.create({
+        data: {
+          detail: safeMedData.data[0].detail,
+          caseId: caseData.id,
+          doctorId: safeMedData.data[0].doctorId,
+        },
+      });
+
+      // Convert Image to PDF one file
+      console.log(safeMedData.data);
+      const medImages = Object.entries(Object.fromEntries(safeMedData.data[0].images));
+
+      // If image to upload
+      if (medImages.length > 0) {
+        const prePdfFile = safeMedData.data.map((item) => {
+          const _data = Object.entries(Object.fromEntries(item.images)).map((i) => {
+            return i[1] as File;
+          });
+          console.log(_data);
+          return toPDF(_data);
+        });
+
+        const postPdfFile = await Promise.all(prePdfFile); // Array
+
+        console.log(postPdfFile[0]);
+
+        if (postPdfFile[0]) {
+          const res = await uploadFileType(Buffer.from(postPdfFile[0]), "application/pdf");
+          if (res.success) {
+            console.log(res.data);
+            if (res.data) {
+              await db.med_record.update({
+                where: {
+                  id: medRecordData.id,
+                },
+                data: {
+                  fileKey: res.data,
+                },
+              });
+            }
+          }
+        }
+      }
+      // EndIf image to upload
+
+      // Upload PDF
+    }
+
+    return caseData;
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error(error.message);
+      return null;
+    } else {
+      console.error(error);
+      return null;
+    }
+  }
+
+  // End PDF Section
+
+  // Upload MedRecord when have
+  // await uploadMedRecord(medRecData);
+  // Create Case
+};
+
+export const testCase = async (data: unknown) => {
+  console.log(data);
+  // Upload MedRecord when have
+  // await uploadMedRecord(medRecData);
+  // Create Case
+};
 
 export const createRequest = async (data: unknown): PromiseResponse<Patient> => {
   try {
@@ -211,5 +325,19 @@ export const getMedicalRecords = async (caseId?: string) => {
   } catch (error) {
     console.error(error);
     throw new Error("Can't get medical records");
+  }
+};
+
+export const getCaseFromPatientId = async (patientId: number) => {
+  try {
+    const caseData = await db.referralCase.findUnique({
+      where: {
+        patientId,
+      },
+    });
+    return caseData;
+  } catch (error) {
+    console.error(error);
+    return null;
   }
 };

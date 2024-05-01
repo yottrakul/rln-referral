@@ -4,6 +4,13 @@ import { Role, Status, Gender, BloodType } from "@prisma/client";
 import { MAX_IMAGE_FILE_SIZE, ACCEPTED_IMAGE_TYPES } from "@/app/_lib/definition";
 import { isValidThaiID } from "@/app/_lib";
 import { type File } from "buffer";
+import type { FileUpload, PreparedMedRecItem } from "@/app/_lib/definition";
+
+/////////////////////////////////////////
+// OMIT
+/////////////////////////////////////////
+
+type MedOmitID = Omit<PreparedMedRecItem, "id">;
 
 /////////////////////////////////////////
 // ENUMS
@@ -230,14 +237,22 @@ export const CreatePatientSchema = z.object({
 });
 
 export const CreateReferalRequestSchema = z.object({
-  senderHospital: z.string(),
-  startHospital: z.string(),
-  receiverHospital: z.string(),
-  patientId: z.string(),
+  senderHospital: z.coerce.number().gt(0, { message: "การกำหนดโรงพยาบาลเริ่มต้นทางผิดพลาด" }),
+  startHospital: z.coerce.number().gt(0, { message: "การกำหนดโรงพยาบาลเริ่มต้นผิดพลาด" }),
+  receiverHospital: z.coerce.number().gt(0, { message: "กรุณาเลือกโรงพยาบาลปลายทาง" }),
+  patientId: z.coerce.number().gt(0, { message: "การกำหนดหมายเลขผู้ป่วยผิดพลาด" }),
 });
 
 export const CreateMedicalRecordSchema = z.object({
   doctorId: z.coerce.string().min(1, "Doctor ID is required"),
   detail: z.string(),
-  images: z.custom<FileList>(),
+  images: z.custom<FileUpload[]>(),
 });
+
+const PreparedMedSchema = CreateMedicalRecordSchema.merge(
+  z.object({
+    images: z.custom<FormData>(),
+  })
+);
+
+export const CreateMedicalRecordSchemaBackEnd = z.array(PreparedMedSchema);

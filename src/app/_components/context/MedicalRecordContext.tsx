@@ -1,21 +1,16 @@
 "use client";
-import { createContext, useContext, useState } from "react";
-
-export type MedRecItem = {
-  id: string;
-  doctorId: string;
-  detail: string;
-  images: FileList;
-};
+import { createContext, useCallback, useContext, useState } from "react";
+import type { MedRecItem, PreparedMedRecItem } from "@/app/_lib/definition";
+import type { z } from "zod";
+import type { CreateMedicalRecordSchema } from "@/app/_schemas";
 
 type MedRecItemWithoutId = Omit<MedRecItem, "id">;
 
 interface MedicalRecordContext {
   medicalRecords: MedRecItem[];
-  addMedicalRecord: (medicalRecord: MedRecItemWithoutId) => void;
+  addMedicalRecord: (medicalRecord: z.infer<typeof CreateMedicalRecordSchema>) => void;
   deleteMedicalRecord: (id: string) => void;
-  // deleteUser: () => Promise<void>;
-  // setUserData: (users: UserWithOutPassword[]) => void;
+  preparedMedicalRecords: () => PreparedMedRecItem[];
 }
 
 export const useMedicalContext = (): MedicalRecordContext => {
@@ -41,10 +36,24 @@ function MedRecordProvider({ children }: { children: React.ReactNode }) {
     setMedicalRecords(medicalRecords.filter((medicalRecord) => medicalRecord.id !== id));
   };
 
-  console.log(medicalRecords);
+  const preparedMedicalRecords = useCallback(() => {
+    return medicalRecords.map((med) => {
+      // Form Data for images
+      const formData = new FormData();
+      Array.from(med.images).forEach(({ data, id }) => {
+        formData.append(`image_${id}`, data);
+      });
+      return {
+        ...med,
+        images: formData,
+      };
+    });
+  }, [medicalRecords]);
 
   return (
-    <MedRecordContext.Provider value={{ medicalRecords, addMedicalRecord, deleteMedicalRecord }}>
+    <MedRecordContext.Provider
+      value={{ medicalRecords, addMedicalRecord, deleteMedicalRecord, preparedMedicalRecords }}
+    >
       {children}
     </MedRecordContext.Provider>
   );

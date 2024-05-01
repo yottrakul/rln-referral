@@ -34,6 +34,10 @@ import { useDebouncedCallback } from "use-debounce";
 import CreateRefferalForm from "@/app/_components/ui/create-request/CreateRefferalForm";
 import { type Patient } from "@/app/_schemas/generated/zod";
 import ErrorHandleUI from "@/app/_components/ui/error/ErrorHandleUI";
+import { useSession } from "next-auth/react";
+import { isUndefined } from "lodash";
+import MedRecordProvider, { useMedicalContext } from "@/app/_components/context/MedicalRecordContext";
+import CreateReferralSummary from "@/app/_components/ui/create-request/CreateReferralSummary";
 interface CreateRequestProps {
   hospitals: Hospital[];
   containerStyle?: SystemStyleObject;
@@ -62,6 +66,7 @@ const MOCK_PATHIENT = {
 export default function CreateRequest({ hospitals, containerStyle }: CreateRequestProps) {
   const [step, setStep] = useState<Step>("patient");
   const [patient, setPatient] = useState<Patient | null>(MOCK_PATHIENT);
+  const session = useSession();
 
   const nextStep = useCallback(() => {
     // patient -> request -> summary
@@ -95,11 +100,17 @@ export default function CreateRequest({ hospitals, containerStyle }: CreateReque
       case "patient":
         return <CreateRequestForm nextStep={handleCreateRequestFormNextStep} />;
       case "request":
-        return <CreateRefferalForm patient={patient} hospitals={hospitals} />;
+        return <CreateRefferalForm patient={patient} hospitals={hospitals} nextStep={nextStep} />;
+      case "summary":
+        return <CreateReferralSummary />;
       default:
         return <ErrorHandleUI />;
     }
-  }, [step, handleCreateRequestFormNextStep, hospitals, patient]);
+  }, [step, handleCreateRequestFormNextStep, hospitals, patient, nextStep]);
+
+  if (isUndefined(session.data?.user.hospitalId)) {
+    return <ErrorHandleUI msg="บัญชีของคุณยังไม่ถูกเพิ่มในโรงพยาบาล" />;
+  }
 
   return (
     <Grid
@@ -115,7 +126,7 @@ export default function CreateRequest({ hospitals, containerStyle }: CreateReque
       </GridItem>
 
       <SlideFade className="" key={step} offsetX={"30px"} offsetY={"0px"} in={true}>
-        {mainRender()}
+        <MedRecordProvider>{mainRender()}</MedRecordProvider>
       </SlideFade>
     </Grid>
   );
@@ -177,10 +188,6 @@ const CreateRequestForm = memo(({ nextStep }: CreateRequestFormProps) => {
       const patient = await createRequest(data);
       console.log(patient);
       if (patient.success) {
-        toast({
-          title: "สร้างคำขอสำเร็จ",
-          status: "success",
-        });
         if (patient.data) {
           nextStep(patient.data);
         }

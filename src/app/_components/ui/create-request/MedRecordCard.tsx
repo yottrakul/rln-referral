@@ -17,22 +17,22 @@ import { BsThreeDots } from "react-icons/bs";
 import { InfoIcon, DownloadIcon, AttachmentIcon, DeleteIcon } from "@chakra-ui/icons";
 import { useCallback, type FC } from "react";
 import { MdOutlinePendingActions } from "react-icons/md";
-import { type MedRecItem } from "@/app/_components/context/MedicalRecordContext";
+import type { MedRecItem } from "@/app/_lib/definition";
 import { useQuery } from "@tanstack/react-query";
 import { getHopitalNameFromDoctorId } from "@/app/_actions/create-request/actions";
 import { getUserById } from "@/app/_actions/back_office";
 import { type getMedicalRecords } from "@/app/_actions/create-request/actions";
 
-type RemoteMedicDatas = Awaited<ReturnType<typeof getMedicalRecords>>;
-type RemoteMedicData = RemoteMedicDatas[0];
+export type RemoteMedicDatas = Awaited<ReturnType<typeof getMedicalRecords>>;
+export type RemoteMedicData = RemoteMedicDatas[0];
 
 interface MedRecordCardProps {
   isPreview?: boolean;
   medicalData?: MedRecItem;
   remoteMedicData?: RemoteMedicData;
   onRemove?: () => void;
-  onDownload?: () => void;
-  onViewDetail?: () => void;
+  onDownload?: (key: string) => void;
+  onViewDetail?: (data: string) => void;
 }
 
 const MedRecordCard: FC<MedRecordCardProps> = ({
@@ -78,15 +78,28 @@ const MedRecordCard: FC<MedRecordCardProps> = ({
       );
     } else {
       return [
-        <MenuItem onClick={onViewDetail} key={"info"} icon={<InfoIcon />}>
+        <MenuItem
+          onClick={() => {
+            return onViewDetail && remoteMedicData ? onViewDetail(remoteMedicData.detail) : null;
+          }}
+          key={"info"}
+          icon={<InfoIcon />}
+        >
           ดูรายละเอียด
         </MenuItem>,
-        <MenuItem onClick={onDownload} key={"download-pdf"} icon={<DownloadIcon />}>
+        <MenuItem
+          isDisabled={!remoteMedicData?.fileKey}
+          onClick={() => {
+            return onDownload && remoteMedicData ? onDownload(remoteMedicData.fileKey ?? "") : null;
+          }}
+          key={"download-pdf"}
+          icon={<DownloadIcon />}
+        >
           ดาวโหลด PDF
         </MenuItem>,
       ];
     }
-  }, [isPreview, onDownload, onViewDetail, onRemove]);
+  }, [isPreview, onDownload, onViewDetail, onRemove, remoteMedicData]);
 
   return (
     <Card>
@@ -120,7 +133,7 @@ const MedRecordCard: FC<MedRecordCardProps> = ({
                         ? "ไม่สามารถโหลดข้อมูล รพ. ได้"
                         : doctorData?.hospitalName ?? "ไม่พบข้อมูลโรงพยาบาล"}
                 </Text>
-                <Text>วันที่สร้าง 02/01/1996</Text>
+                {!isPreview && <Text>วันที่สร้าง {remoteMedicData?.createdAt.toLocaleDateString("en-GB")}</Text>}
               </Box>
             </VStack>
           </HStack>

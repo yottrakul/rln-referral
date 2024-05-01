@@ -136,7 +136,8 @@ model Med_record {
     createdAt DateTime     @default(now())
     doctorId  String
     detail    String
-    cases     ReferralCase @relation(fields: [caseId], references: [id])
+    fileKey   String?
+    cases     ReferralCase @relation(fields: [caseId], references: [id], onDelete: Cascade)
     doctor    User         @relation(fields: [doctorId], references: [id])
 }
 

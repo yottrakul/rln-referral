@@ -94,7 +94,6 @@ const ModalMedRecordCreate: FC<ModalMedRecordCreateProps> = ({ hospitals, onClos
   const _modalRef = useRef(null);
 
   const onSubmit = async (data: z.infer<typeof CreateMedicalRecordSchema>) => {
-    console.log(data);
     addMedicalRecord(data);
     onClose();
   };

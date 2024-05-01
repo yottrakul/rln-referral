@@ -24,7 +24,7 @@ export const ReferralCaseScalarFieldEnumSchema = z.enum(['id','patientId','statu
 
 export const PatientScalarFieldEnumSchema = z.enum(['id','citizenId','patientFirstname','patientSurname','phone','birthDate','gender','bloodType','houseNumber','moo','subDistrict','subArea','province','postalCode']);
 
-export const Med_recordScalarFieldEnumSchema = z.enum(['id','caseId','createdAt','doctorId','detail']);
+export const Med_recordScalarFieldEnumSchema = z.enum(['id','caseId','createdAt','doctorId','detail','fileKey']);
 
 export const Log_case_statusScalarFieldEnumSchema = z.enum(['caseId','statusTo','statusFrom','changeAt']);
 
@@ -48,7 +48,7 @@ export const ReferralCaseOrderByRelevanceFieldEnumSchema = z.enum(['id']);
 
 export const PatientOrderByRelevanceFieldEnumSchema = z.enum(['citizenId','patientFirstname','patientSurname','phone','houseNumber','moo','subDistrict','subArea','province','postalCode']);
 
-export const Med_recordOrderByRelevanceFieldEnumSchema = z.enum(['id','caseId','doctorId','detail']);
+export const Med_recordOrderByRelevanceFieldEnumSchema = z.enum(['id','caseId','doctorId','detail','fileKey']);
 
 export const Log_case_statusOrderByRelevanceFieldEnumSchema = z.enum(['caseId','statusTo','statusFrom']);
 
@@ -233,6 +233,7 @@ export const Med_recordSchema = z.object({
   createdAt: z.coerce.date(),
   doctorId: z.string(),
   detail: z.string(),
+  fileKey: z.string().nullable(),
 })
 
 export type Med_record = z.infer<typeof Med_recordSchema>

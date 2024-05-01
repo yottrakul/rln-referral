@@ -55,3 +55,22 @@ export type PromiseResponse<TData> = Promise<Response<TData>>;
 
 export type UserWithOutPassword = z.infer<typeof UserSchemaWithOutPassword>;
 export type User = z.infer<typeof UserSchema>;
+
+export type MedRecItem = {
+  id: string;
+  doctorId: string;
+  detail: string;
+  images: FileUpload[];
+};
+
+export type PreparedMedRecItem = {
+  id: string;
+  doctorId: string;
+  detail: string;
+  images: FormData;
+};
+
+export type FileUpload = {
+  id: string;
+  data: File;
+};

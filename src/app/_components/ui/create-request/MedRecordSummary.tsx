@@ -13,26 +13,32 @@ import {
   Button,
   useDisclosure,
   Center,
+  Text,
 } from "@chakra-ui/react";
 import { type Hospital } from "@/app/_schemas/generated/zod";
 import ModalMedRecordCreate from "@/app/_components/ui/create-request/ModalMedRecordCreate";
 import FileUploadProvider from "@/app/_components/context/FileUploadContext";
 import { useMedicalContext } from "../../context/MedicalRecordContext";
-import MedRecordCard from "./MedRecordCard";
+import MedRecordCard from "@/app/_components/ui/create-request/MedRecordCard";
 import { useQuery } from "@tanstack/react-query";
 import { getMedicalRecords } from "@/app/_actions/create-request/actions";
-import { isUndefined } from "lodash";
+import { isNull, isUndefined } from "lodash";
 import { GoInbox } from "react-icons/go";
+import ModalMedRecordDetail from "./ModalMedRecordDetail";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 interface MedRecordSummaryProps {
   containerStyle?: SystemStyleObject;
   hospitals: Hospital[];
-  referralId?: string;
+  referralId?: string | null;
 }
 
 export default function MedRecordSummary({ containerStyle, hospitals, referralId }: MedRecordSummaryProps) {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const modalDetailController = useDisclosure();
   const { medicalRecords: localMedRec, deleteMedicalRecord } = useMedicalContext();
+  const [patientDetail, setPatientDetail] = useState<string | null>(null);
   const {
     data: remoteMedRec,
     isLoading,
@@ -41,14 +47,25 @@ export default function MedRecordSummary({ containerStyle, hospitals, referralId
   } = useQuery({
     queryKey: ["medRecords", referralId],
     queryFn: async () => {
-      const res = await getMedicalRecords(referralId);
+      const res = await getMedicalRecords(referralId!);
       return res;
     },
     staleTime: 0,
-    enabled: isUndefined(referralId) ? false : true,
+    enabled: isUndefined(referralId) || isNull(referralId) ? false : true,
   });
-  //   console.log(errors);
-  // }, [errors]);
+
+  const medIsEmpty = localMedRec.length === 0 && (isUndefined(remoteMedRec) || remoteMedRec.length === 0);
+
+  const handleMedRecordDetail = (data: string) => {
+    setPatientDetail(data);
+    modalDetailController.onOpen();
+  };
+
+  const handleMedRecordDownload = (data: string) => {
+    if (data) {
+      window.open(`/api/secureimg/${data}`, "_blank");
+    }
+  };
 
   return (
     <>
@@ -70,22 +87,23 @@ export default function MedRecordSummary({ containerStyle, hospitals, referralId
             )}
           </Box>
         </CardHeader>
-        <CardBody>
-          {/* <MedRecord /> */}
+        <CardBody display={medIsEmpty ? "grid" : "block"}>
           <VStack alignItems={"stretch"} maxW={"lg"} marginInline={"auto"}>
-            {/* {Array.from({ length: 1 }).map((_, index) => {
-              return <MedRecordCard isPreview key={index} />;
-            })} */}
-            <Box>
-              <Icon as={GoInbox} boxSize={16} color={"purple.500"} />
-            </Box>
+            {medIsEmpty ? (
+              <Center minH={"full"}>
+                <Box textAlign={"center"}>
+                  <Icon as={GoInbox} boxSize={16} color={"purple.500"} />
+                  <Text>ไม่พบประวัติการรักษา</Text>
+                </Box>
+              </Center>
+            ) : null}
+
             {localMedRec.map((medRec, index) => {
               return (
                 <MedRecordCard
                   key={index}
                   medicalData={medRec}
                   isPreview={true}
-                  onDownload={() => console.log("Download PDF")}
                   onViewDetail={() => console.log("OnView")}
                   onRemove={() => deleteMedicalRecord(medRec.id)}
                 />
@@ -99,9 +117,8 @@ export default function MedRecordSummary({ containerStyle, hospitals, referralId
                   key={index}
                   remoteMedicData={medRec}
                   isPreview={false}
-                  onDownload={() => console.log("Download PDF")}
-                  onViewDetail={() => console.log("OnView")}
-                  onRemove={() => console.log("OnRemove")}
+                  onDownload={handleMedRecordDownload}
+                  onViewDetail={handleMedRecordDetail}
                 />
               );
             })}
@@ -111,6 +128,11 @@ export default function MedRecordSummary({ containerStyle, hospitals, referralId
       <FileUploadProvider>
         <ModalMedRecordCreate hospitals={hospitals} isOpen={isOpen} onClose={onClose} />
       </FileUploadProvider>
+      <ModalMedRecordDetail
+        patientDetail={patientDetail ?? "ไม่พบข้อมูล"}
+        isOpen={modalDetailController.isOpen}
+        onClose={modalDetailController.onClose}
+      />
     </>
   );
 }

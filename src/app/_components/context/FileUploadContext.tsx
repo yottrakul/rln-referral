@@ -1,14 +1,9 @@
 "use client";
 import { createContext, useCallback, useContext, useState } from "react";
-import { randomUUID } from "crypto";
-
-type customFile = {
-  id: string;
-  data: File;
-};
+import type { FileUpload } from "@/app/_lib/definition";
 
 interface FileUploadContextType {
-  datas: Array<customFile>;
+  datas: Array<FileUpload>;
   addFiles: (files: Array<File>) => void;
   deleteFile: (id: string) => void;
   deleteAllFiles: () => void;
@@ -28,7 +23,7 @@ export const useFileUploadContext = (): FileUploadContextType => {
 const FileUploadContext = createContext<FileUploadContextType | undefined>(undefined);
 
 function FileUploadProvider({ children }: { children: React.ReactNode }) {
-  const [datas, setDatas] = useState<customFile[]>([]);
+  const [datas, setDatas] = useState<FileUpload[]>([]);
 
   const addFiles = (files: Array<File>) => {
     // it can have multiple files should use foreach

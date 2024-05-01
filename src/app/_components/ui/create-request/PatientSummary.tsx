@@ -12,7 +12,6 @@ import {
   Skeleton,
   Stack,
 } from "@chakra-ui/react";
-import { useQuery } from "@tanstack/react-query";
 import { useCallback } from "react";
 import { GENDER_NAME, patientSummaryHeaders } from "@/app/_lib/definition";
 import { type Patient } from "@/app/_schemas/generated/zod";

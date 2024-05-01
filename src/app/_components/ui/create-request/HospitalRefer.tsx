@@ -1,26 +1,22 @@
 "use client";
-import { ChevronDownIcon } from "@chakra-ui/icons";
 import {
-  Button,
   Card,
   CardBody,
   CardHeader,
-  FormControl,
   FormLabel,
   Heading,
   Input,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
   Badge,
   Collapse,
   type SystemStyleObject,
 } from "@chakra-ui/react";
 import { type Hospital } from "@prisma/client";
 import AutoComplete from "../AutoComplete";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { type AutoCompleteItem } from "../AutoComplete";
+import { useFormContext } from "react-hook-form";
+import { type z } from "zod";
+import { type CreateReferalRequestSchema } from "@/app/_schemas";
 interface HospitalReferProps {
   containerStyle?: SystemStyleObject;
   hospitals: Hospital[];
@@ -28,7 +24,18 @@ interface HospitalReferProps {
 
 export default function HospitalRefer({ containerStyle, hospitals }: HospitalReferProps) {
   const [selectedHospital, setSelectedHospital] = useState<Hospital | null>(null);
-  // null,
+  const {
+    register,
+    setValue,
+    formState: { errors },
+  } = useFormContext<z.infer<typeof CreateReferalRequestSchema>>();
+
+  useEffect(() => {
+    if (selectedHospital) {
+      setValue("receiverHospital", selectedHospital.id, { shouldValidate: true });
+    }
+  }, [selectedHospital, setValue]);
+
   const hospitalList = useMemo(
     () =>
       hospitals.map((hospital) => {
@@ -62,6 +69,8 @@ export default function HospitalRefer({ containerStyle, hospitals }: HospitalRef
         </Collapse>
       </CardHeader>
       <CardBody>
+        <Input {...register("receiverHospital")} hidden />
+        {errors.receiverHospital && <FormLabel color="red.500">{errors.receiverHospital.message}</FormLabel>}
         <AutoComplete items={hospitalList} onSelect={handleSelectHospital} />
       </CardBody>
     </Card>

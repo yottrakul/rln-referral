@@ -89,3 +89,29 @@ export async function uploadFile(form: FormData): PromiseResponse<string> {
     };
   }
 }
+
+export async function uploadFileType(data: Buffer, contentType: string): PromiseResponse<string> {
+  // const fileBuffer = Buffer.from(await data.arrayBuffer());
+  const Key = generateUUID();
+  const command = new PutObjectCommand({
+    Bucket: env.AWS_BUCKET_NAME,
+    Key,
+    Body: data,
+    ContentType: contentType,
+  });
+
+  try {
+    await s3.send(command);
+    return {
+      message: `Success upload file ${Key}`,
+      success: true,
+      data: Key,
+    };
+  } catch (error) {
+    console.error(error);
+    return {
+      message: { error: "Failed to upload file" },
+      success: false,
+    };
+  }
+}
