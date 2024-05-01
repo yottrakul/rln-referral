@@ -18,7 +18,7 @@ import {
 } from "@chakra-ui/react";
 import Navitem from "@/app/_components/ui/navbar/Navitem";
 import UserProfile from "@/app/_components/ui/navbar/Userprofile";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { navItem } from "@/app/_lib/const";
 // icon
@@ -29,6 +29,7 @@ import { MdDriveFileMoveOutline } from "react-icons/md";
 
 export default function Navbar() {
   const pathname = usePathname();
+  const router = useRouter();
   const [active, changeActive] = useState(pathname);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -124,7 +125,15 @@ export default function Navbar() {
               className="btn"
               overflow={"hidden"}
             >
-              <Button mx={2} px={6} bg={"#9E57DA"} _hover={{ bg: "#7943a5" }} color={"white"} rightIcon={<FaPlus />}>
+              <Button
+                onClick={() => router.push("/create-request")}
+                mx={2}
+                px={6}
+                bg={"#9E57DA"}
+                _hover={{ bg: "#7943a5" }}
+                color={"white"}
+                rightIcon={<FaPlus />}
+              >
                 สร้างคำขอ
               </Button>
             </Box>

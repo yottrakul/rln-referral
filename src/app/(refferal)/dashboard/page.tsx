@@ -1,5 +1,5 @@
-import CardOverview from "@/app/_components/ui/DashboardOverview/CardOverview";
-import BarChart from "@/app/_components/ui/DashboardOverview/BarChart";
+import CardOverview from "@/app/_components/ui/dashboard_overview/CardOverview";
+import BarChart from "@/app/_components/ui/dashboard_overview/BarChart";
 import { Grid, Card } from "@chakra-ui/react";
 import { Box, Heading } from "@chakra-ui/react";
 

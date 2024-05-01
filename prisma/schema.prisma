@@ -99,7 +99,7 @@ model Hospital {
 
 model ReferralCase {
     id               String            @id @default(cuid())
-    patientId        Int
+    patientId        Int               @unique
     status           Status
     senderHospital   Int
     startHospital    Int
@@ -113,12 +113,13 @@ model ReferralCase {
 }
 
 model Patient {
-    id               Int            @id @default(autoincrement())
-    refCases         ReferralCase[]
-    citizenId        String         @unique @db.Char(13)
-    patientFirstname String         @db.VarChar(255)
-    patientSurname   String         @db.VarChar(255)
-    birthDate        DateTime       @db.Date
+    id               Int           @id @default(autoincrement())
+    refCases         ReferralCase?
+    citizenId        String        @unique @db.Char(13)
+    patientFirstname String        @db.VarChar(255)
+    patientSurname   String        @db.VarChar(255)
+    phone            String?
+    birthDate        DateTime      @db.Date
     gender           Gender
     bloodType        BloodType
     houseNumber      String?
@@ -135,7 +136,8 @@ model Med_record {
     createdAt DateTime     @default(now())
     doctorId  String
     detail    String
-    cases     ReferralCase @relation(fields: [caseId], references: [id])
+    fileKey   String?
+    cases     ReferralCase @relation(fields: [caseId], references: [id], onDelete: Cascade)
     doctor    User         @relation(fields: [doctorId], references: [id])
 }
 

@@ -134,6 +134,11 @@ export const updateUser = async (formData: FormData): PromiseResponse<UserWithOu
     }
 
     const userUpdateData = validData.data;
+    // เอาไว้ดักกรณีไม่ได้เลือก รพ
+    if (userUpdateData.hospitalId === 0) {
+      userUpdateData.hospitalId = null;
+    }
+    // เพิ่ม Schema สำหรับ validate ข้อมูล เฉพาะ func นี้ โดยเฉพาะ image
 
     const userUpdateQuery: Prisma.UserUpdateArgs = {
       where: {
@@ -156,7 +161,7 @@ export const updateUser = async (formData: FormData): PromiseResponse<UserWithOu
 
     if (userUpdateData.image) {
       const imageFormData = new FormData();
-      imageFormData.append("image", userUpdateData.image);
+      imageFormData.append("image", userUpdateData.image as Blob);
       const resUpload = await uploadFile(imageFormData);
       if (!resUpload.success) {
         throw new Error("Error uploading image");
@@ -314,13 +319,13 @@ export const getUserByQueryAndRole = async (query: string, role?: string, page =
     ]);
 
     // map secureimg endpoint to image
-    const usersSecureImg = usersImageAdaptor(users);
+    const usersSecureImg = usersImageAdaptor(users as UserWithOutPassword[]);
 
     return {
       pegination: {
         total,
       },
-      data: usersSecureImg as UserWithOutPassword[],
+      data: usersSecureImg,
     };
   } catch (error) {
     throw new Error("Error fetching users");

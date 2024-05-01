@@ -1,7 +1,16 @@
 import { UserSchema } from "./generated/zod/index";
 import * as z from "zod";
-import { Role, Status } from "@prisma/client";
+import { Role, Status, Gender, BloodType } from "@prisma/client";
 import { MAX_IMAGE_FILE_SIZE, ACCEPTED_IMAGE_TYPES } from "@/app/_lib/definition";
+import { isValidThaiID } from "@/app/_lib";
+import { type File } from "buffer";
+import type { FileUpload, PreparedMedRecItem } from "@/app/_lib/definition";
+
+/////////////////////////////////////////
+// OMIT
+/////////////////////////////////////////
+
+type MedOmitID = Omit<PreparedMedRecItem, "id">;
 
 /////////////////////////////////////////
 // ENUMS
@@ -28,6 +37,8 @@ const passwordMatch = ({ password, confirmPassword }: { password?: string | null
 
 // Regex for password is at least 4 characters
 export const passwordRegex = new RegExp(/^([a-zA-Z\d]|\s){4,}$/);
+export const phoneNumberRegex = new RegExp(/^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/g);
+export const postalCodeRegex = new RegExp(/^\d{5}(?:[-\s]\d{4})?$/g);
 
 /////////////////////////////////////////
 // SCHEMAS
@@ -189,3 +200,59 @@ export const HospitalSchema = z.object({
   id: z.coerce.number().int({ message: "Invalid hospital ID" }),
   hospitalName: z.string().min(1, "Hospital name is required"),
 });
+
+/////////////////////////////////////////
+// Referral Request
+/////////////////////////////////////////
+
+export const CreatePatientSchema = z.object({
+  citizenId: z.string().min(1, "โปรดระบุเลขหมายบัตรประชาชน").refine(isValidThaiID, { message: "Invalid Citizen ID" }),
+  patientFirstname: z.string().min(1, "โปรดระบุชื่อจริง"),
+  patientSurname: z.string().min(1, "โปรดระบุนามสกุล"),
+  birthDate: z.coerce.date({
+    errorMap: () => ({ message: "โปรดระบุวันเดือนปีเกิด" }),
+  }),
+  gender: z.nativeEnum(Gender, {
+    errorMap: () => ({ message: "โปรดระบุเพศ" }),
+  }),
+  phone: z
+    .union([z.string().regex(phoneNumberRegex, { message: "โปรดระบุหมายเลขโทรศัพท์ที่ถูกต้อง" }), z.string().length(0)])
+    .optional(),
+  bloodType: z.nativeEnum(BloodType, {
+    errorMap: () => ({ message: "โปรดระบุกรุ๊ปเลือด" }),
+  }),
+  houseNumber: z.string().optional(),
+  moo: z
+    .string()
+    .optional()
+    .transform((val) => {
+      return val;
+    }),
+  subDistrict: z.string().optional(),
+  subArea: z.string().optional(),
+  province: z.string().optional(),
+  postalCode: z
+    .union([z.string().regex(postalCodeRegex, { message: "โปรดระบุรหัสไปรษณีย์ที่ถูกต้อง" }), z.string().length(0)])
+    .optional(),
+});
+
+export const CreateReferalRequestSchema = z.object({
+  senderHospital: z.coerce.number().gt(0, { message: "การกำหนดโรงพยาบาลเริ่มต้นทางผิดพลาด" }),
+  startHospital: z.coerce.number().gt(0, { message: "การกำหนดโรงพยาบาลเริ่มต้นผิดพลาด" }),
+  receiverHospital: z.coerce.number().gt(0, { message: "กรุณาเลือกโรงพยาบาลปลายทาง" }),
+  patientId: z.coerce.number().gt(0, { message: "การกำหนดหมายเลขผู้ป่วยผิดพลาด" }),
+});
+
+export const CreateMedicalRecordSchema = z.object({
+  doctorId: z.coerce.string().min(1, "Doctor ID is required"),
+  detail: z.string(),
+  images: z.custom<FileUpload[]>(),
+});
+
+const PreparedMedSchema = CreateMedicalRecordSchema.merge(
+  z.object({
+    images: z.custom<FormData>(),
+  })
+);
+
+export const CreateMedicalRecordSchemaBackEnd = z.array(PreparedMedSchema);
