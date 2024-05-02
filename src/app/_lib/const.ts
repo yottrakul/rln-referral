@@ -19,7 +19,7 @@ export const navItem = [
   {
     title: "รายการคำขอ",
     icon: LuFolderInput,
-    link: "/consult",
+    link: "/request",
   },
   {
     title: "ค้นหารายชื่อ",
