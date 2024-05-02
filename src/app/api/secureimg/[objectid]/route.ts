@@ -16,7 +16,7 @@ export async function GET(request: NextRequest, { params }: { params: { objectid
     Key: objectid,
   });
 
-  const signedUrl = await getSignedUrl(s3, command, { expiresIn: 10 });
+  const signedUrl = await getSignedUrl(s3, command, { expiresIn: 30 });
 
   return NextResponse.redirect(signedUrl);
 }

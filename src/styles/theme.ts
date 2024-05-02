@@ -1,6 +1,8 @@
 import { extendTheme, type ThemeConfig, theme as base } from "@chakra-ui/react";
 import { tableTheme } from "@/app/_components/ui/table/tablet-theme";
 import { formTheme } from "@/app/_components/ui/form_control/form-control-theme";
+import { cardTheme } from "@/app/_components/ui/card/card-theme";
+import { modalTheme } from "@/app/_components/ui/modal/modal-theme";
 import { fonts } from "@/app/_lib/fonts";
 
 export const config: ThemeConfig = {
@@ -30,5 +32,5 @@ export const theme = extendTheme({
     heading: `${fonts.kanit.style.fontFamily}, ${base.fonts?.heading}`,
     body: `${fonts.kanit.style.fontFamily}, ${base.fonts?.body}`,
   },
-  components: { Table: tableTheme, Form: formTheme },
+  components: { Table: tableTheme, Form: formTheme, Card: cardTheme, Modal: modalTheme },
 });

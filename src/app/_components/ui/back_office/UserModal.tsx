@@ -119,6 +119,8 @@ const UserModal = memo(({ account = "credential", data, isEdit, hospitals, onClo
             formDataImage.append("image", val as File);
           } else if (typeof val === "string") {
             formDataImage.append(key, val);
+          } else if (typeof val === "number") {
+            formDataImage.append(key, val.toString());
           }
         });
 

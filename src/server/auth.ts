@@ -26,6 +26,7 @@ declare module "next-auth" {
       role: Role;
       firstName?: string;
       lastName?: string;
+      hospitalId?: number;
     } & DefaultSession["user"];
   }
 
@@ -46,6 +47,7 @@ declare module "next-auth/jwt" {
     firstName?: string;
     lastName?: string;
     image?: string;
+    hospitalId?: number;
   }
 }
 
@@ -85,6 +87,10 @@ export const authOptions: NextAuthOptions = {
         session.user.image = token.image;
       }
 
+      if (token.hospitalId) {
+        session.user.hospitalId = token.hospitalId;
+      }
+
       return session;
     },
     async jwt({ token, profile }) {
@@ -105,6 +111,9 @@ export const authOptions: NextAuthOptions = {
           } else {
             token.image = exitingUser.image;
           }
+        }
+        if (exitingUser?.hospitalId) {
+          token.hospitalId = exitingUser.hospitalId;
         }
       }
       return token;
