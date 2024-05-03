@@ -1,4 +1,4 @@
-import { Divider, Flex, Spacer } from "@chakra-ui/react";
+import { Divider, Flex, Spacer, SystemStyleObject } from "@chakra-ui/react";
 import { Card, CardHeader, CardBody, CardFooter, Text } from "@chakra-ui/react";
 import { PiNumberCircleOneLight } from "react-icons/pi";
 import { Box } from "@chakra-ui/react";
@@ -12,6 +12,8 @@ interface CardOverviewProps {
   bgcolor: string;
 }
 
+
+
 export default function CardOverview({ title, body, date, bgcolor }: CardOverviewProps) {
   return (
     <Box w={"full"}>
@@ -19,7 +21,7 @@ export default function CardOverview({ title, body, date, bgcolor }: CardOvervie
         <CardHeader bg={bgcolor}>
           <Flex>
             <PiNumberCircleOneLight size={40} />
-            <Text className={style.customHeading} ml={1}>
+            <Text whiteSpace={"nowrap"} overflow={"hidden"} textOverflow={"ellipsis"} className={style.customHeading} ml={1}>
               {title}
             </Text>
           </Flex>
