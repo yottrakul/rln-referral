@@ -1,6 +1,5 @@
 import { IoHomeOutline, IoDocumentTextOutline, IoPersonOutline } from "react-icons/io5";
 import { LuFolderInput } from "react-icons/lu";
-import { FaMagnifyingGlass } from "react-icons/fa6";
 import { MdAccessTime } from "react-icons/md";
 
 // คำนำหน้าชื่อในไทย
@@ -20,11 +19,6 @@ export const navItem = [
     title: "รายการคำขอ",
     icon: LuFolderInput,
     link: "/request",
-  },
-  {
-    title: "ค้นหารายชื่อ",
-    icon: FaMagnifyingGlass,
-    link: "/consult",
   },
   {
     title: "ประวัติ",

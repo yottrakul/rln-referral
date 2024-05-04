@@ -40,3 +40,17 @@
 .nav:hover .btns {
   width: 0;
 }
+
+.card{
+  scale: 1;
+  animation: zoom 0.5s;
+}
+
+@keyframes zoom {
+  0% {
+    scale: 0.4;
+  }
+  100% {
+    scale: 1;
+  }
+}

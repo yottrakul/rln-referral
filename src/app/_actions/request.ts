@@ -1,14 +1,127 @@
 "use server";
 
 import { db } from "@/server/db";
-import { getValidPage, prismaExclude, usersImageAdaptor, userImageAdaptor } from "@/app/_lib";
 
-export const getCase = async () => {
+export const getCase = async (
+  page: number,
+  search: string,
+  date: string,
+  hospitalSearch: string,
+  senrec: string,
+  hospitalId: number
+) => {
   try {
-    const cases = await db.referralCase.findMany({
-      where: {},
+    const wherePatient: {
+      birthDate?: string;
+      senderHospital?: number;
+      receiverHospital?: number;
+      OR?: {
+        citizenId?: object;
+        patientFirstname?: object;
+        patientSurname?: object;
+      }[];
+    } = {};
+
+    const whereCase: {
+      senderHospital?: number;
+      receiverHospital?: number;
+      OR?: { patientId: number }[];
+    } = {};
+
+    if (hospitalId != 0) {
+      if (senrec == "1") {
+        whereCase.senderHospital = hospitalId;
+      } else {
+        whereCase.receiverHospital = hospitalId;
+      }
+    }
+
+    if (hospitalSearch) {
+      if (senrec == "1") {
+        whereCase.receiverHospital = Number(hospitalSearch);
+      } else {
+        whereCase.senderHospital = Number(hospitalSearch);
+      }
+    }
+
+    if (search || date) {
+      if (date) {
+        wherePatient.birthDate = date + "T00:00:00.000Z";
+      }
+
+      if (search) {
+        wherePatient.OR = [
+          {
+            citizenId: { contains: search, mode: "insensitive" },
+          },
+          {
+            patientFirstname: { contains: search, mode: "insensitive" },
+          },
+          {
+            patientSurname: { contains: search, mode: "insensitive" },
+          },
+        ];
+      }
+
+      const patient = await db.patient.findMany({
+        where: wherePatient,
+      });
+
+      if (patient.length > 0) {
+        whereCase.OR = [];
+        patient.map((v) => {
+          whereCase.OR?.push({ patientId: v.id });
+        });
+
+        const cases = await db.referralCase.findMany({
+          skip: page,
+          take: 12,
+          where: whereCase,
+        });
+
+        return cases;
+      } else {
+        return [];
+      }
+    } else {
+      const cases = await db.referralCase.findMany({
+        skip: page,
+        take: 12,
+        where: whereCase,
+      });
+      return cases;
+    }
+  } catch (error) {
+    throw new Error("Error fetching users");
+  }
+};
+
+export const getPatient = async (id: number) => {
+  try {
+    const patient = await db.patient.findUnique({
+      where: { id: id },
     });
-    return cases;
+    return patient;
+  } catch (error) {
+    throw new Error("Error fetching users");
+  }
+};
+
+export const getHospital = async (id: number) => {
+  try {
+    const hospital = await db.hospital.findUnique({
+      where: { id: id },
+    });
+    return hospital;
+  } catch (error) {
+    throw new Error("Error fetching users");
+  }
+};
+
+export const getHospitalAll = async () => {
+  try {
+    const hospital = await db.hospital.findMany({});
+    return hospital;
   } catch (error) {
     throw new Error("Error fetching users");
   }
