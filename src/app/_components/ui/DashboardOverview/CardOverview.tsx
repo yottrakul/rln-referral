@@ -14,17 +14,17 @@ interface CardOverviewProps {
   bgcolor: string;
 }
 
-const cardStyle : SystemStyleObject = {
-  borderRadius: "lg",
-  overflow: "hidden"
-}
+// const cardStyle : SystemStyleObject = {
+//   borderRadius: "lg",
+//   overflow: "hidden"
+// }
 
 export default function CardOverview({ title, body, date, bgcolor }: CardOverviewProps) {
 
 
   return (
     <Box w={"full"}>
-      <Card size="md">
+      <Card size="md" borderRadius="lg" overflow="hidden">
         <CardHeader bg={bgcolor}>
           <Flex>
             <PiNumberCircleOneLight size={40} />
