@@ -23,7 +23,7 @@ export default function BtnSearch() {
   };
 
   useEffect(() => {
-    if (searchParams.get("senrec") == "1") setBtn(true);
+    if (searchParams.get("senrec") == "1" || !searchParams.get("senrec")) setBtn(true);
     else setBtn(false);
   }, [searchParams]);
 

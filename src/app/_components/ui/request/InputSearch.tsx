@@ -10,7 +10,17 @@ export default function InputSearch() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
+
+  const search: string = searchParams.get("search")?.toString() ?? "";
+  const date: string = searchParams.get("date")?.toString() ?? "";
+  const [isHospital, setHospital] = useState(0);
+
+  useEffect(() => {
+    setHospital(Number(searchParams.get("hospital")) ?? 0);
+  }, []);
+
   const handleHospital = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setHospital(Number(e.target.value));
     const newSearchParams = new URLSearchParams(searchParams);
     if (e.target.value) {
       newSearchParams.set("hospital", e.target.value);
@@ -53,9 +63,15 @@ export default function InputSearch() {
 
   return (
     <Flex flexWrap={"wrap"} gap={5}>
-      <Input w={"300px"} placeholder="ค้นหาชื่อ-สกุล หรือ เลขบัตรประชาชน" size="md" onChange={handleSearch} />
-      <Input type="Date" w={"200px"} placeholder="วัน/เดือน/ปี" size="md" onChange={handleDate} />
-      <Select w={"250px"} size="md" placeholder="โรงพยาบาล" onChange={handleHospital}>
+      <Input
+        defaultValue={search}
+        w={"300px"}
+        placeholder="ค้นหาชื่อ-สกุล หรือ เลขบัตรประชาชน"
+        size="md"
+        onChange={handleSearch}
+      />
+      <Input defaultValue={date} type="Date" w={"200px"} placeholder="วัน/เดือน/ปี" size="md" onChange={handleDate} />
+      <Select value={isHospital} w={"250px"} size="md" placeholder="โรงพยาบาลทั้งหมด" onChange={handleHospital}>
         {isallHospital.map((v, index) => {
           return (
             <option key={index} value={v.id}>

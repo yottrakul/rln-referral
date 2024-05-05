@@ -22,6 +22,7 @@ export default function CardData() {
   const [isBottom, setBottom] = useState(true);
   const [isData, setData] = useState<typeData[]>([]);
   const [isSearch, setSearch] = useState(false);
+  const [isNoData, setNoData] = useState(true);
   const toast = useToast();
 
   useEffect(() => {
@@ -38,6 +39,7 @@ export default function CardData() {
   useEffect(() => {
     if (isBottom) {
       const bottomLoad = async () => {
+        setNoData(false);
         if (isSearch) {
           setData([]);
           setSearch(false);
@@ -53,6 +55,7 @@ export default function CardData() {
         if (res !== null) {
           setData(isData.concat(res as typeData[]));
         }
+        setNoData(true);
       };
 
       bottomLoad().catch((error) => {
@@ -86,7 +89,7 @@ export default function CardData() {
           </Box>
         );
       })}
-      <Box w={"100%"} display={isData.length == 0 ? "block" : "none"}>
+      <Box w={"100%"} display={isData.length == 0 && isNoData ? "block" : "none"} className="card">
         <Center mt={8}>ไม่พบข้อมูล</Center>
       </Box>
     </>

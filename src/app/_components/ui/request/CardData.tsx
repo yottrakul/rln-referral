@@ -38,7 +38,9 @@ export default function CardData({ patientId, senderhospital, receiverhospital, 
       if (res) {
         setPatient(res);
       }
-      const res1 = await getHospital(searchParams.get("senrec") == "1" ? receiverhospital : senderhospital);
+      const res1 = await getHospital(
+        searchParams.get("senrec") == "1" || !searchParams.get("senrec") ? receiverhospital : senderhospital
+      );
       if (res) {
         setHospital(res1);
       }
