@@ -22,7 +22,7 @@ export default function CardData() {
   const [isBottom, setBottom] = useState(true);
   const [isData, setData] = useState<typeData[]>([]);
   const [isSearch, setSearch] = useState(false);
-  const [isNoData, setNoData] = useState(true);
+  const [isNoData, setNoData] = useState(false);
   const toast = useToast();
 
   useEffect(() => {
@@ -37,38 +37,36 @@ export default function CardData() {
   }, []);
 
   useEffect(() => {
-    if (isBottom) {
-      const bottomLoad = async () => {
-        setNoData(false);
-        if (isSearch) {
-          setData([]);
-          setSearch(false);
-        }
-        const res = await getCase(
-          isData.length,
-          searchParams.get("search") ?? "",
-          searchParams.get("date") ?? "",
-          searchParams.get("hospital") ?? "",
-          searchParams.get("senrec") ?? "1",
-          session?.user.hospitalId ?? 0
-        );
-        if (res !== null) {
-          setData(isData.concat(res as typeData[]));
-        }
-        setNoData(true);
-      };
+    const bottomLoad = async () => {
+      setNoData(false);
+      if (isSearch) {
+        setData([]);
+        setSearch(false);
+      }
+      const res = await getCase(
+        isData.length,
+        searchParams.get("search") ?? "",
+        searchParams.get("date") ?? "",
+        searchParams.get("hospital") ?? "",
+        searchParams.get("senrec") ?? "1",
+        session?.user.hospitalId ?? 0
+      );
+      if (res !== null) {
+        setData(isData.concat(res as typeData[]));
+      }
+      setNoData(true);
+    };
 
-      bottomLoad().catch((error) => {
-        console.log(error);
-        toast({
-          title: "Error | Referral Case",
-          description: "Error to get referral case medical records",
-          status: "error",
-          duration: 9000,
-          isClosable: true,
-        });
+    bottomLoad().catch((error) => {
+      console.log(error);
+      toast({
+        title: "Error | Referral Case",
+        description: "Error to get referral case medical records",
+        status: "error",
+        duration: 9000,
+        isClosable: true,
       });
-    }
+    });
   }, [isBottom, toast, isSearch]);
 
   useEffect(() => {
@@ -79,7 +77,7 @@ export default function CardData() {
     <>
       {isData.map((v, index) => {
         return (
-          <Box key={index}>
+          <Box key={index} maxW={"600px"}>
             <Carddata
               patientId={v?.patientId}
               senderhospital={v?.senderHospital}

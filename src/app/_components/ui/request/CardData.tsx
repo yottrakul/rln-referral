@@ -4,6 +4,7 @@ import { InfoOutlineIcon } from "@chakra-ui/icons";
 import { getPatient, getHospital } from "@/app/_actions/request";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import { statusItem } from "@/app/_lib/const";
 
 interface Props {
   patientId: number;
@@ -51,9 +52,14 @@ export default function CardData({ patientId, senderhospital, receiverhospital, 
     });
   }, [patientId, senderhospital, receiverhospital, searchParams]);
 
+  const find = (v: string) => {
+    const status = statusItem.find((value) => value.titleEN == v);
+    return status;
+  };
+
   return (
     <>
-      <Card display={isHospital ? "block" : "none"} className="card">
+      <Card display={isHospital ? "block" : "none"} className="card" bg={find(status)?.bgColor}>
         <CardBody px={6}>
           <Heading as="h6" style={{ fontSize: "25px" }}>
             ข้อมูลผู้ป่วย
@@ -72,7 +78,7 @@ export default function CardData({ patientId, senderhospital, receiverhospital, 
               <Text as="b">{searchParams.get("senrec") == "1" ? "โรงพยาบาลปลายทาง" : "โรงพยาบาลต้นทาง"}</Text>
               <Text as="b">สถานะ</Text>
               <Text>{isHospital?.hospitalName}</Text>
-              <Text>{status}</Text>
+              <Text color={find(status)?.color}>{find(status)?.titleTH}</Text>
             </SimpleGrid>
           </Box>
 

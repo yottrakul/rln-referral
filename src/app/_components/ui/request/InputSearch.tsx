@@ -62,16 +62,32 @@ export default function InputSearch() {
   }, []);
 
   return (
-    <Flex flexWrap={"wrap"} gap={5}>
+    <Flex flexWrap={"wrap"} gap={5} flex={"1 1 fit-content"}>
       <Input
+        flex={5}
         defaultValue={search}
-        w={"300px"}
+        flexBasis={"300px"}
         placeholder="ค้นหาชื่อ-สกุล หรือ เลขบัตรประชาชน"
         size="md"
         onChange={handleSearch}
       />
-      <Input defaultValue={date} type="Date" w={"200px"} placeholder="วัน/เดือน/ปี" size="md" onChange={handleDate} />
-      <Select value={isHospital} w={"250px"} size="md" placeholder="โรงพยาบาลทั้งหมด" onChange={handleHospital}>
+      <Input
+        flex={5}
+        defaultValue={date}
+        type="Date"
+        flexBasis={"200px"}
+        placeholder="วัน/เดือน/ปี"
+        size="md"
+        onChange={handleDate}
+      />
+      <Select
+        flex={5}
+        value={isHospital}
+        flexBasis={"250px"}
+        size="md"
+        placeholder="โรงพยาบาลทั้งหมด"
+        onChange={handleHospital}
+      >
         {isallHospital.map((v, index) => {
           return (
             <option key={index} value={v.id}>

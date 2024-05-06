@@ -36,3 +36,31 @@ export const navItem = [
     link: "/backoffice_user",
   },
 ];
+
+//สถานะ
+export const statusItem = [
+  {
+    titleTH: "สร้างคำขอ",
+    titleEN: "PENDING",
+    color: "#FA7B33",
+    bgColor: "#FEFEFE",
+  },
+  {
+    titleTH: "ผ่านการอนุมัติ",
+    titleEN: "ACCEPT",
+    color: "#00AD30",
+    bgColor: "#F7FFF7",
+  },
+  {
+    titleTH: "ปฏิเสธการอนุมัติ",
+    titleEN: "REJECT",
+    color: "#FF0000",
+    bgColor: "#FFF5F5",
+  },
+  {
+    titleTH: "เสร็จสิ้น",
+    titleEN: "COMPLETE",
+    color: "#00AD30",
+    bgColor: "#FEFEFE",
+  },
+];
