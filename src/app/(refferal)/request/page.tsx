@@ -1,7 +1,7 @@
 import InputSearch from "@/app/_components/ui/request/InputSearch";
 import BtnSearch from "@/app/_components/ui/request/BtnSearch";
 import AllCard from "@/app/_components/ui/request/AllCard";
-import { Container, Heading, Flex, SimpleGrid } from "@chakra-ui/react";
+import { Container, Heading, Flex, Grid } from "@chakra-ui/react";
 
 export default async function page() {
   return (
@@ -15,17 +15,16 @@ export default async function page() {
           <InputSearch />
         </Flex>
 
-        <SimpleGrid
+        <Grid
           className="scroll"
-          minChildWidth="350px"
-          maxW={"1800px"}
-          spacing="20px"
+          // minChildWidth="350px"
+          gridTemplateColumns={`repeat(auto-fill, minmax(350px, 1fr))`}
+          // spacing="20px"
           mb={4}
           gap={6}
-          marginInline={"auto"}
         >
           <AllCard />
-        </SimpleGrid>
+        </Grid>
       </Container>
     </div>
   );

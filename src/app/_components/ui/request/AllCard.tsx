@@ -5,22 +5,23 @@ import { getCase } from "@/app/_actions/request";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
+import type { ReferralCase } from "@prisma/client";
 
-interface typeData {
-  id: string;
-  patientId: number;
-  status: string;
-  senderHospital: number;
-  startHospital: number;
-  receiverHospital: number;
-}
+// interface typeData {
+//   id: string;
+//   patientId: number;
+//   status: string;
+//   senderHospital: number;
+//   startHospital: number;
+//   receiverHospital: number;
+// }
 
 export default function CardData() {
   const { data: session } = useSession();
   const searchParams = useSearchParams();
 
   const [isBottom, setBottom] = useState(true);
-  const [isData, setData] = useState<typeData[]>([]);
+  const [isData, setData] = useState<ReferralCase[]>([]);
   const [isSearch, setSearch] = useState(false);
   const [isNoData, setNoData] = useState(false);
   const toast = useToast();
@@ -52,7 +53,7 @@ export default function CardData() {
         session?.user.hospitalId ?? 0
       );
       if (res !== null) {
-        setData(isData.concat(res as typeData[]));
+        setData(isData.concat(res));
       }
       setNoData(true);
     };
@@ -87,7 +88,12 @@ export default function CardData() {
           </Box>
         );
       })}
-      <Box w={"100%"} display={isData.length == 0 && isNoData ? "block" : "none"} className="card">
+      <Box
+        gridColumn={"1 / -1"}
+        w={"100%"}
+        display={isData.length == 0 && isNoData ? "block" : "none"}
+        className="card"
+      >
         <Center mt={8}>ไม่พบข้อมูล</Center>
       </Box>
     </>

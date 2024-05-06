@@ -5,6 +5,7 @@ import { getPatient, getHospital } from "@/app/_actions/request";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { statusItem } from "@/app/_lib/const";
+import type { Patient, Hospital } from "@prisma/client";
 
 interface Props {
   patientId: number;
@@ -12,26 +13,27 @@ interface Props {
   receiverhospital: number;
   status: string;
 }
-interface typePatient {
-  id: number;
-  citizenId: string;
-  patientFirstname: string;
-  patientSurname: string;
-  phone: string | null;
-  birthDate: Date;
-  gender: string;
-  bloodType: string;
-  postalCode: string | null;
-}
-interface typeHospital {
-  id: number;
-  hospitalName: string;
-}
+// interface typePatient {
+//   id: number;
+//   citizenId: string;
+//   patientFirstname: string;
+//   patientSurname: string;
+//   phone: string | null;
+//   birthDate: Date;
+//   gender: string;
+//   bloodType: string;
+//   postalCode: string | null;
+// }
+
+// interface typeHospital {
+//   id: number;
+//   hospitalName: string;
+// }
 
 export default function CardData({ patientId, senderhospital, receiverhospital, status }: Props) {
   const searchParams = useSearchParams();
-  const [isPatient, setPatient] = useState<typePatient>();
-  const [isHospital, setHospital] = useState<typeHospital | null>();
+  const [isPatient, setPatient] = useState<Patient>();
+  const [isHospital, setHospital] = useState<Hospital | null>();
 
   useEffect(() => {
     const loadPatient = async () => {
