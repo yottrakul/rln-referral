@@ -3,21 +3,23 @@ import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Toolti
 import { Bar } from "react-chartjs-2";
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
+//Prop of Chart
 const options = {
   responsive: true,
+  maintainAspectRatio: true,
   plugins: {
     legend: {
       position: "top" as const,
     },
     title: {
-      display: true,
+      display: false,
       text: "Chart.js Bar Chart",
     },
   },
 };
-
 const labels = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"];
 
+//Data for Chart
 const data = {
   labels,
   datasets: [
@@ -36,6 +38,7 @@ const data = {
     },
   ],
 };
+
 
 export default function BarChart() {
   return <Bar options={options} data={data} />;

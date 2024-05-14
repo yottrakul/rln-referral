@@ -3,7 +3,6 @@ import BarChart from "@/app/_components/ui/DashboardOverview/BarChart";
 import { Grid, Card, SystemStyleObject } from "@chakra-ui/react";
 import { Box, Heading } from "@chakra-ui/react";
 
-
 export default function Dashboard() {
   return (
     <Box w={"full"}>
@@ -15,8 +14,7 @@ export default function Dashboard() {
         <CardOverview title="คำขอผ่านการอนุมัติ" body="COMPLETE" date="3/8/2020" bgcolor="#09B006" />
       </Grid>
       <Heading mt={10} p={3}>
-        Today
-
+        Today 
       </Heading>
       <Card p={5}>
         <BarChart />

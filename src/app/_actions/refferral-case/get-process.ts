@@ -9,7 +9,6 @@ export const getAllProcessList = async (status: Status) => {
         status,
       },
     });
-
     return referralCase;
   } catch (error) {
     return null;
