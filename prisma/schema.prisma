@@ -146,7 +146,7 @@ model Log_case_status {
     statusTo   Status
     statusFrom Status
     changeAt   DateTime     @default(now())
-    case       ReferralCase @relation(fields: [caseId], references: [id])
+    case       ReferralCase @relation(fields: [caseId], references: [id], onDelete: Cascade)
 
     @@id([caseId, statusTo, statusFrom])
 }
