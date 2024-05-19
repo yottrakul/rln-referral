@@ -1,4 +1,4 @@
-import { Center, Box, type SystemStyleObject, Card, CardHeader, Heading, CardBody } from "@chakra-ui/react";
+import { Box, type SystemStyleObject, Card, CardHeader, Heading, CardBody } from "@chakra-ui/react";
 import type { FC } from "react";
 
 interface ChatProps {
@@ -14,7 +14,7 @@ const Chat: FC<ChatProps> = ({ containerStyle }) => {
             Chat
           </Heading>
         </CardHeader>
-        <CardBody>ค่อยทำ</CardBody>
+        <CardBody>Coming Soon</CardBody>
       </Card>
     </Box>
   );

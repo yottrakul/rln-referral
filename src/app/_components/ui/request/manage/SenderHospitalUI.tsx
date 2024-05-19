@@ -52,7 +52,7 @@ const SenderHospitalUI: FC<StartHospitalUIProps> = ({ caseData }) => {
                 </ResendManage>
               </WrapItem>
             )}
-            <WrapItem>{caseData.status !== "COMPLETE" ? <CancleCaseBtn caseId={caseData.id} /> : null}</WrapItem>
+            <WrapItem>{caseData.status === "PENDING" ? <CancleCaseBtn caseId={caseData.id} /> : null}</WrapItem>
           </Wrap>
         </Flex>
       </GridItem>

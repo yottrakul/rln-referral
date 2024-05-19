@@ -33,7 +33,7 @@ export default function ReactQueryProvider({ children }: { children: React.React
   const queryClient = getQueryClient();
   return (
     <QueryClientProvider client={queryClient}>
-      <ReactQueryDevtools initialIsOpen={false} />
+      {/* <ReactQueryDevtools initialIsOpen={false} /> */}
       {children}
     </QueryClientProvider>
   );

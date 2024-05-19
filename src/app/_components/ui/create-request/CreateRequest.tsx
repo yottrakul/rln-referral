@@ -45,27 +45,9 @@ interface CreateRequestProps {
 
 type Step = "patient" | "request" | "summary";
 
-// TODO อย่าลืมลบรหัสตัวเอง และเปลี่ยนเป็นข้อมูลจริง patient
-const MOCK_PATHIENT = {
-  id: 1,
-  citizenId: "1929900784421",
-  patientFirstname: "ยชญ์ตระกูล",
-  patientSurname: "สุวรรณศรี",
-  phone: "0655264591",
-  birthDate: new Date("2001-05-01T00:00:00.000Z"),
-  gender: "MALE",
-  bloodType: "O",
-  houseNumber: "72/66",
-  moo: "",
-  subDistrict: "",
-  subArea: "",
-  province: "",
-  postalCode: "",
-} as Patient;
-
 export default function CreateRequest({ hospitals, containerStyle }: CreateRequestProps) {
   const [step, setStep] = useState<Step>("patient");
-  const [patient, setPatient] = useState<Patient | null>(MOCK_PATHIENT);
+  const [patient, setPatient] = useState<Patient | null>(null);
   const session = useSession();
 
   const nextStep = useCallback(() => {
@@ -92,8 +74,6 @@ export default function CreateRequest({ hospitals, containerStyle }: CreateReque
     },
     [nextStep]
   );
-
-  // TODO อย่าลืมลบรหัสตัวเอง
 
   const mainRender = useCallback(() => {
     switch (step) {

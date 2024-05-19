@@ -1,7 +1,7 @@
 import { Suspense, type FC } from "react";
 import type { ReferralCase } from "@prisma/client";
-import { Grid, GridItem, Flex, Stack, Heading, Spacer, Wrap, WrapItem, Text } from "@chakra-ui/react";
-import Chat from "../../chat/Chat";
+import { Grid, GridItem, Flex, Stack, Heading, Spacer, Text } from "@chakra-ui/react";
+import Chat from "@/app/_components/ui/chat/Chat";
 import DisplayStatus from "./DisplayStatus";
 import HospitalReferInputWrapper from "./HospitalReferInputWrapper";
 import MedRecordWrapper from "./MedRecordWrapper";
