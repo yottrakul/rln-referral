@@ -46,11 +46,11 @@ const baseStyle = definePartsStyle({
       "&[data-state='selected'] > td:first-of-type": {
         boxShadow: "3px 0px inset hsl(273, 64%, 60%)",
       },
-      "@media (max-width: 767px)": {
-        "&[data-state='selected'] td": {
-          boxShadow: "3px 0px inset hsl(273, 64%, 60%)",
-        },
-      },
+      // "@media (max-width: 767px)": {
+      //   "&[data-state='selected'] td": {
+      //     boxShadow: "3px 0px inset hsl(273, 64%, 60%)",
+      //   },
+      // },
       td: {
         paddingY: "1rem",
         transition: "all 0.3s ease",
@@ -63,43 +63,43 @@ const baseStyle = definePartsStyle({
   },
 
   td: {
-    "@media (max-width: 767px)": {
-      overflowX: "auto",
-      borderRight: "1px solid hsl(0, 0%, 90%)",
-      borderLeft: "1px solid hsl(0, 0%, 90%)",
-      display: "grid",
-      gridTemplateColumns: "15ch auto",
-      "& *[data-cell]": {
-        display: "grid",
-        gridTemplateColumns: "10ch auto",
-      },
-      "&[data-cell-action=true]": {
-        display: "flex",
-      },
-      "&[data-cell-action=true] > *": {
-        flex: "1",
-      },
-      "& *[data-cell]::before": {
-        content: "attr(data-cell) ' : '",
-        textTransform: "capitalize",
-        fontWeight: "700",
-      },
-      "&[data-cell-action=true]::before": {
-        content: "''",
-      },
-      "&:first-of-type": {
-        paddingTop: "1.5rem",
-      },
-      "&:last-child": {
-        paddingBottom: "1.5rem",
-      },
-    },
+    // "@media (max-width: 767px)": {
+    //   overflowX: "auto",
+    //   borderRight: "1px solid hsl(0, 0%, 90%)",
+    //   borderLeft: "1px solid hsl(0, 0%, 90%)",
+    //   display: "grid",
+    //   gridTemplateColumns: "15ch auto",
+    //   "& *[data-cell]": {
+    //     display: "grid",
+    //     gridTemplateColumns: "10ch auto",
+    //   },
+    //   "&[data-cell-action=true]": {
+    //     display: "flex",
+    //   },
+    //   "&[data-cell-action=true] > *": {
+    //     flex: "1",
+    //   },
+    //   "& *[data-cell]::before": {
+    //     content: "attr(data-cell) ' : '",
+    //     textTransform: "capitalize",
+    //     fontWeight: "700",
+    //   },
+    //   "&[data-cell-action=true]::before": {
+    //     content: "''",
+    //   },
+    //   "&:first-of-type": {
+    //     paddingTop: "1.5rem",
+    //   },
+    //   "&:last-child": {
+    //     paddingBottom: "1.5rem",
+    //   },
+    // },
   },
 
   th: {
-    "@media (max-width: 767px)": {
-      display: "none",
-    },
+    // "@media (max-width: 767px)": {
+    //   display: "none",
+    // },
   },
 });
 

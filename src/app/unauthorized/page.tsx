@@ -1,4 +1,4 @@
-import LogoutButton from "@/app/_components/ui/Logout/LogoutButton";
+import LogoutButton from "@/app/_components/ui/logout/LogoutButton";
 
 export default function UnauthorizedPage() {
   return (

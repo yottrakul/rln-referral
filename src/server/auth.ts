@@ -8,6 +8,9 @@ import Credentials from "next-auth/providers/credentials";
 import { env } from "@/env";
 import { LoginSchema } from "@/app/_schemas";
 import bcrypt from "bcryptjs";
+import { z } from "zod";
+import { getFile, getSignedURL } from "@/app/_actions/s3/actions";
+import { SECURE_IMAGE_ENDPOINT } from "@/app/_lib/definition";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -21,7 +24,15 @@ declare module "next-auth" {
       id: string;
       // ...other properties
       role: Role;
+      firstName?: string;
+      lastName?: string;
+      hospitalId?: number;
     } & DefaultSession["user"];
+  }
+
+  interface Profile extends GoogleProfile {
+    firstName: string;
+    lastName: string;
   }
 
   // interface User {
@@ -33,6 +44,10 @@ declare module "next-auth" {
 declare module "next-auth/jwt" {
   interface JWT {
     role: Role;
+    firstName?: string;
+    lastName?: string;
+    image?: string;
+    hospitalId?: number;
   }
 }
 
@@ -60,17 +75,45 @@ export const authOptions: NextAuthOptions = {
         session.user.id = token.sub;
       }
 
+      // เพิ่มชื่อและนามสกุล ให้กับ session ที่ได้จาก token
+      session.user.firstName = token.firstName;
+      session.user.lastName = token.lastName;
+
       // เพิ่ม role ให้กับ session ที่ได้จาก token
       session.user.role = token.role;
 
+      // เพิ่ม image ให้กับ session ที่ได้จาก token
+      if (token.image) {
+        session.user.image = token.image;
+      }
+
+      if (token.hospitalId) {
+        session.user.hospitalId = token.hospitalId;
+      }
+
       return session;
     },
-    async jwt({ token }) {
+    async jwt({ token, profile }) {
       // เพิ่ม role ให้กับ token
+      if (profile) {
+        token.firstName = profile.firstName;
+        token.lastName = profile.lastName;
+      }
       if (token.sub) {
         const exitingUser = await getUserById(token.sub);
         if (exitingUser?.role) {
           token.role = exitingUser.role;
+        }
+        if (exitingUser?.image) {
+          const isURL = exitingUser.image.startsWith("http");
+          if (!isURL) {
+            token.image = `${SECURE_IMAGE_ENDPOINT}/${exitingUser.image.trim()}`;
+          } else {
+            token.image = exitingUser.image;
+          }
+        }
+        if (exitingUser?.hospitalId) {
+          token.hospitalId = exitingUser.hospitalId;
         }
       }
       return token;
@@ -87,6 +130,8 @@ export const authOptions: NextAuthOptions = {
           name: profile.name,
           email: profile.email,
           image: profile.picture,
+          firstName: profile.given_name,
+          lastName: profile.family_name,
         };
       },
     }),

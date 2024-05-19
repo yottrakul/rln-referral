@@ -1,5 +1,5 @@
 "use client";
-import { Table, TableContainer, Thead, Tr, Th, Tbody, Td } from "@chakra-ui/react";
+import { Table, TableContainer, Thead, Tr, Th, Tbody, Td, type TableContainerProps } from "@chakra-ui/react";
 import {
   type ColumnDef,
   type SortingState,
@@ -15,12 +15,13 @@ type ReactTableProps<TData, TValue> = {
   data: TData[];
   columns: ColumnDef<TData, TValue>[];
   onRowSelectStateChange?: Dispatch<SetStateAction<TData[]>>;
-};
+} & TableContainerProps;
 
 export default function ReactTable<TData, TValue>({
   data,
   columns,
   onRowSelectStateChange,
+  ...rest
 }: ReactTableProps<TData, TValue>) {
   // SelectRow State
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
@@ -45,8 +46,12 @@ export default function ReactTable<TData, TValue>({
     }
   }, [rowSelection, table, onRowSelectStateChange]);
 
+  useEffect(() => {
+    setRowSelection({});
+  }, [data]);
+
   return (
-    <TableContainer>
+    <TableContainer {...rest}>
       <Table>
         <Thead>
           {table.getHeaderGroups().map((headerGroup) => (
@@ -58,13 +63,21 @@ export default function ReactTable<TData, TValue>({
           ))}
         </Thead>
         <Tbody>
-          {table.getRowModel().rows.map((row) => (
-            <Tr data-state={rowSelection ? (row.getIsSelected() ? "selected" : "false") : null} key={row.id}>
-              {row.getVisibleCells().map((cell) => (
-                <Td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</Td>
-              ))}
+          {table.getRowModel().rows.length ? (
+            table.getRowModel().rows.map((row) => (
+              <Tr data-state={rowSelection ? (row.getIsSelected() ? "selected" : "false") : null} key={row.id}>
+                {row.getVisibleCells().map((cell) => (
+                  <Td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</Td>
+                ))}
+              </Tr>
+            ))
+          ) : (
+            <Tr>
+              <Td colSpan={columns.length} textAlign={"center"} h={24}>
+                No Results
+              </Td>
             </Tr>
-          ))}
+          )}
         </Tbody>
       </Table>
     </TableContainer>

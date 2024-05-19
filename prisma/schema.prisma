@@ -2,7 +2,8 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-    provider = "prisma-client-js"
+    provider        = "prisma-client-js"
+    previewFeatures = ["fullTextSearch"]
 }
 
 generator zod {
@@ -69,43 +70,36 @@ model Session {
 }
 
 model User {
-    id            String    @id @default(cuid())
+    id            String       @id @default(cuid())
     name          String?
-    email         String?   @unique
+    prefixName    String?
+    firstName     String?
+    lastName      String?
+    email         String?      @unique
     emailVerified DateTime?
     image         String?
     password      String? // @db.Text
-    role          Role      @default(GUEST)
+    role          Role         @default(GUEST)
     hospitalId    Int?
-    hospital      Hospital? @relation(fields: [hospitalId], references: [id])
+    hospital      Hospital?    @relation(fields: [hospitalId], references: [id])
     accounts      Account[]
     sessions      Session[]
+    medRecords    Med_record[]
 }
 
 model Hospital {
     id                 Int                   @id @default(autoincrement())
-    hospitalName       String
-    sendCases          Referral_case[]       @relation("send_cases")
-    reciveCases        Referral_case[]       @relation("recive_cases")
-    startCaseFrom      Referral_case[]       @relation("startCaseFrom")
+    hospitalName       String                @unique
+    sendCases          ReferralCase[]        @relation("send_cases")
+    reciveCases        ReferralCase[]        @relation("recive_cases")
+    startCaseFrom      ReferralCase[]        @relation("startCaseFrom")
     hospitalUser       User[]
     historyProcessList Hitory_process_list[]
 }
 
-model Hitory_process_list {
-    id         Int      @id @default(autoincrement())
-    hospitalId Int
-    sender     Int      @default(0)
-    recive     Int      @default(0)
-    reject     Int      @default(0)
-    accept     Int      @default(0)
-    createAt   DateTime @default(now())
-    hospital   Hospital @relation(fields: [hospitalId], references: [id])
-}
-
-model Referral_case {
+model ReferralCase {
     id               String            @id @default(cuid())
-    patientId        Int
+    patientId        Int               @unique
     status           Status
     senderHospital   Int
     startHospital    Int
@@ -115,16 +109,17 @@ model Referral_case {
     medRecord        Med_record[]
     logCaseStatus    Log_case_status[]
     startCaseFrom    Hospital          @relation("startCaseFrom", fields: [startHospital], references: [id])
-    patient          Patient_info      @relation(fields: [patientId], references: [id])
+    patient          Patient           @relation(fields: [patientId], references: [id])
 }
 
-model Patient_info {
-    id               Int             @id @default(autoincrement())
-    refCases         Referral_case[]
-    citizenId        String          @unique @db.Char(13)
-    patientFirstname String          @db.VarChar(255)
-    patientSurname   String          @db.VarChar(255)
-    brithDate        DateTime        @db.Date
+model Patient {
+    id               Int           @id @default(autoincrement())
+    refCases         ReferralCase?
+    citizenId        String        @unique @db.Char(13)
+    patientFirstname String        @db.VarChar(255)
+    patientSurname   String        @db.VarChar(255)
+    phone            String?
+    birthDate        DateTime      @db.Date
     gender           Gender
     bloodType        BloodType
     houseNumber      String?
@@ -136,23 +131,35 @@ model Patient_info {
 }
 
 model Med_record {
-    id       String        @id @default(cuid())
-    case     String
-    date     DateTime
-    doctor   String
-    hospital String
-    detail   String
-    cases    Referral_case @relation(fields: [case], references: [id])
+    id        String       @id @default(cuid())
+    caseId    String
+    createdAt DateTime     @default(now())
+    doctorId  String
+    detail    String
+    fileKey   String?
+    cases     ReferralCase @relation(fields: [caseId], references: [id], onDelete: Cascade)
+    doctor    User         @relation(fields: [doctorId], references: [id])
 }
 
 model Log_case_status {
     caseId     String
-    statusTo   String
-    statusFrom String
-    changeAt   DateTime
-    case       Referral_case @relation(fields: [caseId], references: [id])
+    statusTo   Status
+    statusFrom Status
+    changeAt   DateTime     @default(now())
+    case       ReferralCase @relation(fields: [caseId], references: [id], onDelete: Cascade)
 
     @@id([caseId, statusTo, statusFrom])
+}
+
+model Hitory_process_list {
+    id         Int      @id @default(autoincrement())
+    hospitalId Int
+    sender     Int      @default(0)
+    recive     Int      @default(0)
+    reject     Int      @default(0)
+    accept     Int      @default(0)
+    createAt   DateTime @default(now())
+    hospital   Hospital @relation(fields: [hospitalId], references: [id])
 }
 
 // model VerificationToken {
@@ -184,6 +191,7 @@ enum Role {
 }
 
 enum Status {
+    NONE
     PENDING
     ACCEPT
     REJECT
