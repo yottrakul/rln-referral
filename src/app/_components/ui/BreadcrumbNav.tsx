@@ -30,7 +30,10 @@ export default function BreadcrumbNav({ containerStyle }: BreadcrumbNavProps) {
               {path === lastPathNames ? (
                 <BreadcrumbLink>{`${path.slice(0, 1).toUpperCase()}${path.slice(1)}`}</BreadcrumbLink>
               ) : (
-                <Link href={`/${path}`}>{path}</Link>
+                <BreadcrumbLink
+                  as={Link}
+                  href={`/${path}`}
+                >{`${path.slice(0, 1).toUpperCase()}${path.slice(1)}`}</BreadcrumbLink>
               )}
             </BreadcrumbItem>
           );

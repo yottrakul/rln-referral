@@ -36,7 +36,7 @@ import { type Patient } from "@/app/_schemas/generated/zod";
 import ErrorHandleUI from "@/app/_components/ui/error/ErrorHandleUI";
 import { useSession } from "next-auth/react";
 import { isUndefined } from "lodash";
-import MedRecordProvider, { useMedicalContext } from "@/app/_components/context/MedicalRecordContext";
+import MedRecordProvider from "@/app/_components/context/MedicalRecordContext";
 import CreateReferralSummary from "@/app/_components/ui/create-request/CreateReferralSummary";
 interface CreateRequestProps {
   hospitals: Hospital[];

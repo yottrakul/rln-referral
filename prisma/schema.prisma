@@ -145,7 +145,7 @@ model Log_case_status {
     caseId     String
     statusTo   Status
     statusFrom Status
-    changeAt   DateTime
+    changeAt   DateTime     @default(now())
     case       ReferralCase @relation(fields: [caseId], references: [id])
 
     @@id([caseId, statusTo, statusFrom])

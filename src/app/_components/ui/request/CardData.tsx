@@ -6,12 +6,14 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { statusItem } from "@/app/_lib/const";
 import type { Patient, Hospital } from "@prisma/client";
+import Nextink from "next/link";
 
 interface Props {
   patientId: number;
   senderhospital: number;
   receiverhospital: number;
   status: string;
+  caseId: string;
 }
 // interface typePatient {
 //   id: number;
@@ -30,7 +32,7 @@ interface Props {
 //   hospitalName: string;
 // }
 
-export default function CardData({ patientId, senderhospital, receiverhospital, status }: Props) {
+export default function CardData({ patientId, senderhospital, receiverhospital, status, caseId }: Props) {
   const searchParams = useSearchParams();
   const [isPatient, setPatient] = useState<Patient>();
   const [isHospital, setHospital] = useState<Hospital | null>();
@@ -83,11 +85,12 @@ export default function CardData({ patientId, senderhospital, receiverhospital, 
               <Text color={find(status)?.color}>{find(status)?.titleTH}</Text>
             </SimpleGrid>
           </Box>
-
-          <Button colorScheme={"linkedin"} mt={4} w={"100%"} variant="outline" size={"sm"}>
-            <Icon as={InfoOutlineIcon} mr={3} />
-            ดูรายละเอียด
-          </Button>
+          <Nextink href={`/request/${caseId}`}>
+            <Button colorScheme={"linkedin"} mt={4} w={"100%"} variant="outline" size={"sm"}>
+              <Icon as={InfoOutlineIcon} mr={3} />
+              ดูรายละเอียด
+            </Button>
+          </Nextink>
         </CardBody>
       </Card>
     </>

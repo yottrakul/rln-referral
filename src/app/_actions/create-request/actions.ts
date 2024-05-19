@@ -13,7 +13,6 @@ import { toPDF } from "@/app/_lib/pdf/core";
 import { uploadFileType } from "@/app/_actions/s3/actions";
 
 export const createCase = async (data: unknown, medData: unknown) => {
-  console.log(medData);
   const safeData = CreateReferalRequestSchema.safeParse(data);
   const safeMedData = CreateMedicalRecordSchemaBackEnd.safeParse(medData);
 
@@ -26,9 +25,6 @@ export const createCase = async (data: unknown, medData: unknown) => {
     }
     throw new Error("Bad Request");
   }
-
-  console.log(safeData);
-  console.log(safeMedData);
 
   try {
     // Create Case
@@ -46,6 +42,43 @@ export const createCase = async (data: unknown, medData: unknown) => {
         status: "PENDING",
       },
     });
+
+    await db.log_case_status.upsert({
+      where: {
+        caseId_statusTo_statusFrom: {
+          caseId: caseData.id,
+          statusFrom: "NONE",
+          statusTo: "PENDING",
+        },
+      },
+      create: {
+        statusFrom: "NONE",
+        statusTo: "PENDING",
+        caseId: caseData.id,
+      },
+      update: {
+        changeAt: new Date(),
+      },
+    });
+
+    await db.log_case_status.upsert({
+      where: {
+        caseId_statusTo_statusFrom: {
+          caseId: caseData.id,
+          statusFrom: "PENDING",
+          statusTo: "PENDING",
+        },
+      },
+      create: {
+        statusFrom: "PENDING",
+        statusTo: "PENDING",
+        caseId: caseData.id,
+      },
+      update: {
+        changeAt: new Date(),
+      },
+    });
+
     // End Create Case
     // ทำแค่รองรับ Med ตัวเดียว!!
     // PDF Section

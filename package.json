@@ -36,6 +36,7 @@
     "chart.js": "^4.4.2",
     "faker": "^6.6.6",
     "framer-motion": "^10.18.0",
+    "ismobilejs": "^1.1.1",
     "lodash": "^4.17.21",
     "lottie-react": "^2.4.0",
     "next": "^14.0.4",

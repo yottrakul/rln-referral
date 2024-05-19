@@ -1,3 +1,4 @@
+"use client";
 import { Center, Icon, VStack, Text } from "@chakra-ui/react";
 import { BiSolidError } from "react-icons/bi";
 

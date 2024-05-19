@@ -1,6 +1,5 @@
 "use client";
 // import MedRecord from "@/app/_components/ui/create-request/MedRecord";
-import { BsThreeDots } from "react-icons/bs";
 import {
   Card,
   CardHeader,
@@ -26,15 +25,15 @@ import { isNull, isUndefined } from "lodash";
 import { GoInbox } from "react-icons/go";
 import ModalMedRecordDetail from "./ModalMedRecordDetail";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 
 interface MedRecordSummaryProps {
   containerStyle?: SystemStyleObject;
-  hospitals: Hospital[];
+  hospitals?: Hospital[];
   referralId?: string | null;
 }
 
 export default function MedRecordSummary({ containerStyle, hospitals, referralId }: MedRecordSummaryProps) {
+  // console.log(isUndefined(hospitals));
   const { isOpen, onOpen, onClose } = useDisclosure();
   const modalDetailController = useDisclosure();
   const { medicalRecords: localMedRec, deleteMedicalRecord } = useMedicalContext();
@@ -80,7 +79,7 @@ export default function MedRecordSummary({ containerStyle, hospitals, referralId
             position={"absolute"}
             inset={0}
           >
-            {localMedRec.length > 0 ? null : (
+            {isUndefined(hospitals) ? null : localMedRec.length > 0 ? null : (
               <Button onClick={onOpen} colorScheme={"purple"}>
                 เพิ่มประวัติการรักษา
               </Button>
@@ -125,9 +124,12 @@ export default function MedRecordSummary({ containerStyle, hospitals, referralId
           </VStack>
         </CardBody>
       </Card>
-      <FileUploadProvider>
-        <ModalMedRecordCreate hospitals={hospitals} isOpen={isOpen} onClose={onClose} />
-      </FileUploadProvider>
+      {hospitals && (
+        <FileUploadProvider>
+          <ModalMedRecordCreate hospitals={hospitals} isOpen={isOpen} onClose={onClose} />
+        </FileUploadProvider>
+      )}
+
       <ModalMedRecordDetail
         patientDetail={patientDetail ?? "ไม่พบข้อมูล"}
         isOpen={modalDetailController.isOpen}

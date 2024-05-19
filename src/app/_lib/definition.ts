@@ -8,6 +8,7 @@ export const MAX_IMAGE_FILE_SIZE = 3 * 1024 * 1024; // 3MB
 export const MAX_MEDRECORD_IMAGE_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 export const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
 export const SECURE_IMAGE_ENDPOINT = "/api/secureimg";
+export const HOSPITAL_REFER_DRAWER_ID = "hospital-refer-drawer";
 
 export const ROLE_NAME: Record<Role, string> = {
   ADMIN: "ผู้ดูแลระบบ",
@@ -73,4 +74,10 @@ export type PreparedMedRecItem = {
 export type FileUpload = {
   id: string;
   data: File;
+};
+
+export type Step = {
+  title: string;
+  description: string;
+  description2: string;
 };

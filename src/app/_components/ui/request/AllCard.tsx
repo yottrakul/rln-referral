@@ -80,6 +80,7 @@ export default function CardData() {
         return (
           <Box key={index} maxW={"600px"}>
             <Carddata
+              caseId={v?.id}
               patientId={v?.patientId}
               senderhospital={v?.senderHospital}
               receiverhospital={v?.receiverHospital}

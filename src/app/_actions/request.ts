@@ -1,6 +1,7 @@
 "use server";
 
 import { db } from "@/server/db";
+import type { Prisma } from "@prisma/client";
 
 export const getCase = async (
   page: number,
@@ -11,26 +12,20 @@ export const getCase = async (
   hospitalId: number
 ) => {
   try {
-    const wherePatient: {
-      birthDate?: string;
-      senderHospital?: number;
-      receiverHospital?: number;
-      OR?: {
-        citizenId?: object;
-        patientFirstname?: object;
-        patientSurname?: object;
-      }[];
-    } = {};
+    const wherePatient: Prisma.PatientWhereInput = {};
 
-    const whereCase: {
-      senderHospital?: number;
-      receiverHospital?: number;
-      OR?: { patientId: number }[];
-    } = {};
+    const whereCase: Prisma.ReferralCaseWhereInput = {};
 
     if (hospitalId != 0) {
       if (senrec == "1") {
-        whereCase.senderHospital = hospitalId;
+        // whereCase.senderHospital = hospitalId;
+        // whereCase.startHospital = hospitalId;
+        whereCase.OR = [
+          { startHospital: hospitalId },
+          {
+            senderHospital: hospitalId,
+          },
+        ];
       } else {
         whereCase.receiverHospital = hospitalId;
       }
@@ -41,6 +36,7 @@ export const getCase = async (
         whereCase.receiverHospital = Number(hospitalSearch);
       } else {
         whereCase.senderHospital = Number(hospitalSearch);
+        whereCase.startHospital = hospitalId;
       }
     }
 

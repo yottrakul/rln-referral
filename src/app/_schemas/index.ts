@@ -243,6 +243,10 @@ export const CreateReferalRequestSchema = z.object({
   patientId: z.coerce.number().gt(0, { message: "การกำหนดหมายเลขผู้ป่วยผิดพลาด" }),
 });
 
+export const EditReceiverHospitalReferalRequestSchema = z.object({
+  receiverHospital: z.coerce.number().gt(0, { message: "กรุณาเลือกโรงพยาบาลปลายทาง" }),
+});
+
 export const CreateMedicalRecordSchema = z.object({
   doctorId: z.coerce.string().min(1, "Doctor ID is required"),
   detail: z.string(),
