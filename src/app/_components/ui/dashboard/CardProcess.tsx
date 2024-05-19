@@ -8,7 +8,7 @@ interface CardProcessProp {
 }
 
 export default function CardProcess({ status }: CardProcessProp) {
-  const [numRefCase, setNumRefCase] = React.useState<number>();
+  const [numRefCase, setNumRefCase] = React.useState<number>(0);
   const [isError, setIsError] = React.useState<boolean>(false);
 
   useEffect(() => {
@@ -27,9 +27,9 @@ export default function CardProcess({ status }: CardProcessProp) {
   }
 
   return (
-    <div>
+    <>
       {numRefCase?.toString()}
       {/* {JSON.stringify(referralCase)} */}
-    </div>
+    </>
   );
 }
