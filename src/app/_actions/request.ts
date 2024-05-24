@@ -2,6 +2,7 @@
 
 import { db } from "@/server/db";
 import type { Prisma } from "@prisma/client";
+import { cache } from "react";
 
 export const getCase = async (
   page: number,
@@ -103,7 +104,7 @@ export const getPatient = async (id: number) => {
   }
 };
 
-export const getHospital = async (id: number) => {
+export const getHospital = cache(async (id: number) => {
   try {
     const hospital = await db.hospital.findUnique({
       where: { id: id },
@@ -112,7 +113,7 @@ export const getHospital = async (id: number) => {
   } catch (error) {
     throw new Error("Error fetching users");
   }
-};
+});
 
 export const getHospitalAll = async () => {
   try {

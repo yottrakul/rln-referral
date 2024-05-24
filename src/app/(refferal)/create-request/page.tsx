@@ -7,7 +7,7 @@ export default async function page() {
   return (
     <>
       <BreadcrumbNav />
-      <CreateRequest hospitals={hospitals} />
+      <CreateRequest containerStyle={{ mt: "4" }} hospitals={hospitals} />
     </>
   );
 }

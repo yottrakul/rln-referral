@@ -15,7 +15,6 @@ const ReceiverActionsWrapper: FC<ReceiverActionsWrapperProps> = ({ caseId, child
   const toast = useToast();
   const handleAcceptCase = async () => {
     setIsPending(true);
-    // TODO: Implement accept case
     try {
       await acceptCase(caseId);
     } catch (error) {

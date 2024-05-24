@@ -70,7 +70,18 @@ export default function Navbar() {
           <DrawerHeader></DrawerHeader>
           <DrawerBody>
             <Box w={"100%"} h={"40px"}>
-              <Button mx={2} px={6} bg={"#9E57DA"} _hover={{ bg: "#7943a5" }} color={"white"} rightIcon={<FaPlus />}>
+              <Button
+                onClick={() => {
+                  router.push("/create-request");
+                  onClose();
+                }}
+                mx={2}
+                px={6}
+                bg={"#9E57DA"}
+                _hover={{ bg: "#7943a5" }}
+                color={"white"}
+                rightIcon={<FaPlus />}
+              >
                 สร้างคำขอ
               </Button>
             </Box>

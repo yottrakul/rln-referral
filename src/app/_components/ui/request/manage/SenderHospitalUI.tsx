@@ -10,6 +10,7 @@ import HospitalReferInputWrapper from "./HospitalReferInputWrapper";
 import { getHospitalNameById } from "@/app/_actions/hospital/actions";
 import ReactHtmlParser from "react-html-parser";
 import MedRecordProvider from "@/app/_components/context/MedicalRecordContext";
+import PatientSummarySC from "./PatientSummarySC";
 
 interface StartHospitalUIProps {
   caseData: ReferralCase;
@@ -66,8 +67,14 @@ const SenderHospitalUI: FC<StartHospitalUIProps> = async ({ caseData }) => {
         </GridItem>
 
         <GridItem colSpan={{ base: 1, md: 2 }}>
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense fallback={<div>Loading Process...</div>}>
             <DisplayStatus caseId={caseData.id} />
+          </Suspense>
+        </GridItem>
+
+        <GridItem colSpan={{ base: 1, md: 2 }}>
+          <Suspense fallback={<div>Loading Patient data...</div>}>
+            <PatientSummarySC patientId={caseData.patientId} />
           </Suspense>
         </GridItem>
 

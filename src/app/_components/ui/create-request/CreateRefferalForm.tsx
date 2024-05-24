@@ -120,6 +120,7 @@ export default function CreateRefferalForm({ patient, hospitals, nextStep }: Cre
           gridTemplateColumns={{ md: `minmax(0,1fr) minmax(0,1fr)` }}
           gridTemplateRows={{ base: `minmax(0,25rem) minmax(0,50rem) auto`, md: `minmax(0,50rem) auto` }}
           gap={4}
+          mb={4}
         >
           <PatientSummary patient={patient} />
           <Grid gap={4} gridTemplateRows={`1fr auto`}>

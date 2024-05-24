@@ -5,6 +5,7 @@ import Chat from "@/app/_components/ui/chat/Chat";
 import DisplayStatus from "./DisplayStatus";
 import MedRecordWrapper from "./MedRecordWrapper";
 import MedRecordProvider from "@/app/_components/context/MedicalRecordContext";
+import PatientSummarySC from "./PatientSummarySC";
 
 interface StartHospitalUIProps {
   caseData: ReferralCase;
@@ -50,6 +51,12 @@ const StartHospitalUI: FC<StartHospitalUIProps> = ({ caseData }) => {
         <GridItem colSpan={{ base: 1, md: 2 }}>
           <Suspense fallback={<div>Loading...</div>}>
             <DisplayStatus caseId={caseData.id} />
+          </Suspense>
+        </GridItem>
+
+        <GridItem colSpan={{ base: 1, md: 2 }}>
+          <Suspense fallback={<div>Loading Patient data...</div>}>
+            <PatientSummarySC patientId={caseData.patientId} />
           </Suspense>
         </GridItem>
 

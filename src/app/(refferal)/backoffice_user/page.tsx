@@ -2,6 +2,7 @@ import ModalLoadingSkeleton from "@/app/_components/ui/back_office/ModalLoadingS
 import UpdateUserModal from "@/app/_components/ui/back_office/UpdateUserModal";
 import UserFilterControl from "@/app/_components/ui/back_office/UserFilterControl";
 import UserManagement from "@/app/_components/ui/back_office/user/UserManagement";
+import { Heading } from "@chakra-ui/react";
 import { Suspense } from "react";
 
 export default async function backoffice_user({
@@ -16,6 +17,9 @@ export default async function backoffice_user({
   const page = searchParams?.page ?? "1";
   return (
     <main>
+      <Heading mb={3} size={"lg"}>
+        Back Office
+      </Heading>
       <UserFilterControl />
       <Suspense key={query + role + page} fallback={<div>Loading...</div>}>
         <UserManagement query={query} role={role} page={page} />

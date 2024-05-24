@@ -17,9 +17,6 @@ import {
   AlertTitle,
   AlertDescription,
   FormErrorMessage,
-  Divider,
-  AbsoluteCenter,
-  SimpleGrid,
   ModalFooter,
   Button,
   Text,
@@ -165,7 +162,7 @@ const ModalMedRecordCreate: FC<ModalMedRecordCreateProps> = ({ hospitals, onClos
           <FileUploadProvider>
             <FormProvider {...methodsForm}>
               <form onSubmit={methodsForm.handleSubmit(onSubmit)}>
-                <Grid templateColumns="repeat(2, 1fr)" gap={4}>
+                <Grid templateColumns={{ base: `repeat(1, 1fr)`, md: `repeat(2, 1fr)` }} gap={4}>
                   <GridItem>
                     <Stack>
                       <FormControl>
@@ -208,8 +205,8 @@ const ModalMedRecordCreate: FC<ModalMedRecordCreateProps> = ({ hospitals, onClos
                       <DropzoneField name="images" multiple />
                     </FormControl>
                   </GridItem>
-                  <GridItem colSpan={2}></GridItem>
-                  <GridItem colSpan={2}>
+                  {/* <GridItem colSpan={2}></GridItem> */}
+                  <GridItem colSpan={{ base: 1, md: 2 }}>
                     <FilePreview />
                   </GridItem>
                 </Grid>
