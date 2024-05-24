@@ -1,16 +1,16 @@
-import { UserSchema } from "./generated/zod/index";
-import * as z from "zod";
-import { Role, Status, Gender, BloodType } from "@prisma/client";
-import { MAX_IMAGE_FILE_SIZE, ACCEPTED_IMAGE_TYPES } from "@/app/_lib/definition";
 import { isValidThaiID } from "@/app/_lib";
+import type { FileUpload } from "@/app/_lib/definition";
+import { ACCEPTED_IMAGE_TYPES, MAX_IMAGE_FILE_SIZE } from "@/app/_lib/definition";
+import { BloodType, Gender, Role, Status } from "@prisma/client";
 import { type File } from "buffer";
-import type { FileUpload, PreparedMedRecItem } from "@/app/_lib/definition";
+import * as z from "zod";
+import { UserSchema } from "./generated/zod/index";
 
 /////////////////////////////////////////
 // OMIT
 /////////////////////////////////////////
 
-type MedOmitID = Omit<PreparedMedRecItem, "id">;
+// type MedOmitID = Omit<PreparedMedRecItem, "id">;
 
 /////////////////////////////////////////
 // ENUMS

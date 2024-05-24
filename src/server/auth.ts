@@ -1,16 +1,14 @@
-import { getServerSession, type DefaultSession, type NextAuthOptions } from "next-auth";
-import { db } from "@/server/db";
 import { getUserByEmail, getUserById } from "@/app/_actions/data/user";
+import { SECURE_IMAGE_ENDPOINT } from "@/app/_lib/definition";
+import { LoginSchema } from "@/app/_schemas";
+import { env } from "@/env";
+import { db } from "@/server/db";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { type Role } from "@prisma/client";
-import GoogleProvider, { type GoogleProfile } from "next-auth/providers/google";
-import Credentials from "next-auth/providers/credentials";
-import { env } from "@/env";
-import { LoginSchema } from "@/app/_schemas";
 import bcrypt from "bcryptjs";
-import { z } from "zod";
-import { getFile, getSignedURL } from "@/app/_actions/s3/actions";
-import { SECURE_IMAGE_ENDPOINT } from "@/app/_lib/definition";
+import { getServerSession, type DefaultSession, type NextAuthOptions } from "next-auth";
+import Credentials from "next-auth/providers/credentials";
+import GoogleProvider, { type GoogleProfile } from "next-auth/providers/google";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`

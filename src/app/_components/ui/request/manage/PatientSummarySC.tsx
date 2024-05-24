@@ -1,5 +1,4 @@
 import { getPatientById } from "@/app/_actions/refferral-case/patient";
-import { getPatient } from "@/app/_actions/request";
 import PatientSummary from "@/app/_components/ui/create-request/PatientSummary";
 import { type FC } from "react";
 

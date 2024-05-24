@@ -1,7 +1,7 @@
-import { Prisma, type User } from "@prisma/client";
-import _ from "lodash";
-import { randomUUID } from "crypto";
 import { SECURE_IMAGE_ENDPOINT, type UserWithOutPassword } from "@/app/_lib/definition";
+import { Prisma } from "@prisma/client";
+import { randomUUID } from "crypto";
+import _ from "lodash";
 
 type A<T extends string> = T extends `${infer U}ScalarFieldEnum` ? U : never;
 type Entity = A<keyof typeof Prisma>;
