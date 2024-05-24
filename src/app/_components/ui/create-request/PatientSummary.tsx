@@ -1,19 +1,8 @@
 "use client";
-import { getPatientByCitizenId } from "@/app/_actions/create-request/actions";
-import {
-  Card,
-  CardBody,
-  CardHeader,
-  Heading,
-  SimpleGrid,
-  StackDivider,
-  Box,
-  Text,
-  Skeleton,
-  Stack,
-} from "@chakra-ui/react";
+import { Card, CardBody, CardHeader, Heading, SimpleGrid, Box, Text, Icon, Flex } from "@chakra-ui/react";
 import { useCallback } from "react";
-import { GENDER_NAME, patientSummaryHeaders } from "@/app/_lib/definition";
+import { GENDER_NAME, patientSummaryHeaders, patientSummaryHeadersIcon } from "@/app/_lib/definition";
+import { BsLayoutTextSidebarReverse } from "react-icons/bs";
 import { type Patient } from "@/app/_schemas/generated/zod";
 import ErrorHandleUI from "@/app/_components/ui/error/ErrorHandleUI";
 import _, { isNull, isUndefined } from "lodash";
@@ -63,12 +52,24 @@ export default function PatientSummary({ patient }: PatientSummaryProps) {
 
         return (
           <Box key={key + finalValue}>
-            <Heading size="sm" textTransform="uppercase">
-              {headerName}
-            </Heading>
-            <Text pt="2" fontSize="md">
-              {finalValue}
-            </Text>
+            <Flex gap={4}>
+              <Icon
+                as={
+                  patientSummaryHeadersIcon[key as keyof typeof patientSummaryHeaders]?.icon ??
+                  BsLayoutTextSidebarReverse
+                }
+                boxSize={6}
+                color={patientSummaryHeadersIcon[key as keyof typeof patientSummaryHeaders]?.color}
+              />
+              <Box>
+                <Heading size="sm" textTransform="uppercase">
+                  {headerName}
+                </Heading>
+                <Text pt="2" fontSize="md">
+                  {finalValue}
+                </Text>
+              </Box>
+            </Flex>
           </Box>
         );
       });

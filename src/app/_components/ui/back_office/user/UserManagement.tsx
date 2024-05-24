@@ -33,5 +33,9 @@ export default async function UserManagement({ query = "", role = "", page }: Us
 }
 
 const UserManageLayout = ({ children }: { children: React.ReactNode }) => {
-  return <VStack align={"end"}>{children}</VStack>;
+  return (
+    <VStack align={"end"} mb={4}>
+      {children}
+    </VStack>
+  );
 };

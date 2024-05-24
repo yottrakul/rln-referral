@@ -38,7 +38,7 @@ export default function DisplayStepper({ steps, activeStep }: DisplayStepperProp
             <Step key={index}>
               <VStack>
                 <StepIndicator>
-                  <StepStatus complete={`✅`} incomplete={`😶‍🌫️`} active={`⏳`} />
+                  <StepStatus complete={`✅`} incomplete={`❌`} active={`⏳`} />
                 </StepIndicator>
                 <Flex flexDir={"column"} alignItems={"center"}>
                   <StepTitle>{step.title}</StepTitle>

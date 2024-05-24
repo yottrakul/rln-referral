@@ -20,7 +20,7 @@ import FileUploadProvider from "@/app/_components/context/FileUploadContext";
 import { useMedicalContext } from "../../context/MedicalRecordContext";
 import MedRecordCard from "@/app/_components/ui/create-request/MedRecordCard";
 import { useQuery } from "@tanstack/react-query";
-import { getMedicalRecords } from "@/app/_actions/create-request/actions";
+import { getMedicalRecordsByCaseId, getMedicalRecordsByPatientId } from "@/app/_actions/create-request/actions";
 import { isNull, isUndefined } from "lodash";
 import { GoInbox } from "react-icons/go";
 import ModalMedRecordDetail from "./ModalMedRecordDetail";
@@ -29,10 +29,18 @@ import { useState } from "react";
 interface MedRecordSummaryProps {
   containerStyle?: SystemStyleObject;
   hospitals?: Hospital[];
-  referralId?: string | null;
+  referralId: string | null;
+  patientId: number | null;
+  mode?: "CASEID" | "PATIENTID";
 }
 
-export default function MedRecordSummary({ containerStyle, hospitals, referralId }: MedRecordSummaryProps) {
+export default function MedRecordSummary({
+  containerStyle,
+  hospitals,
+  referralId,
+  patientId,
+  mode,
+}: MedRecordSummaryProps) {
   // console.log(isUndefined(hospitals));
   const { isOpen, onOpen, onClose } = useDisclosure();
   const modalDetailController = useDisclosure();
@@ -44,13 +52,17 @@ export default function MedRecordSummary({ containerStyle, hospitals, referralId
     isFetching,
     isError,
   } = useQuery({
-    queryKey: ["medRecords", referralId],
+    queryKey: ["medRecords", referralId, localMedRec],
     queryFn: async () => {
-      const res = await getMedicalRecords(referralId!);
+      const fetchFunc =
+        mode === "CASEID"
+          ? () => getMedicalRecordsByCaseId(referralId!)
+          : () => getMedicalRecordsByPatientId(patientId!);
+      const res = await fetchFunc();
       return res;
     },
     staleTime: 0,
-    enabled: isUndefined(referralId) || isNull(referralId) ? false : true,
+    enabled: !isNull(referralId) || !isNull(patientId),
   });
 
   const medIsEmpty = localMedRec.length === 0 && (isUndefined(remoteMedRec) || remoteMedRec.length === 0);

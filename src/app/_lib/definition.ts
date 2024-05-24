@@ -2,6 +2,9 @@ import { type UserSchemaWithOutPassword } from "@/app/_schemas";
 import type { z } from "zod";
 import { type Role, type Gender } from "@prisma/client";
 import { type UserSchema } from "@/app/_schemas/generated/zod";
+import { AiOutlineUser, AiOutlineCalendar, AiFillHeart, AiOutlinePhone, AiOutlineHome } from "react-icons/ai";
+import { FaTransgender } from "react-icons/fa";
+import type { IconType } from "react-icons";
 
 export const LIMIT_PER_PAGE = 10;
 export const MAX_IMAGE_FILE_SIZE = 3 * 1024 * 1024; // 3MB
@@ -31,6 +34,64 @@ export const patientSummaryHeaders = {
   subArea: "แขวง/อำเภอ",
   province: "จังหวัด",
   postalCode: "รหัสไปรษณีย์",
+};
+
+export const patientSummaryHeadersIcon: Record<
+  keyof typeof patientSummaryHeaders,
+  { icon: IconType; color: string } | null
+> = {
+  citizenId: {
+    icon: AiOutlineUser,
+    color: "purple.500",
+  },
+  patientFirstname: {
+    icon: AiOutlineUser,
+    color: "purple.500",
+  },
+  patientSurname: {
+    icon: AiOutlineUser,
+    color: "purple.500",
+  },
+  birthDate: {
+    icon: AiOutlineCalendar,
+    color: "orange.400",
+  },
+  bloodType: {
+    icon: AiFillHeart,
+    color: "red.400",
+  },
+  gender: {
+    icon: FaTransgender,
+    color: "orange.400",
+  },
+  phone: {
+    icon: AiOutlinePhone,
+    color: "green.500",
+  },
+  houseNumber: {
+    icon: AiOutlineHome,
+    color: "blue.500",
+  },
+  moo: {
+    icon: AiOutlineHome,
+    color: "blue.500",
+  },
+  subDistrict: {
+    icon: AiOutlineHome,
+    color: "blue.500",
+  },
+  subArea: {
+    icon: AiOutlineHome,
+    color: "blue.500",
+  },
+  province: {
+    icon: AiOutlineHome,
+    color: "blue.500",
+  },
+  postalCode: {
+    icon: AiOutlineHome,
+    color: "blue.500",
+  },
 };
 
 export const GENDER_NAME: Record<Gender, string> = {

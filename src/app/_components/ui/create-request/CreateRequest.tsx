@@ -8,21 +8,17 @@ import {
   type SystemStyleObject,
   Text,
   FormControl,
-  FormHelperText,
   FormLabel,
   Input,
   Select,
-  Textarea,
-  VStack,
+  Heading,
   Button,
   FormErrorMessage,
   useToast,
-  ScaleFade,
   SlideFade,
   InputGroup,
   InputRightElement,
   Spinner,
-  Box,
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { type Hospital } from "@prisma/client";
@@ -100,9 +96,7 @@ export default function CreateRequest({ hospitals, containerStyle }: CreateReque
       }}
     >
       <GridItem>
-        <Text fontSize={"xl"} fontWeight={"bold"}>
-          สร้างคำขอ
-        </Text>
+        <Heading mb={4}>สร้างคำขอ</Heading>
       </GridItem>
 
       <SlideFade className="" key={step} offsetX={"30px"} offsetY={"0px"} in={true}>
@@ -166,7 +160,6 @@ const CreateRequestForm = memo(({ nextStep }: CreateRequestFormProps) => {
   const onSubmit = async (data: z.infer<typeof CreatePatientSchema>) => {
     try {
       const patient = await createRequest(data);
-      console.log(patient);
       if (patient.success) {
         if (patient.data) {
           nextStep(patient.data);
@@ -225,7 +218,7 @@ const CreateRequestForm = memo(({ nextStep }: CreateRequestFormProps) => {
         ข้อมูลผู้ป่วย
       </Text>
       <form>
-        <Grid gridTemplateColumns={`repeat(3, 1fr)`} gap={4}>
+        <Grid gridTemplateColumns={{ base: `repeat(1, 1fr)`, md: `repeat(2, 1fr)`, lg: `repeat(3, 1fr)` }} gap={4}>
           <GridItem>
             <FormControl isRequired isInvalid={!!errors.citizenId}>
               <FormLabel>เลขหมายบัตรประชาชน</FormLabel>
@@ -339,7 +332,7 @@ const CreateRequestForm = memo(({ nextStep }: CreateRequestFormProps) => {
             </FormControl>
           </GridItem>
         </Grid>
-        <Button isDisabled={!isFormReady} onClick={handleSubmit(onSubmit)} colorScheme="purple">
+        <Button mt={4} mb={4} isDisabled={!isFormReady} onClick={handleSubmit(onSubmit)} colorScheme="purple">
           ถัดไป
         </Button>
       </form>

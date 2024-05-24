@@ -1,6 +1,17 @@
 "use client";
-import { type FC, useState } from "react";
-import { Button, Icon, useToast } from "@chakra-ui/react";
+import { type FC, useState, useRef } from "react";
+import {
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogOverlay,
+  Button,
+  Icon,
+  useDisclosure,
+  useToast,
+} from "@chakra-ui/react";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { cancelCase } from "@/app/_actions/request/actions";
 import ModalDeleteSuccess from "./ModalDeleteSuccess";
@@ -13,11 +24,13 @@ interface CancleCaseBtnProps {
 const CancleCaseBtn: FC<CancleCaseBtnProps> = ({ caseId }) => {
   const [isPending, setIsPending] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const { isOpen: isAlertOpen, onOpen: onAlertOpen, onClose: onAlertClose } = useDisclosure();
   const router = useRouter();
   const toast = useToast();
+  const cancelRef = useRef<HTMLButtonElement | null>(null);
   const handleOnClick = async () => {
-    console.log("Cancel Case");
     // Call API to cancel case
+    onAlertClose();
     try {
       setIsPending(true);
       await cancelCase(caseId);
@@ -53,13 +66,33 @@ const CancleCaseBtn: FC<CancleCaseBtnProps> = ({ caseId }) => {
     <>
       <Button
         isLoading={isPending}
-        onClick={handleOnClick}
+        onClick={onAlertOpen}
         minW={"fit-content"}
         colorScheme="red"
         rightIcon={<Icon as={FaRegTrashAlt} />}
       >
         ยกเลิกคำขอ
       </Button>
+      <AlertDialog isOpen={isAlertOpen} leastDestructiveRef={cancelRef} onClose={onAlertClose}>
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+              ยกเลิกคำขอ
+            </AlertDialogHeader>
+
+            <AlertDialogBody>คุณแน่ใจหรือไม่ที่จะยกเลิกคำขอนี้</AlertDialogBody>
+
+            <AlertDialogFooter>
+              <Button ref={cancelRef} onClick={onAlertClose}>
+                ยกเลิก
+              </Button>
+              <Button colorScheme="red" onClick={handleOnClick} ml={3}>
+                ลบคำขอ
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
       <ModalDeleteSuccess isOpen={isSuccess} />
     </>
   );

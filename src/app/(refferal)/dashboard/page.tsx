@@ -1,17 +1,18 @@
-import CardOverview from "@/app/_components/ui/dashboard_overview/CardOverview";
 import BarChart from "@/app/_components/ui/dashboard_overview/BarChart";
 import { Grid, Card } from "@chakra-ui/react";
 import { Box, Heading } from "@chakra-ui/react";
+import CardOverviewWrapper from "@/app/_components/ui/dashboard_overview/CardOverviewWrapper";
+import { Suspense } from "react";
+import CardOverviewSkeleton from "@/app/_components/ui/dashboard_overview/skeleton/CardOverviewSkeleton";
 
 export default function Dashboard() {
   return (
     <Box w={"full"}>
       <Heading m={3}>Overview</Heading>
-      <Grid templateColumns="repeat(auto-fit, minmax(280px,1fr))" gap={6}>
-        <CardOverview title="ส่งต่อผู้ป่วย" body="PENDING" date="3/8/2020" bgcolor="#9E57DA" />
-        <CardOverview title="รับผู้ป่วยใหม่" body="ACCEPT" date="3/8/2020" bgcolor="#56BEC9" />
-        <CardOverview title="คำขอถูกปฏิเสธ" body="REJECT" date="3/8/2020" bgcolor="#E5483E" />
-        <CardOverview title="คำขอผ่านการอนุมัติ" body="COMPLETE" date="3/8/2020" bgcolor="#09B006" />
+      <Grid suppressHydrationWarning templateColumns="repeat(auto-fit, minmax(280px,1fr))" gap={6}>
+        <Suspense fallback={<CardOverviewSkeleton />}>
+          <CardOverviewWrapper />
+        </Suspense>
       </Grid>
       <Heading mt={10} p={3}>
         Today

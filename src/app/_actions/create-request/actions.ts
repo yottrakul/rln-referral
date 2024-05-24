@@ -2,9 +2,8 @@
 
 import { type PromiseResponse } from "@/app/_lib/definition";
 import { CreateMedicalRecordSchemaBackEnd, CreatePatientSchema, CreateReferalRequestSchema } from "@/app/_schemas";
-import { type Patient, PatientSchema, PatientPartialSchema } from "@/app/_schemas/generated/zod";
+import { type Patient } from "@/app/_schemas/generated/zod";
 import { db } from "@/server/db";
-import { isUndefined } from "lodash";
 import { type z } from "zod";
 import { type UserWithOutPassword } from "@/app/_lib/definition";
 import { prismaExclude, usersImageAdaptor } from "@/app/_lib";
@@ -28,55 +27,77 @@ export const createCase = async (data: unknown, medData: unknown) => {
 
   try {
     // Create Case
-    const caseData = await db.referralCase.upsert({
-      where: {
-        patientId: safeData.data.patientId,
-      },
-      create: {
+    // const caseData = await db.referralCase.upsert({
+    //   where: {
+    //     patientId: safeData.data.patientId,
+    //   },
+    //   create: {
+    //     ...safeData.data,
+    //     status: "PENDING",
+    //   },
+    //   update: {
+    //     senderHospital: safeData.data.senderHospital,
+    //     receiverHospital: safeData.data.receiverHospital,
+    //     status: "PENDING",
+    //   },
+    // });
+
+    const caseData = await db.referralCase.create({
+      data: {
         ...safeData.data,
-        status: "PENDING",
-      },
-      update: {
-        senderHospital: safeData.data.senderHospital,
-        receiverHospital: safeData.data.receiverHospital,
         status: "PENDING",
       },
     });
 
-    await db.log_case_status.upsert({
-      where: {
-        caseId_statusTo_statusFrom: {
+    // await db.log_case_status.upsert({
+    //   where: {
+    //     caseId_statusTo_statusFrom: {
+    //       caseId: caseData.id,
+    //       statusFrom: "NONE",
+    //       statusTo: "PENDING",
+    //     },
+    //   },
+    //   create: {
+    //     statusFrom: "NONE",
+    //     statusTo: "PENDING",
+    //     caseId: caseData.id,
+    //   },
+    //   update: {
+    //     changeAt: new Date(),
+    //   },
+    // });
+
+    // await db.log_case_status.upsert({
+    //   where: {
+    //     caseId_statusTo_statusFrom: {
+    //       caseId: caseData.id,
+    //       statusFrom: "PENDING",
+    //       statusTo: "PENDING",
+    //     },
+    //   },
+    //   create: {
+    //     statusFrom: "PENDING",
+    //     statusTo: "PENDING",
+    //     caseId: caseData.id,
+    //   },
+    //   update: {
+    //     changeAt: new Date(),
+    //   },
+    // });
+
+    await db.log_case_status.createMany({
+      data: [
+        {
           caseId: caseData.id,
           statusFrom: "NONE",
           statusTo: "PENDING",
         },
-      },
-      create: {
-        statusFrom: "NONE",
-        statusTo: "PENDING",
-        caseId: caseData.id,
-      },
-      update: {
-        changeAt: new Date(),
-      },
-    });
-
-    await db.log_case_status.upsert({
-      where: {
-        caseId_statusTo_statusFrom: {
+        {
           caseId: caseData.id,
           statusFrom: "PENDING",
           statusTo: "PENDING",
         },
-      },
-      create: {
-        statusFrom: "PENDING",
-        statusTo: "PENDING",
-        caseId: caseData.id,
-      },
-      update: {
-        changeAt: new Date(),
-      },
+      ],
     });
 
     // End Create Case
@@ -93,7 +114,6 @@ export const createCase = async (data: unknown, medData: unknown) => {
       });
 
       // Convert Image to PDF one file
-      console.log(safeMedData.data);
       const medImages = Object.entries(Object.fromEntries(safeMedData.data[0].images));
 
       // If image to upload
@@ -102,18 +122,14 @@ export const createCase = async (data: unknown, medData: unknown) => {
           const _data = Object.entries(Object.fromEntries(item.images)).map((i) => {
             return i[1] as File;
           });
-          console.log(_data);
           return toPDF(_data);
         });
 
         const postPdfFile = await Promise.all(prePdfFile); // Array
 
-        console.log(postPdfFile[0]);
-
         if (postPdfFile[0]) {
           const res = await uploadFileType(Buffer.from(postPdfFile[0]), "application/pdf");
           if (res.success) {
-            console.log(res.data);
             if (res.data) {
               await db.med_record.update({
                 where: {
@@ -333,8 +349,35 @@ export const getHopitalNameFromDoctorId = async (doctorId: string): PromiseRespo
   }
 };
 
-export const getMedicalRecords = async (caseId?: string) => {
-  if (isUndefined(caseId)) throw new Error("CaseId is required");
+// export const getMedicalRecords = async (caseId?: string) => {
+//   if (isUndefined(caseId)) throw new Error("CaseId is required");
+//   try {
+//     const medicals = db.med_record.findMany({
+//       where: {
+//         caseId,
+//       },
+//       include: {
+//         doctor: {
+//           include: {
+//             hospital: {
+//               select: {
+//                 hospitalName: true,
+//               },
+//             },
+//           },
+//         },
+//         cases: true,
+//       },
+//     });
+
+//     return medicals;
+//   } catch (error) {
+//     console.error(error);
+//     throw new Error("Can't get medical records");
+//   }
+// };
+
+export const getMedicalRecordsByCaseId = async (caseId: string) => {
   try {
     const medicals = db.med_record.findMany({
       where: {
@@ -361,9 +404,38 @@ export const getMedicalRecords = async (caseId?: string) => {
   }
 };
 
+export const getMedicalRecordsByPatientId = async (patientId: number) => {
+  try {
+    const medicals = db.med_record.findMany({
+      where: {
+        cases: {
+          patientId: patientId,
+        },
+      },
+      include: {
+        doctor: {
+          include: {
+            hospital: {
+              select: {
+                hospitalName: true,
+              },
+            },
+          },
+        },
+        cases: true,
+      },
+    });
+
+    return medicals;
+  } catch (error) {
+    console.error(error);
+    throw new Error("Can't get medical records");
+  }
+};
+
 export const getCaseFromPatientId = async (patientId: number) => {
   try {
-    const caseData = await db.referralCase.findUnique({
+    const caseData = await db.referralCase.findMany({
       where: {
         patientId,
       },

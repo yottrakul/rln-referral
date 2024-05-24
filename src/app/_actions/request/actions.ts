@@ -1,11 +1,16 @@
 "use server";
+import { toPDF } from "@/app/_lib/pdf/core";
+import { CreateMedicalRecordSchemaBackEnd } from "@/app/_schemas";
 import { db } from "@/server/db";
 import type { Status } from "@prisma/client";
 import { revalidatePath } from "next/cache";
+import { unstable_noStore as noStore } from "next/cache";
+import { uploadFileType } from "@/app/_actions/s3/actions";
 
 type SteperCaseType = `${Status}_${Status}`;
 
 export const getRequest = async (id: string) => {
+  noStore();
   try {
     const request = await db.referralCase.findUnique({
       where: {
@@ -19,6 +24,7 @@ export const getRequest = async (id: string) => {
 };
 
 export const getCaseProgress = async (caseId: string) => {
+  noStore();
   let currStep = 0;
   const stepsPayload = [
     { title: "สร้างคำขอ", description: "ไม่พบข้อมูล", description2: "ไม่พบข้อมูล" },
@@ -168,6 +174,58 @@ export const endCase = async (caseId: string) => {
       throw new Error(error.message);
     } else {
       throw new Error("Something went wrong!");
+    }
+  }
+};
+
+export const addMedRecordToCase = async (caseId: string, medData: unknown) => {
+  const safeMedData = CreateMedicalRecordSchemaBackEnd.safeParse(medData);
+  if (!safeMedData.success) {
+    if (!safeMedData.success) {
+      console.error(safeMedData.error.flatten());
+    }
+    throw new Error("Bad Request");
+  }
+
+  if (safeMedData.data.length > 0 && safeMedData.data[0]) {
+    // Create MedRecord Section
+    const medRecordData = await db.med_record.create({
+      data: {
+        detail: safeMedData.data[0].detail,
+        caseId,
+        doctorId: safeMedData.data[0].doctorId,
+      },
+    });
+
+    // Convert Image to PDF one file
+    const medImages = Object.entries(Object.fromEntries(safeMedData.data[0].images));
+
+    // If image to upload
+    if (medImages.length > 0) {
+      const prePdfFile = safeMedData.data.map((item) => {
+        const _data = Object.entries(Object.fromEntries(item.images)).map((i) => {
+          return i[1] as File;
+        });
+        return toPDF(_data);
+      });
+
+      const postPdfFile = await Promise.all(prePdfFile); // Array
+
+      if (postPdfFile[0]) {
+        const res = await uploadFileType(Buffer.from(postPdfFile[0]), "application/pdf");
+        if (res.success) {
+          if (res.data) {
+            await db.med_record.update({
+              where: {
+                id: medRecordData.id,
+              },
+              data: {
+                fileKey: res.data,
+              },
+            });
+          }
+        }
+      }
     }
   }
 };

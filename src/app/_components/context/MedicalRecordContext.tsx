@@ -10,6 +10,7 @@ interface MedicalRecordContext {
   medicalRecords: MedRecItem[];
   addMedicalRecord: (medicalRecord: z.infer<typeof CreateMedicalRecordSchema>) => void;
   deleteMedicalRecord: (id: string) => void;
+  reset: () => void;
   preparedMedicalRecords: () => PreparedMedRecItem[];
 }
 
@@ -50,9 +51,13 @@ function MedRecordProvider({ children }: { children: React.ReactNode }) {
     });
   }, [medicalRecords]);
 
+  const reset = () => {
+    setMedicalRecords([]);
+  };
+
   return (
     <MedRecordContext.Provider
-      value={{ medicalRecords, addMedicalRecord, deleteMedicalRecord, preparedMedicalRecords }}
+      value={{ medicalRecords, addMedicalRecord, deleteMedicalRecord, preparedMedicalRecords, reset }}
     >
       {children}
     </MedRecordContext.Provider>

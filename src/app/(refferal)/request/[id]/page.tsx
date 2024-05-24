@@ -28,3 +28,5 @@ export default async function RequestPage({ params }: RequestParams) {
     </div>
   );
 }
+
+export const dynamic = "force-dynamic";

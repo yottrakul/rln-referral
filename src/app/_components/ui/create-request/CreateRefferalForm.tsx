@@ -1,15 +1,4 @@
-import {
-  Grid,
-  GridItem,
-  Button,
-  Box,
-  Input,
-  useToast,
-  Modal,
-  ModalOverlay,
-  ModalBody,
-  ModalContent,
-} from "@chakra-ui/react";
+import { Grid, GridItem, Button, Input, useToast } from "@chakra-ui/react";
 import PatientSummary from "@/app/_components/ui/create-request/PatientSummary";
 import MedRecordSummary from "@/app/_components/ui/create-request/MedRecordSummary";
 import HospitalRefer from "@/app/_components/ui/create-request/HospitalRefer";
@@ -22,7 +11,8 @@ import { type Patient } from "@/app/_schemas/generated/zod";
 import { useMedicalContext } from "@/app/_components/context/MedicalRecordContext";
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
-import { createCase, getCaseFromPatientId } from "@/app/_actions/create-request/actions";
+// import { createCase, getCaseFromPatientId } from "@/app/_actions/create-request/actions";
+import { createCase } from "@/app/_actions/create-request/actions";
 import ModalPending from "./ModalPending";
 
 interface CreateRefferalFormProps {
@@ -46,7 +36,7 @@ export default function CreateRefferalForm({ patient, hospitals, nextStep }: Cre
   const referForm = useForm<z.infer<typeof CreateReferalRequestSchema>>({
     resolver: zodResolver(CreateReferalRequestSchema),
   });
-  const [refCaseId, setRefCaseId] = useState<string | null>(null);
+  // const [refCaseId, setRefCaseId] = useState<string | null>(null);
   const [isPending, setIsPending] = useState(false);
 
   const onSubmit = async (data: z.infer<typeof CreateReferalRequestSchema>) => {
@@ -93,28 +83,28 @@ export default function CreateRefferalForm({ patient, hospitals, nextStep }: Cre
     }
   }, [patient, referForm]);
 
-  useEffect(() => {
-    const checkPatientCase = async () => {
-      if (patient?.id) {
-        const res = await getCaseFromPatientId(patient.id);
-        if (res) {
-          const { id } = res;
-          setRefCaseId(id);
-        }
-      }
-    };
+  // useEffect(() => {
+  //   const checkPatientCase = async () => {
+  //     if (patient?.id) {
+  //       const res = await getCaseFromPatientId(patient.id);
+  //       if (res) {
+  //         const { id } = res;
+  //         setRefCaseId(id);
+  //       }
+  //     }
+  //   };
 
-    checkPatientCase().catch((error) => {
-      console.log(error);
-      toast({
-        title: "Error | Referral Case",
-        description: "Error to get referral case medical records",
-        status: "error",
-        duration: 9000,
-        isClosable: true,
-      });
-    });
-  }, [patient, toast]);
+  //   checkPatientCase().catch((error) => {
+  //     console.log(error);
+  //     toast({
+  //       title: "Error | Referral Case",
+  //       description: "Error to get referral case medical records",
+  //       status: "error",
+  //       duration: 9000,
+  //       isClosable: true,
+  //     });
+  //   });
+  // }, [patient, toast]);
 
   useEffect(() => {
     if (session.data?.user.hospitalId) {
@@ -130,10 +120,16 @@ export default function CreateRefferalForm({ patient, hospitals, nextStep }: Cre
           gridTemplateColumns={{ md: `minmax(0,1fr) minmax(0,1fr)` }}
           gridTemplateRows={{ base: `minmax(0,25rem) minmax(0,50rem) auto`, md: `minmax(0,50rem) auto` }}
           gap={4}
+          mb={4}
         >
           <PatientSummary patient={patient} />
           <Grid gap={4} gridTemplateRows={`1fr auto`}>
-            <MedRecordSummary hospitals={hospitals} referralId={refCaseId} />
+            <MedRecordSummary
+              hospitals={hospitals}
+              referralId={null}
+              patientId={patient?.id ?? null}
+              mode="PATIENTID"
+            />
             <HospitalRefer hospitals={hospitals} />
           </Grid>
           <GridItem textAlign={"right"} colStart={{ md: 2 }}>
