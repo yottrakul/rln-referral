@@ -1,6 +1,5 @@
 "use client";
-import { Divider, Flex, Spacer } from "@chakra-ui/react";
-import { Card, CardHeader, CardBody, CardFooter, Text } from "@chakra-ui/react";
+import { Card, CardBody, CardFooter, CardHeader, Divider, Spacer, Text } from "@chakra-ui/react";
 import style from "./Dashboard.module.css";
 
 interface CardOverviewProps {

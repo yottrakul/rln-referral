@@ -1,21 +1,20 @@
-"use client"
-import { Button, VStack, Input, Text } from '@chakra-ui/react'
-import { useState } from 'react';
-import { getUserByEmail } from '@/app/_actions/data/user';
+"use client";
+import { Button, Text, VStack } from "@chakra-ui/react";
+import { useState } from "react";
 
 export default function Inputs() {
-  const [number, setNumber] = useState(0)
+  const [number, setNumber] = useState(0);
 
   console.log("Render");
 
   const incressNumber = () => {
-    setNumber(number+1);
-  }
+    setNumber(number + 1);
+  };
 
   const logNumber = () => {
-    console.log(number)
-  }
-  
+    console.log(number);
+  };
+
   return (
     <VStack>
       <Button onClick={incressNumber}>+</Button>
@@ -24,5 +23,5 @@ export default function Inputs() {
       <Text>{number}</Text>
       <Button>Submit</Button>
     </VStack>
-  )
+  );
 }

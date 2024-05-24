@@ -1,6 +1,6 @@
-import { SimpleGrid, Box, Stack, Divider, AbsoluteCenter } from "@chakra-ui/react";
-import PreviewCard from "@/app/_components/ui/create-request/MedRecordUploadPreviewCard";
 import { useFileUploadContext } from "@/app/_components/context/FileUploadContext";
+import PreviewCard from "@/app/_components/ui/create-request/MedRecordUploadPreviewCard";
+import { AbsoluteCenter, Box, Divider, SimpleGrid } from "@chakra-ui/react";
 
 const FilePreview = () => {
   const { datas: filesData, deleteFile } = useFileUploadContext();

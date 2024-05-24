@@ -1,8 +1,8 @@
 "use client";
-import { useState } from "react";
-import ReactTable from "@/app/_components/ui/table/ReactTable";
 import { userColumn } from "@/app/_components/ui/back_office/user/table/columns";
+import ReactTable from "@/app/_components/ui/table/ReactTable";
 import { type UserWithOutPassword } from "@/app/_lib/definition";
+import { useState } from "react";
 
 interface UserManagementTableProps {
   data: UserWithOutPassword[];
