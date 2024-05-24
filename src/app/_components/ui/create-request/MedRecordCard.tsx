@@ -21,9 +21,9 @@ import type { MedRecItem } from "@/app/_lib/definition";
 import { useQuery } from "@tanstack/react-query";
 import { getHopitalNameFromDoctorId } from "@/app/_actions/create-request/actions";
 import { getUserById } from "@/app/_actions/back_office";
-import { type getMedicalRecords } from "@/app/_actions/create-request/actions";
+import { type getMedicalRecordsByCaseId } from "@/app/_actions/create-request/actions";
 
-export type RemoteMedicDatas = Awaited<ReturnType<typeof getMedicalRecords>>;
+export type RemoteMedicDatas = Awaited<ReturnType<typeof getMedicalRecordsByCaseId>>;
 export type RemoteMedicData = RemoteMedicDatas[0];
 
 interface MedRecordCardProps {
@@ -133,6 +133,7 @@ const MedRecordCard: FC<MedRecordCardProps> = ({
                         ? "ไม่สามารถโหลดข้อมูล รพ. ได้"
                         : doctorData?.hospitalName ?? "ไม่พบข้อมูลโรงพยาบาล"}
                 </Text>
+                {!isPreview && remoteMedicData?.caseId && <Text>CaseId: {remoteMedicData.caseId}</Text>}
                 {!isPreview && <Text>วันที่สร้าง {remoteMedicData?.createdAt.toLocaleDateString("en-GB")}</Text>}
               </Box>
             </VStack>
@@ -150,20 +151,5 @@ const MedRecordCard: FC<MedRecordCardProps> = ({
     </Card>
   );
 };
-
-// const MenuComp: FC<MenuCompProps> = ({ isPreview }) => {
-//   return (
-//     <Menu>
-//       <MenuButton>
-//         <BsThreeDots fontSize={"1.3rem"} color="var(--chakra-colors-purple-500)" />
-//       </MenuButton>
-//       <MenuList>
-//         {/* MenuItems are not rendered unless Menu is open */}
-//         <MenuItem icon={<InfoIcon />}>ดูรายละเอียด</MenuItem>
-//         <MenuItem icon={<DownloadIcon />}>ดาวโหลด PDF</MenuItem>
-//       </MenuList>
-//     </Menu>
-//   );
-// };
 
 export default MedRecordCard;

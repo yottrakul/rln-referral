@@ -166,7 +166,6 @@ const CreateRequestForm = memo(({ nextStep }: CreateRequestFormProps) => {
   const onSubmit = async (data: z.infer<typeof CreatePatientSchema>) => {
     try {
       const patient = await createRequest(data);
-      console.log(patient);
       if (patient.success) {
         if (patient.data) {
           nextStep(patient.data);

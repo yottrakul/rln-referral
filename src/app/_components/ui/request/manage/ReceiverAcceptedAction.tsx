@@ -1,5 +1,6 @@
 "use client";
-import { endCase } from "@/app/_actions/request/actions";
+import { addMedRecordToCase, endCase } from "@/app/_actions/request/actions";
+import { useMedicalContext } from "@/app/_components/context/MedicalRecordContext";
 import {
   Button,
   AlertDialog,
@@ -20,15 +21,21 @@ interface ReceiverAcceptedActionProps {
 const ReceiverAcceptedAction: FC<ReceiverAcceptedActionProps> = ({ caseId }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isPending, setIsPending] = useState(false);
+  const { preparedMedicalRecords, reset: resetMedRecordList } = useMedicalContext();
   const toast = useToast();
   const cancelRef = useRef<HTMLButtonElement | null>(null);
   const handleEndTreatment = async () => {
     // console.log("End treatment", caseId);
     onClose();
-    // TODO: Implement end treatment
     setIsPending(true);
     try {
+      const medBlob = preparedMedicalRecords();
+      if (medBlob.length === 0) {
+        throw new Error("ไม่สามารถสิ้นสุดการรักษาได้ กรุณาเพิ่มเอกสารการรักษา");
+      }
+      await addMedRecordToCase(caseId, medBlob);
       await endCase(caseId);
+      resetMedRecordList();
     } catch (error) {
       if (error instanceof Error) {
         toast({

@@ -1,4 +1,5 @@
 export default function MedRecord() {
+  // TODO ลบออก
   return (
     <>
       {Array.from({ length: 5 }).map((_, index) => {
